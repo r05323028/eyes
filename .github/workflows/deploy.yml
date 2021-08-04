@@ -33,10 +33,10 @@ jobs:
         run: |
           poetry install
 
-      # Build the book
-      - name: Build the book
+      - name: Build the doc
+        working-directory: ./doc
         run: |
-          cd doc & poetry run make html
+          poetry run make html
 
       # Push the book's HTML to github-pages
       - name: GitHub Pages action
