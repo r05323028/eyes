@@ -4,10 +4,10 @@ from eyes.crawler import PttCrawler
 from eyes.data import PttPost
 
 
-class TestCrawler:
-    '''Crawler module test cases
+class TestPttCrawler:
+    '''PttCrawler test cases
     '''
-    def test_ptt_crawler(self):
+    def test_crawl_post(self):
         '''Test ptt crawler
         '''
         crawler = PttCrawler(board='Gossiping')
@@ -16,3 +16,8 @@ class TestCrawler:
         post = crawler.crawl_post(url)
 
         assert isinstance(post, PttPost)
+
+
+class TestDcardCrawler:
+    '''DcardCrawler test cases
+    '''
