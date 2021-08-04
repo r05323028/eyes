@@ -1,17 +1,38 @@
 '''Eyes data containers
 '''
 from datetime import datetime
-from typing import Optional
+from typing import Optional, List
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+
+
+class Comment(BaseModel):
+    '''Comment Base Model
+
+    Attributes:
+        created_at (Optional[datetime])
+        updated_at (Optional[datetime])
+    '''
+    created_at: Optional[datetime]
+    updated_at: Optional[datetime]
+
+
+class PttComment(Comment):
+    '''Ptt Post Comment Model
+    '''
+
+
+class DcardComment(Comment):
+    '''Dcard Post Comment Model
+    '''
 
 
 class Post(BaseModel):
     '''Post Base Model
 
     Attributes:
-        created_at (datetime)
-        updated_at (datetime)
+        created_at (Optional[datetime])
+        updated_at (Optional[datetime])
     '''
     created_at: Optional[datetime]
     updated_at: Optional[datetime]
@@ -20,8 +41,10 @@ class Post(BaseModel):
 class PttPost(Post):
     '''PTT Post Model
     '''
+    comments: List[PttComment] = Field([])
 
 
 class DcardPost(Post):
     '''Dcard Post Model
     '''
+    comments: List[DcardComment] = Field([])
