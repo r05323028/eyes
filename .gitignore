@@ -10,6 +10,9 @@ __pycache__/
 .DS_Store
 .vscode
 
+# sphinx
+_build
+
 # Distribution / packaging
 .Python
 build/
