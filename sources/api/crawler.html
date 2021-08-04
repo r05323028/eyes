@@ -1,0 +1,182 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>eyes.crawler &#8212; eyes 0.1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="eyes.task" href="task.html" />
+    <link rel="prev" title="eyes.data" href="data.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-eyes.crawler">
+<span id="eyes-crawler"></span><h1>eyes.crawler<a class="headerlink" href="#module-eyes.crawler" title="Permalink to this headline">¶</a></h1>
+<p>Eyes crawlers</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="eyes.crawler.Crawler">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">eyes.crawler.</span></span><span class="sig-name descname"><span class="pre">Crawler</span></span><a class="headerlink" href="#eyes.crawler.Crawler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Crawler base class</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="eyes.crawler.Crawler.crawl_latest_posts">
+<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">crawl_latest_posts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="data.html#eyes.data.Post" title="eyes.data.Post"><span class="pre">eyes.data.Post</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#eyes.crawler.Crawler.crawl_latest_posts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Crawl latest posts</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>limit</strong> (<em>int</em>) – limitation number of crawled posts</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of crawled posts</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[<a class="reference internal" href="data.html#eyes.data.Post" title="eyes.data.Post">Post</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="eyes.crawler.PttCrawler">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">eyes.crawler.</span></span><span class="sig-name descname"><span class="pre">PttCrawler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">board</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eyes.crawler.PttCrawler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ptt Crawler</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="eyes.crawler.PttCrawler.crawl_latest_posts">
+<span class="sig-name descname"><span class="pre">crawl_latest_posts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="data.html#eyes.data.PttPost" title="eyes.data.PttPost"><span class="pre">eyes.data.PttPost</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#eyes.crawler.PttCrawler.crawl_latest_posts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Crawl latest posts</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>limit</strong> (<em>int</em>) – limitation number of crawled posts</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of crawled posts</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[<a class="reference internal" href="data.html#eyes.data.Post" title="eyes.data.Post">Post</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="eyes.crawler.DcardCrawler">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">eyes.crawler.</span></span><span class="sig-name descname"><span class="pre">DcardCrawler</span></span><a class="headerlink" href="#eyes.crawler.DcardCrawler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dcard Crawler</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="eyes.crawler.DcardCrawler.crawl_latest_posts">
+<span class="sig-name descname"><span class="pre">crawl_latest_posts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="data.html#eyes.data.DcardPost" title="eyes.data.DcardPost"><span class="pre">eyes.data.DcardPost</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#eyes.crawler.DcardCrawler.crawl_latest_posts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Crawl latest posts</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>limit</strong> (<em>int</em>) – limitation number of crawled posts</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>list of crawled posts</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[<a class="reference internal" href="data.html#eyes.data.Post" title="eyes.data.Post">Post</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">eyes</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="data.html">eyes.data</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">eyes.crawler</a></li>
+<li class="toctree-l1"><a class="reference internal" href="task.html">eyes.task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="db.html">eyes.db</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="data.html" title="previous chapter">eyes.data</a></li>
+      <li>Next: <a href="task.html" title="next chapter">eyes.task</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Sean Chang.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../../_sources/sources/api/crawler.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
