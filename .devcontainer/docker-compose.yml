@@ -1,0 +1,36 @@
+version: "3"
+
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+      args:
+        VARIANT: 3.7
+        INSTALL_NODE: "true"
+        NODE_VERSION: "lts/*"
+    volumes:
+      - ..:/workspace:cached
+    networks:
+      - eyes
+    command: sleep infinity
+
+  db:
+    image: mysql:5.7
+    platform: linux/amd64
+    volumes:
+      - eyes-db:/var/lib/mysql
+    env_file: ../.env
+    networks:
+      - eyes
+
+  redis:
+    image: redis:latest
+    networks:
+      - eyes
+
+volumes:
+  eyes-db:
+
+networks:
+  eyes:

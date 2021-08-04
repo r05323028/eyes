@@ -1,0 +1,35 @@
+[tool.poetry]
+name = "eyes"
+version = "0.1.0"
+description = ""
+authors = ["Sean Chang <seanchang@kklab.com>"]
+
+[tool.poetry.dependencies]
+python = "~3.7"
+pydantic = "^1.8.2"
+SQLAlchemy = "^1.4.22"
+celery = {extras = ["redis"], version = "^5.1.2"}
+rich = "^10.6.0"
+SQLAlchemy-Utils = "^0.37.8"
+click = "^7.0"
+mysqlclient = "^2.0.3"
+bs4 = "^0.0.1"
+requests = "^2.26.0"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+pylint = "^2.9.6"
+yapf = "^0.31.0"
+Sphinx = "^4.1.2"
+isort = "^5.9.3"
+
+[tool.isort]
+profile = "hug"
+src_paths = ["eyes", "tests"]
+
+[tool.poetry.scripts]
+eyes = "eyes.cmd:cli"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
