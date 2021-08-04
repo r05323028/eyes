@@ -1,7 +1,7 @@
 '''Eyes db models
 '''
 import sqlalchemy as sa
-from sqlalchemy.orm import declarative_base
+from sqlalchemy.orm import declarative_base, relationship
 from sqlalchemy_utils.models import Timestamp
 
 Base = declarative_base()
@@ -16,6 +16,7 @@ class PttPost(Base, Timestamp):
         sa.String(64),
         primary_key=True,
     )
+    comments = relationship('PttComment')
 
 
 class PttComment(Base, Timestamp):
@@ -24,6 +25,10 @@ class PttComment(Base, Timestamp):
     __tablename__ = 'ptt_comments'
 
     id = sa.Column(sa.String(64), primary_key=True)
+    post_id = sa.Column(
+        sa.String(64),
+        sa.ForeignKey('ptt_posts.id'),
+    )
 
 
 class DcardPost(Base, Timestamp):
@@ -35,6 +40,7 @@ class DcardPost(Base, Timestamp):
         sa.String(64),
         primary_key=True,
     )
+    comments = relationship('DcardComment')
 
 
 class DcardComment(Base, Timestamp):
@@ -45,4 +51,8 @@ class DcardComment(Base, Timestamp):
     id = sa.Column(
         sa.String(64),
         primary_key=True,
+    )
+    post_id = sa.Column(
+        sa.String(64),
+        sa.ForeignKey('dcard_posts.id'),
     )
