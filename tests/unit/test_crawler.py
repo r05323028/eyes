@@ -31,8 +31,10 @@ class TestPttCrawler:
                 break
 
         for post in posts:
-            assert re.match('[A-Z].[0-9]{10}.[A-Z].[A-Z0-9]{3}.html',
-                            os.path.basename(post))
+            assert re.match(
+                '[A-Z].[0-9]{10}.[A-Z].[A-Z0-9]{3}.html',
+                os.path.basename(post),
+            )
 
 
 class TestDcardCrawler:

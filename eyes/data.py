@@ -1,7 +1,7 @@
 '''Eyes data containers
 '''
 from datetime import datetime
-from typing import Optional, List
+from typing import List, Optional
 
 from pydantic import BaseModel, Field
 
@@ -19,7 +19,14 @@ class Comment(BaseModel):
 
 class PttComment(Comment):
     '''Ptt Post Comment Model
+
+    Attributes:
+        post_id (str): post id
+        reaction (str): comment reaction
+        author (str): comment author
+        content (str): comment content
     '''
+    post_id: str
     reaction: str
     author: str
     content: str
@@ -43,6 +50,15 @@ class Post(BaseModel):
 
 class PttPost(Post):
     '''PTT Post Model
+
+    Attributes:
+        id (str): post id
+        title (str): post title
+        author (str): post author
+        board (str): board name
+        content (str): post content
+        comments (List[PttComment]): post comments
+        url (str): post url
     '''
     id: str
     title: str
