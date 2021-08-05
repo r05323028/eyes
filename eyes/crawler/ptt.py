@@ -1,8 +1,10 @@
+'''PTT crawler module
+'''
 import logging
 import os
 import re
 from datetime import datetime
-from typing import List
+from typing import Iterator
 
 import requests
 from lxml import etree
@@ -13,6 +15,8 @@ from eyes.crawler.utils import get_dom
 PTT_OVER_18_BOARDS = [
     'Gossiping',
 ]
+
+PTT_BASE_URL = 'https://www.ptt.cc'
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -119,22 +123,36 @@ def get_next_url(dom: etree.Element) -> str:
         '//*[@id="action-bar-container"]/div/div[2]/a[2]/@href')[0]
 
 
-def crawl_latest_posts(
-    board: str,
-    limit: int = 100,
-) -> List[PttPost]:
-    '''Crawl latest N posts
+def crawl_post_urls(board: str) -> Iterator[str]:
+    '''Crawl latest N post urls
 
     Args:
         board (str): board name
-        limit (int): limitation number of posts
 
     Returns:
-        List[PttPost]: a list of ptt data containers
+        Iterator[str]: a list of ptt data containers
     '''
-    start = f'https://www.ptt.cc/bbs/{board}/index.html'
-    tasks = []
+    cookies = {}
 
-    resp = requests.get(start, cookies={'over18': '1'})
+    if board in PTT_OVER_18_BOARDS:
+        cookies.update({'over18': '1'})
+
+    next_url = f'{PTT_BASE_URL}/bbs/{board}/index.html'
+    resp = requests.get(next_url, cookies=cookies)
     dom = get_dom(resp)
-    next_url = get_next_url(dom)
+
+    while next_url:
+        # get post urls
+        logger.info('Page: %s', next_url)
+        r_ents = dom.xpath('//*[@class="r-ent"]')
+
+        for row in r_ents:
+            href = row.xpath('div[@class="title"]/a/@href')
+
+            if href:
+                post_url = href[0]
+                yield f'{PTT_BASE_URL}{post_url}'
+
+        next_url = get_next_url(dom)
+        resp = requests.get(f'{PTT_BASE_URL}{next_url}', cookies=cookies)
+        dom = get_dom(resp)
