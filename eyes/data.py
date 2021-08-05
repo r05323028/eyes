@@ -20,6 +20,9 @@ class Comment(BaseModel):
 class PttComment(Comment):
     '''Ptt Post Comment Model
     '''
+    reaction: str
+    author: str
+    content: str
 
 
 class DcardComment(Comment):
@@ -41,7 +44,13 @@ class Post(BaseModel):
 class PttPost(Post):
     '''PTT Post Model
     '''
+    id: str
+    title: str
+    author: str
+    board: str
+    content: str
     comments: List[PttComment] = Field([])
+    url: str
 
 
 class DcardPost(Post):
