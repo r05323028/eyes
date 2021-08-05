@@ -9,8 +9,8 @@ from typing import Iterator
 import requests
 from lxml import etree
 
-from eyes.data import PttPost, PttComment
 from eyes.crawler.utils import get_dom
+from eyes.data import PttComment, PttPost
 
 PTT_OVER_18_BOARDS = [
     'Gossiping',
@@ -89,6 +89,7 @@ def crawl_post(
 
         comments.append(
             PttComment(
+                post_id=get_post_id(resp.url),
                 reaction=span[0].text.strip(),
                 author=span[1].text,
                 content=span[2].text[2:],

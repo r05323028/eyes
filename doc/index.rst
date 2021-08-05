@@ -21,6 +21,7 @@ Eyes
    sources/api/crawler
    sources/api/tasks
    sources/api/db
+   sources/api/config
 
 
 
