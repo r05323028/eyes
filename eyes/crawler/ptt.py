@@ -70,7 +70,8 @@ def crawl_post(
     )
 
     # content
-    content = dom.xpath('//*[@id="main-content"]/text()')[0]
+    content = dom.xpath('//*[@id="main-content"]/text()')
+    content = ''.join(content)
 
     # comments
     comments = []

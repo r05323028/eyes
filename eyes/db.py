@@ -26,7 +26,7 @@ class PttPost(Base, Timestamp):
     __tablename__ = 'ptt_posts'
 
     id = sa.Column(
-        sa.String(64),
+        sa.String(128),
         primary_key=True,
     )
     title = sa.Column(
