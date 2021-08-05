@@ -5,11 +5,11 @@ eyes is a **Public Opinion Mining System** focusing on taiwanese forums such as 
 ## Tech Stack
 
 - Argo Workflow
-- BeautifulSoup
 - Celery
+- FastAPI
 - MySQL
 - Redis
-- SQLAlchemy
+- SQLAlchemy ORM
 
 ## License
 
