@@ -37,6 +37,7 @@
  <a href="#C"><strong>C</strong></a>
  | <a href="#D"><strong>D</strong></a>
  | <a href="#E"><strong>E</strong></a>
+ | <a href="#G"><strong>G</strong></a>
  | <a href="#M"><strong>M</strong></a>
  | <a href="#P"><strong>P</strong></a>
  | <a href="#U"><strong>U</strong></a>
@@ -47,19 +48,11 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="sources/api/data.html#eyes.data.Comment">Comment (class in eyes.data)</a>
 </li>
-      <li><a href="sources/api/crawler.html#eyes.crawler.Crawler.crawl_latest_posts">crawl_latest_posts() (eyes.crawler.Crawler method)</a>
-
-      <ul>
-        <li><a href="sources/api/crawler.html#eyes.crawler.DcardCrawler.crawl_latest_posts">(eyes.crawler.DcardCrawler method)</a>
+      <li><a href="sources/api/crawler.html#eyes.crawler.ptt.crawl_post">crawl_post() (in module eyes.crawler.ptt)</a>
 </li>
-        <li><a href="sources/api/crawler.html#eyes.crawler.PttCrawler.crawl_latest_posts">(eyes.crawler.PttCrawler method)</a>
-</li>
-        <li><a href="sources/api/task.html#eyes.task.crawl_latest_posts">(in module eyes.task)</a>
-</li>
-      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="sources/api/crawler.html#eyes.crawler.Crawler">Crawler (class in eyes.crawler)</a>
+      <li><a href="sources/api/crawler.html#eyes.crawler.ptt.crawl_post_urls">crawl_post_urls() (in module eyes.crawler.ptt)</a>
 </li>
       <li><a href="sources/api/data.html#eyes.data.Comment.created_at">created_at (eyes.data.Comment attribute)</a>
 
@@ -81,8 +74,6 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="sources/api/crawler.html#eyes.crawler.DcardCrawler">DcardCrawler (class in eyes.crawler)</a>
-</li>
       <li><a href="sources/api/data.html#eyes.data.DcardPost">DcardPost (class in eyes.data)</a>
 
       <ul>
@@ -96,10 +87,17 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li>
-    eyes.crawler
+    eyes.crawler.ptt
 
       <ul>
-        <li><a href="sources/api/crawler.html#module-eyes.crawler">module</a>
+        <li><a href="sources/api/crawler.html#module-eyes.crawler.ptt">module</a>
+</li>
+      </ul></li>
+      <li>
+    eyes.crawler.utils
+
+      <ul>
+        <li><a href="sources/api/crawler.html#module-eyes.crawler.utils">module</a>
 </li>
       </ul></li>
       <li>
@@ -119,12 +117,26 @@
 </li>
       </ul></li>
       <li>
-    eyes.task
+    eyes.tasks
 
       <ul>
-        <li><a href="sources/api/task.html#module-eyes.task">module</a>
+        <li><a href="sources/api/tasks.html#module-eyes.tasks">module</a>
 </li>
       </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="G">G</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="sources/api/crawler.html#eyes.crawler.utils.get_dom">get_dom() (in module eyes.crawler.utils)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="sources/api/crawler.html#eyes.crawler.ptt.get_next_url">get_next_url() (in module eyes.crawler.ptt)</a>
+</li>
+      <li><a href="sources/api/crawler.html#eyes.crawler.ptt.get_post_id">get_post_id() (in module eyes.crawler.ptt)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -135,13 +147,15 @@
     module
 
       <ul>
-        <li><a href="sources/api/crawler.html#module-eyes.crawler">eyes.crawler</a>
+        <li><a href="sources/api/crawler.html#module-eyes.crawler.ptt">eyes.crawler.ptt</a>
+</li>
+        <li><a href="sources/api/crawler.html#module-eyes.crawler.utils">eyes.crawler.utils</a>
 </li>
         <li><a href="sources/api/data.html#module-eyes.data">eyes.data</a>
 </li>
         <li><a href="sources/api/db.html#module-eyes.db">eyes.db</a>
 </li>
-        <li><a href="sources/api/task.html#module-eyes.task">eyes.task</a>
+        <li><a href="sources/api/tasks.html#module-eyes.tasks">eyes.tasks</a>
 </li>
       </ul></li>
   </ul></td>
@@ -160,8 +174,6 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="sources/api/crawler.html#eyes.crawler.PttCrawler">PttCrawler (class in eyes.crawler)</a>
-</li>
       <li><a href="sources/api/data.html#eyes.data.PttPost">PttPost (class in eyes.data)</a>
 
       <ul>
@@ -205,7 +217,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="sources/api/data.html">eyes.data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="sources/api/crawler.html">eyes.crawler</a></li>
-<li class="toctree-l1"><a class="reference internal" href="sources/api/task.html">eyes.task</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sources/api/tasks.html">eyes.tasks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="sources/api/db.html">eyes.db</a></li>
 </ul>
 

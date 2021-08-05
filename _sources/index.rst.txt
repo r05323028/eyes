@@ -19,7 +19,7 @@ Eyes
 
    sources/api/data
    sources/api/crawler
-   sources/api/task
+   sources/api/tasks
    sources/api/db
 
 
