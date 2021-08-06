@@ -27,8 +27,24 @@ class TestPttCrawler:
         for i, post in enumerate(post_urls):
             posts.append(post)
 
-            if i > 100:
+            if i > 10:
                 break
+
+        for post in posts:
+            assert re.match(
+                '[A-Z].[0-9]{10}.[A-Z].[A-Z0-9]{3}.html',
+                os.path.basename(post),
+            )
+
+    def test_crawl_latest_urls(self):
+        '''Test ptt crawl latest n days post urls
+        '''
+
+        posts = []
+        post_urls = crawl_post_urls(board='sex', n_days=1)
+
+        for i, post in enumerate(post_urls):
+            posts.append(post)
 
         for post in posts:
             assert re.match(

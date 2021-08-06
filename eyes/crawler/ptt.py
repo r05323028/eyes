@@ -3,8 +3,8 @@
 import logging
 import os
 import re
-from datetime import datetime
-from typing import Iterator
+from datetime import datetime, timedelta
+from typing import Iterator, Optional
 
 import requests
 from lxml import etree
@@ -12,11 +12,14 @@ from lxml import etree
 from eyes.crawler.utils import get_dom
 from eyes.data import PttComment, PttPost
 
+PTT_BASE_URL = 'https://www.ptt.cc'
 PTT_OVER_18_BOARDS = [
     'Gossiping',
+    'sex',
 ]
-
-PTT_BASE_URL = 'https://www.ptt.cc'
+PTT_CRAWLER_SETTINGS = {
+    'n_expired_posts': 100,
+}
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -37,7 +40,7 @@ def get_post_id(url: str, ) -> str:
 def crawl_post(
     url: str,
     board: str,
-) -> PttPost:
+) -> Optional[PttPost]:
     '''Crawl a ptt post into a PttPost
 
     Args:
@@ -45,7 +48,7 @@ def crawl_post(
         board (str): board name
 
     Returns:
-        PttPost: ptt post data container
+        Optional[PttPost]: ptt post data container, None if 404
     '''
     logger.info('Crawl %s', url)
     cookies = {}
@@ -56,18 +59,27 @@ def crawl_post(
         })
 
     resp = requests.get(url, cookies=cookies)
+
+    if resp.status_code == 404:
+        return
+
     dom = get_dom(resp)
 
     # article meta
-    author = dom.xpath('//*[@id="main-content"]/div[1]/span[2]/text()')[0]
-    board = dom.xpath('//*[@id="main-content"]/div[2]/span[2]/text()')[0]
-    title = dom.xpath('//*[@id="main-content"]/div[3]/span[2]/text()')[0]
-    post_created_at = dom.xpath(
-        '//*[@id="main-content"]/div[4]/span[2]/text()')[0]
-    post_created_at = datetime.strptime(
-        post_created_at,
-        '%a %b  %d %H:%M:%S %Y',
-    )
+    author = ''.join(
+        dom.xpath('//*[@id="main-content"]/div[1]/span[2]/text()'))
+
+    board = ''.join(dom.xpath('//*[@id="main-content"]/div[2]/span[2]/text()'))
+    title = ''.join(dom.xpath('//*[@id="main-content"]/div[3]/span[2]/text()'))
+    post_created_at = ''.join(
+        dom.xpath('//*[@id="main-content"]/div[4]/span[2]/text()'))
+    if post_created_at:
+        post_created_at = datetime.strptime(
+            post_created_at,
+            '%a %b  %d %H:%M:%S %Y',
+        )
+    else:
+        post_created_at = datetime.utcfromtimestamp(0)
 
     # content
     content = dom.xpath('//*[@id="main-content"]/text()')
@@ -98,7 +110,7 @@ def crawl_post(
             ))
 
     # post
-    post = PttPost(
+    return PttPost(
         id=get_post_id(resp.url),
         title=title,
         author=author,
@@ -108,8 +120,6 @@ def crawl_post(
         created_at=post_created_at,
         url=resp.url,
     )
-
-    return post
 
 
 def get_next_url(dom: etree.Element) -> str:
@@ -125,15 +135,25 @@ def get_next_url(dom: etree.Element) -> str:
         '//*[@id="action-bar-container"]/div/div[2]/a[2]/@href')[0]
 
 
-def crawl_post_urls(board: str) -> Iterator[str]:
+def crawl_post_urls(
+    board: str,
+    n_days: Optional[datetime] = None,
+) -> Iterator[str]:
     '''Crawl latest N post urls
 
     Args:
         board (str): board name
+        n_days (Optional[dateime]): number of days which posts are created at this range. If `n_days` is None, crawler will ignore this setting.
 
     Returns:
-        Iterator[str]: a list of ptt data containers
+        Iterator[str]: a list of ptt post urls
     '''
+    # expired settings
+    if n_days:
+        expired_counter = 0
+        now = datetime.utcnow()
+        critical_point = now - timedelta(days=n_days)
+
     cookies = {}
 
     if board in PTT_OVER_18_BOARDS:
@@ -151,9 +171,27 @@ def crawl_post_urls(board: str) -> Iterator[str]:
         for row in r_ents:
             href = row.xpath('div[@class="title"]/a/@href')
 
+            # check if post is expired
+            if n_days:
+                created_at = row.xpath(
+                    'div[@class="meta"]/div[@class="date"]/text()')[0]
+                created_at = datetime.strptime(created_at.strip(), '%m/%d')
+                created_at = created_at.replace(
+                    year=now.
+                    year if created_at.month > now.month else now.year - 1)
+
+                if created_at < critical_point:
+                    expired_counter += 1
+
             if href:
                 post_url = href[0]
                 yield f'{PTT_BASE_URL}{post_url}'
+
+        # terminate loop if expired_posts exceeds limitation
+        if n_days and expired_counter > PTT_CRAWLER_SETTINGS['n_expired_posts']:
+            logger.info("n_expired_posts exceeds limitation: %s",
+                        expired_counter)
+            break
 
         next_url = get_next_url(dom)
         resp = requests.get(f'{PTT_BASE_URL}{next_url}', cookies=cookies)
