@@ -1,8 +1,8 @@
-'''Eyes tasks
+'''Eyes celery tasks
 '''
 import logging
 import os
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 import sqlalchemy as sa
 from celery import Celery, Task
@@ -51,7 +51,7 @@ def crawl_ptt_post(
     self,
     url: str,
     board: str,
-) -> Dict:
+) -> Optional[Dict]:
     '''Crawl a ptt post and store it into database
 
     Args:
@@ -59,9 +59,13 @@ def crawl_ptt_post(
         board (str): board name
 
     Returns:
-        Dict: post dictionary
+        Optional[Dict]: post dictionary
     '''
     post = crawl_post(url, board)
+
+    if not post:
+        return
+
     row = post.dict()
     row['comments'] = [PttComment(**com) for com in row['comments']]
     row = PttPost(**row)
@@ -90,7 +94,13 @@ def crawl_ptt_posts(
         List[Dict]: list of posts
     '''
     rows = []
-    posts = [crawl_post(url, board) for url in urls]
+    posts = []
+
+    for url in urls:
+        post = crawl_post(url, board)
+
+        if post:
+            posts.append(post)
 
     for row in posts:
         row = row.dict()

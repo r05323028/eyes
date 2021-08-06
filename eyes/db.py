@@ -17,7 +17,11 @@ class Timestamp:
         default=datetime.utcnow,
         nullable=False,
     )
-    updated_at = sa.Column(sa.DateTime)
+    updated_at = sa.Column(
+        sa.DateTime,
+        default=datetime.utcnow,
+        nullable=False,
+    )
 
 
 class PttPost(Base, Timestamp):

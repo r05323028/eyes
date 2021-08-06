@@ -22,6 +22,7 @@ Eyes
    sources/api/tasks
    sources/api/db
    sources/api/config
+   sources/api/job
 
 
 

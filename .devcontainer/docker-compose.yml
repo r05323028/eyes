@@ -21,16 +21,23 @@ services:
     volumes:
       - eyes-db:/var/lib/mysql
     env_file: ../.env
+    ports:
+      - 3306:3306
     networks:
       - eyes
 
   redis:
     image: redis:latest
+    volumes:
+      - eyes-redis:/data
+    ports:
+      - 6379:6379
     networks:
       - eyes
 
 volumes:
   eyes-db:
+  eyes-redis:
 
 networks:
   eyes:

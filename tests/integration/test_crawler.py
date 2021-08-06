@@ -4,7 +4,7 @@ from typing import Dict, List
 
 import pytest
 import sqlalchemy as sa
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, Session
 
 from eyes.tasks import crawl_ptt_post, crawl_ptt_posts
 from eyes.config import DatabaseConfig
@@ -18,7 +18,10 @@ class TestCrawler:
         yield ['ptt_posts', 'ptt_comments']
 
     @pytest.fixture
-    def session(self, tables):
+    def session(
+        self,
+        tables,
+    ):
         db_config = DatabaseConfig()
         engine = sa.create_engine(
             f'mysql://{db_config.username}:{db_config.password}@{db_config.host}:{db_config.port}/{db_config.database}?charset=utf8mb4'
@@ -34,7 +37,10 @@ class TestCrawler:
             session.execute(f'TRUNCATE TABLE {tbl}')
         session.commit()
 
-    def test_ptt_celery_crawler(self, session):
+    def test_ptt_celery_crawler(
+        self,
+        session: Session,
+    ):
         '''Test ptt celery crawler & orm model
         '''
         board = 'Gossiping'
@@ -44,7 +50,10 @@ class TestCrawler:
 
         assert isinstance(post, Dict)
 
-    def test_ptt_celery_bulk_crawler(self, session):
+    def test_ptt_celery_bulk_crawler(
+        self,
+        session: Session,
+    ):
         '''Test ptt celery bulk insert
         '''
         board = 'Gossiping'
