@@ -16,11 +16,12 @@
 
   // Add the IDs of extensions you want installed when the container is created.
   "extensions": [
-    "ms-python.python",
-    "coenraads.bracket-pair-colorizer",
-    "bungcip.better-toml",
-    "esbenp.prettier-vscode"
-  ],
+	"ms-python.python",
+	"coenraads.bracket-pair-colorizer",
+	"bungcip.better-toml",
+	"esbenp.prettier-vscode",
+	"editorconfig.editorconfig"
+],
 
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
   // "forwardPorts": [],

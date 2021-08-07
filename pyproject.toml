@@ -16,6 +16,7 @@ mysqlclient = "^2.0.3"
 bs4 = "^0.0.1"
 requests = "^2.26.0"
 lxml = "^4.6.3"
+flower = "^1.0.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.0"
