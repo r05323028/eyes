@@ -1,20 +1,15 @@
-'''Eyes commands
+'''DB commands
 '''
 import logging
 
 import click
 import sqlalchemy as sa
-from sqlalchemy.engine import create_engine
 from sqlalchemy_utils.functions import create_database, database_exists
 
 from eyes.db import Base
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
-
-CONTEXT_SETTINGS = {
-    'help_option_names': ['-h', '--help'],
-}
 
 
 @click.group()
@@ -27,30 +22,30 @@ def db():
 @click.option(
     '--host',
     required=True,
-    help='database host',
+    help='Database host',
 )
 @click.option(
     '--port',
     default=3306,
-    help='database port',
+    help='Database port',
 )
 @click.option(
     '-u',
     '--user',
     required=True,
-    help='database user',
+    help='Database user',
 )
 @click.option(
     '-p',
     '--password',
     prompt=True,
     hide_input=True,
-    help='database password',
+    help='Database password',
 )
 @click.option(
     '--database',
     default='eyes',
-    help='database name',
+    help='Database name',
 )
 def init(
     host: str,
@@ -71,12 +66,4 @@ def init(
     Base.metadata.create_all(bind=engine)
 
 
-@click.group(context_settings=CONTEXT_SETTINGS)
-def cli():
-    '''Eyes Command Line Tools
-    '''
-
-
 db.add_command(init)
-
-cli.add_command(db)

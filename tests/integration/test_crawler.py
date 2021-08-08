@@ -4,10 +4,10 @@ from typing import Dict, List
 
 import pytest
 import sqlalchemy as sa
-from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy.orm import Session, sessionmaker
 
-from eyes.tasks import crawl_ptt_post, crawl_ptt_posts
 from eyes.config import DatabaseConfig
+from eyes.tasks import crawl_ptt_post, crawl_ptt_posts
 
 
 class TestCrawler:
@@ -36,6 +36,7 @@ class TestCrawler:
         for tbl in tables:
             session.execute(f'TRUNCATE TABLE {tbl}')
         session.commit()
+        session.close()
 
     def test_ptt_celery_crawler(
         self,
