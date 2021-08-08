@@ -39,17 +39,13 @@ class TestPttCrawler:
     def test_crawl_latest_urls(self):
         '''Test ptt crawl latest n days post urls
         '''
-
-        posts = []
         post_urls = crawl_post_urls(board='sex', n_days=1)
+        post_urls = [post for post in post_urls]
 
-        for i, post in enumerate(post_urls):
-            posts.append(post)
-
-        for post in posts:
+        for post_url in post_urls:
             assert re.match(
                 '[A-Z].[0-9]{10}.[A-Z].[A-Z0-9]{3}.html',
-                os.path.basename(post),
+                os.path.basename(post_url),
             )
 
 

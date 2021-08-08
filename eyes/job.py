@@ -1,7 +1,7 @@
 '''Eyes job
 '''
 import enum
-from typing import Callable, Dict, Optional, List
+from typing import Callable, Dict, Optional
 
 import pydantic
 

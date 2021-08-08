@@ -2,9 +2,10 @@
 '''
 import pytest
 import sqlalchemy as sa
-from sqlalchemy.orm import sessionmaker, Session
-from eyes.job import JobType, Job, Dispatcher
+from sqlalchemy.orm import Session, sessionmaker
+
 from eyes.config import DatabaseConfig
+from eyes.job import Dispatcher, Job, JobType
 
 
 class TestJob:
@@ -33,6 +34,7 @@ class TestJob:
         for tbl in tables:
             session.execute(f'TRUNCATE TABLE {tbl}')
         session.commit()
+        session.close()
 
     def test_dispatch(
         self,
