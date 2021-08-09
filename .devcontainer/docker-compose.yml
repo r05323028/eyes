@@ -9,6 +9,7 @@ services:
         VARIANT: 3.7
         INSTALL_NODE: "true"
         NODE_VERSION: "lts/*"
+    platform: linux/amd64
     volumes:
       - ..:/workspace:cached
     networks:

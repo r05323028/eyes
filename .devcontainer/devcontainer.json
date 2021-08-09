@@ -11,7 +11,10 @@
     "python.linting.enabled": true,
     "python.linting.pylintEnabled": true,
     "python.formatting.provider": "yapf",
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
+    "yaml.schemas": {
+      "https://raw.githubusercontent.com/argoproj/argo-workflows/master/api/jsonschema/schema.json": "kubernetes/**/*.yaml"
+    }
   },
 
   // Add the IDs of extensions you want installed when the container is created.
@@ -20,7 +23,9 @@
 	"coenraads.bracket-pair-colorizer",
 	"bungcip.better-toml",
 	"esbenp.prettier-vscode",
-	"editorconfig.editorconfig"
+	"editorconfig.editorconfig",
+	"redhat.vscode-yaml",
+	"ms-kubernetes-tools.vscode-kubernetes-tools"
 ],
 
   // Use 'forwardPorts' to make a list of ports inside the container available locally.

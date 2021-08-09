@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: eyes-config-prod
+data:
+  MYSQL_ROOT_PASSWORD: example
+  MYSQL_USERNAME: root
+  MYSQL_PASSWORD: example
+  MYSQL_HOST: db-mysql
+  CELERY_BROKER_URL: redis://:example@redis-master:6379/0
+  CELERY_RESULT_BACKEND: redis://:example@redis-master:6379/0
