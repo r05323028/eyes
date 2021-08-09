@@ -7,6 +7,7 @@ eyes is a **Public Opinion Mining System** focusing on taiwanese forums such as 
 - Argo Workflow
 - Celery, Flower
 - FastAPI
+- Kubernetes, Helm Charts
 - MySQL
 - Redis
 - SQLAlchemy ORM

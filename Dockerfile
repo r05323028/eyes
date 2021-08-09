@@ -10,6 +10,12 @@ RUN apt update && \
 RUN pip install poetry && \ 
     pip cache purge
 
+# argo cli
+RUN curl -sLO https://github.com/argoproj/argo-workflows/releases/download/v3.1.5/argo-linux-amd64.gz && \
+    gunzip argo-linux-amd64.gz && \
+    chmod +x argo-linux-amd64 && \
+    mv ./argo-linux-amd64 /usr/local/bin/argo
+
 # set workdir
 WORKDIR /app
 

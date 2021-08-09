@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: CronWorkflow
+metadata:
+  name: crawl-ptt-latest-posts
+spec:
+  schedule: "0 8 * * *"
+  timezone: "Asia/Taipei"
+  workflowSpec:
+    entrypoint: crawler
+    templates:
+      - name: crawler
+        container:
+          image: eyes/base
+          imagePullPolicy: Never
+          command: ["/bin/bash", "-c", "--"]
+          envFrom:
+            - configMapRef:
+                name: eyes-config-prod
+          args:
+            [
+              "poetry run eyes job dispatch --n_days 1 --job_type CRAWL_PTT_LATEST_POSTS --board sex",
+            ]

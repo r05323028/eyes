@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ .Release.Name }}"
+spec:
+  selector:
+    matchLabels:
+      app: "{{ .Release.Name }}"
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: "{{ .Release.Name }}"
+    spec:
+      containers:
+        - name: "{{ .Release.Name }}"
+          image: "{{ .Values.image }}"
+          command: ["/bin/bash", "-c", "--"]
+          args: ["sleep infinity"]
+          imagePullPolicy: Never
+          envFrom:
+            - configMapRef:
+                name: eyes-config-prod
