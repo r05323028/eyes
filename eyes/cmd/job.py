@@ -4,7 +4,7 @@ import logging
 
 import click
 
-from eyes.job import Dispatcher, JobType, Job
+from eyes.job import Jobs, JobType, Job
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -40,7 +40,7 @@ def dispatch(
     '''Dispatch a job
     '''
     job_type = JobType[job_type]
-    dispatcher = Dispatcher()
+    jobs = Jobs()
 
     if job_type == JobType.CRAWL_PTT_LATEST_POSTS:
         # check options
@@ -56,9 +56,9 @@ def dispatch(
             },
         )
 
-    # dispatch job
-    logger.info('Dispatch job, %s', job)
-    dispatcher.dispatch(job)
+        # dispatch job
+        logger.info('Dispatch job, %s', job)
+        jobs.dispatch(job)
 
 
 job.add_command(dispatch)

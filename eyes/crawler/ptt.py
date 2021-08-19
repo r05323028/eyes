@@ -65,61 +65,67 @@ def crawl_post(
 
     dom = get_dom(resp)
 
-    # article meta
-    author = ''.join(
-        dom.xpath('//*[@id="main-content"]/div[1]/span[2]/text()'))
+    try:
+        # article meta
+        author = ''.join(
+            dom.xpath('//*[@id="main-content"]/div[1]/span[2]/text()'))
 
-    board = ''.join(dom.xpath('//*[@id="main-content"]/div[2]/span[2]/text()'))
-    title = ''.join(dom.xpath('//*[@id="main-content"]/div[3]/span[2]/text()'))
-    post_created_at = ''.join(
-        dom.xpath('//*[@id="main-content"]/div[4]/span[2]/text()'))
-    if post_created_at:
-        post_created_at = datetime.strptime(
-            post_created_at,
-            '%a %b  %d %H:%M:%S %Y',
+        board = ''.join(
+            dom.xpath('//*[@id="main-content"]/div[2]/span[2]/text()'))
+        title = ''.join(
+            dom.xpath('//*[@id="main-content"]/div[3]/span[2]/text()'))
+        post_created_at = ''.join(
+            dom.xpath('//*[@id="main-content"]/div[4]/span[2]/text()'))
+        if post_created_at:
+            post_created_at = datetime.strptime(
+                post_created_at,
+                '%a %b  %d %H:%M:%S %Y',
+            )
+        else:
+            post_created_at = datetime.utcfromtimestamp(0)
+
+        # content
+        content = dom.xpath('//*[@id="main-content"]/text()')
+        content = ''.join(content)
+
+        # comments
+        comments = []
+        comments_etree = dom.xpath('//div[@class="push"]')
+
+        for com in comments_etree:
+            span = com.xpath('span')
+            comment_created_at = re.findall(
+                '[0-9]{2}/[0-9]{2} [0-9]{2}:[0-9]{2}', span[3].text)[0]
+            comment_created_at = datetime.strptime(
+                comment_created_at,
+                '%m/%d %H:%M',
+            )
+            comment_created_at = comment_created_at.replace(
+                year=datetime.now().year)
+
+            comments.append(
+                PttComment(
+                    post_id=get_post_id(resp.url),
+                    reaction=span[0].text.strip(),
+                    author=span[1].text,
+                    content=span[2].text[2:],
+                    created_at=comment_created_at,
+                ))
+
+        # post
+        return PttPost(
+            id=get_post_id(resp.url),
+            title=title,
+            author=author,
+            board=board,
+            content=content,
+            comments=comments,
+            created_at=post_created_at,
+            url=resp.url,
         )
-    else:
-        post_created_at = datetime.utcfromtimestamp(0)
-
-    # content
-    content = dom.xpath('//*[@id="main-content"]/text()')
-    content = ''.join(content)
-
-    # comments
-    comments = []
-    comments_etree = dom.xpath('//div[@class="push"]')
-
-    for com in comments_etree:
-        span = com.xpath('span')
-        comment_created_at = re.findall('[0-9]{2}/[0-9]{2} [0-9]{2}:[0-9]{2}',
-                                        span[3].text)[0]
-        comment_created_at = datetime.strptime(
-            comment_created_at,
-            '%m/%d %H:%M',
-        )
-        comment_created_at = comment_created_at.replace(
-            year=datetime.now().year)
-
-        comments.append(
-            PttComment(
-                post_id=get_post_id(resp.url),
-                reaction=span[0].text.strip(),
-                author=span[1].text,
-                content=span[2].text[2:],
-                created_at=comment_created_at,
-            ))
-
-    # post
-    return PttPost(
-        id=get_post_id(resp.url),
-        title=title,
-        author=author,
-        board=board,
-        content=content,
-        comments=comments,
-        created_at=post_created_at,
-        url=resp.url,
-    )
+    except IndexError:
+        logger.error("Could not crawl %s", url)
+        return
 
 
 def get_next_url(dom: etree.Element) -> str:
@@ -137,13 +143,13 @@ def get_next_url(dom: etree.Element) -> str:
 
 def crawl_post_urls(
     board: str,
-    n_days: Optional[datetime] = None,
+    n_days: Optional[int] = None,
 ) -> Iterator[str]:
     '''Crawl latest N post urls
 
     Args:
         board (str): board name
-        n_days (Optional[dateime]): number of days which posts are created at this range. If `n_days` is None, crawler will ignore this setting.
+        n_days (Optional[int]): number of days which posts are created at this range. If `n_days` is None, crawler will ignore this setting.
 
     Returns:
         Iterator[str]: a list of ptt post urls
@@ -171,21 +177,28 @@ def crawl_post_urls(
         for row in r_ents:
             href = row.xpath('div[@class="title"]/a/@href')
 
-            # check if post is expired
-            if n_days:
-                created_at = row.xpath(
-                    'div[@class="meta"]/div[@class="date"]/text()')[0]
-                created_at = datetime.strptime(created_at.strip(), '%m/%d')
-                created_at = created_at.replace(
-                    year=now.
-                    year if created_at.month > now.month else now.year - 1)
-
-                if created_at < critical_point:
-                    expired_counter += 1
-
             if href:
-                post_url = href[0]
-                yield f'{PTT_BASE_URL}{post_url}'
+                post_url = f'{PTT_BASE_URL}{href[0]}'
+
+                # check if post is expired
+                if n_days:
+                    created_at = row.xpath(
+                        'div[@class="meta"]/div[@class="date"]/text()')[0]
+                    created_at = datetime.strptime(created_at.strip(), '%m/%d')
+                    created_at = created_at.replace(
+                        year=now.
+                        year if created_at.month <= now.month else now.year -
+                        1)
+
+                    if created_at < critical_point:
+                        logger.info(
+                            "Catch an expired post %s (created at: %s)",
+                            post_url,
+                            created_at.strftime("%Y-%m-%d"),
+                        )
+                        expired_counter += 1
+
+                yield post_url
 
         # terminate loop if expired_posts exceeds limitation
         if n_days and expired_counter > PTT_CRAWLER_SETTINGS['n_expired_posts']:
