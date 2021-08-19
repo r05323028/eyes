@@ -42,18 +42,18 @@
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="eyes.job.Dispatcher">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">eyes.job.</span></span><span class="sig-name descname"><span class="pre">Dispatcher</span></span><a class="headerlink" href="#eyes.job.Dispatcher" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="eyes.job.Jobs">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">eyes.job.</span></span><span class="sig-name descname"><span class="pre">Jobs</span></span><a class="headerlink" href="#eyes.job.Jobs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Job dispatcher class</p>
 <dl class="py property">
-<dt class="sig sig-object py" id="eyes.job.Dispatcher.job_map">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">job_map</span></span><em class="property"><span class="pre">:</span> <span class="pre">Dict[eyes.job.JobType,</span> <span class="pre">Callable]</span></em><a class="headerlink" href="#eyes.job.Dispatcher.job_map" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="eyes.job.Jobs.job_map">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">job_map</span></span><em class="property"><span class="pre">:</span> <span class="pre">Dict[eyes.job.JobType,</span> <span class="pre">Callable]</span></em><a class="headerlink" href="#eyes.job.Jobs.job_map" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return job map</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="eyes.job.Dispatcher.crawl_ptt_latest_posts">
-<span class="sig-name descname"><span class="pre">crawl_ptt_latest_posts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">job</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">eyes.job.Job</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eyes.job.Dispatcher.crawl_ptt_latest_posts" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="eyes.job.Jobs.crawl_ptt_latest_posts">
+<span class="sig-name descname"><span class="pre">crawl_ptt_latest_posts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">job</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">eyes.job.Job</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eyes.job.Jobs.crawl_ptt_latest_posts" title="Permalink to this definition">¶</a></dt>
 <dd><p>Crawl latest ptt posts</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -63,8 +63,8 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="eyes.job.Dispatcher.dispatch">
-<span class="sig-name descname"><span class="pre">dispatch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">job</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">eyes.job.Job</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eyes.job.Dispatcher.dispatch" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="eyes.job.Jobs.dispatch">
+<span class="sig-name descname"><span class="pre">dispatch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">job</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">eyes.job.Job</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eyes.job.Jobs.dispatch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Dispatch job</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
