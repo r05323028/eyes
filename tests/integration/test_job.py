@@ -5,7 +5,7 @@ import sqlalchemy as sa
 from sqlalchemy.orm import Session, sessionmaker
 
 from eyes.config import DatabaseConfig
-from eyes.job import Dispatcher, Job, JobType
+from eyes.job import Jobs, Job, JobType
 
 
 class TestJob:
@@ -49,5 +49,5 @@ class TestJob:
                 'board': 'sex',
             },
         )
-        dispatcher = Dispatcher()
-        dispatcher.dispatch(job)
+        jobs = Jobs()
+        jobs.dispatch(job)

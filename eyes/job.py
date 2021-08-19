@@ -40,7 +40,7 @@ class Job(pydantic.BaseModel):
         return v
 
 
-class Dispatcher:
+class Jobs:
     '''Job dispatcher class
     '''
     @property

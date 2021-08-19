@@ -16,11 +16,11 @@ services:
       - eyes
     command: sleep infinity
 
-  db:
+  mysql:
     image: mysql:5.7
     platform: linux/amd64
     volumes:
-      - eyes-db:/var/lib/mysql
+      - eyes-mysql:/var/lib/mysql
     env_file: ../.env
     ports:
       - 3306:3306
@@ -37,7 +37,7 @@ services:
       - eyes
 
 volumes:
-  eyes-db:
+  eyes-mysql:
   eyes-redis:
 
 networks:
