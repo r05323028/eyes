@@ -2,6 +2,7 @@
 '''
 import logging
 import os
+from datetime import datetime
 from typing import Dict, List, Optional
 
 import sqlalchemy as sa
@@ -69,7 +70,16 @@ def crawl_ptt_post(
     row = post.dict()
     row['comments'] = [PttComment(**com) for com in row['comments']]
     row = PttPost(**row)
-    self.sess.add(row)
+
+    exist_row = self.sess.query(PttPost).filter(PttPost.id == row.id).first()
+
+    # upsert
+    if exist_row:
+        row.updated_at = datetime.utcnow()
+        self.sess.merge(row)
+    else:
+        self.sess.add(row)
+
     self.sess.commit()
 
     return post.dict()
@@ -93,22 +103,43 @@ def crawl_ptt_posts(
     Returns:
         List[Dict]: list of posts
     '''
-    rows = []
-    posts = []
+    posts = {}
 
     for url in urls:
         post = crawl_post(url, board)
 
         if post:
-            posts.append(post)
+            posts[post.id] = post
 
-    for row in posts:
-        row = row.dict()
-        row['comments'] = [PttComment(**com) for com in row['comments']]
-        row = PttPost(**row)
-        rows.append(row)
+    exist_posts = []
 
-    self.sess.bulk_save_objects(rows)
+    # update exist rows
+    for exist_row in self.sess.query(PttPost).filter(
+            PttPost.id.in_(posts.keys())).all():
+        exist_post = posts.pop(exist_row.id)
+        exist_posts.append(exist_post)
+
+        # convert data container to orm model
+        exist_post = exist_post.dict()
+        exist_post['comments'] = [
+            PttComment(**com) for com in exist_post['comments']
+        ]
+        exist_post = PttPost(**exist_post)
+        exist_post.updated_at = datetime.utcnow()
+        self.sess.merge(exist_post)
+
+    new_rows = []
+
+    # insert new rows
+    for new_row in posts.values():
+        new_row = new_row.dict()
+        new_row['comments'] = [
+            PttComment(**com) for com in new_row['comments']
+        ]
+        new_row = PttPost(**new_row)
+        new_rows.append(new_row)
+
+    self.sess.bulk_save_objects(new_rows)
     self.sess.commit()
 
-    return [post.dict() for post in posts]
+    return [post.dict() for post in exist_posts + list(posts.values())]
