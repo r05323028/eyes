@@ -67,15 +67,12 @@ class Jobs:
 
         posts = []
 
-        for i, url in enumerate(urls):
+        for url in urls:
             res = crawl_ptt_post.delay(url, job.payload['board'])
             post = res.get()
 
             if post:
                 posts.append(post)
-
-            if i > 10:
-                break
 
     def dispatch(
         self,

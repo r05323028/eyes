@@ -68,6 +68,7 @@ class PttComment(Base, Timestamp):
     post_id = sa.Column(
         sa.String(64),
         sa.ForeignKey('ptt_posts.id'),
+        nullable=False,
     )
     reaction = sa.Column(
         sa.String(10),
