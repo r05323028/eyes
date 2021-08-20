@@ -5,7 +5,7 @@ import sqlalchemy as sa
 from sqlalchemy.orm import Session, sessionmaker
 
 from eyes.config import DatabaseConfig
-from eyes.job import Jobs, Job, JobType
+from eyes.job import Job, Jobs, JobType
 
 
 class TestJob:

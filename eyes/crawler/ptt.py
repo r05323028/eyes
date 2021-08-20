@@ -10,7 +10,7 @@ import requests
 from lxml import etree
 
 from eyes.crawler.utils import get_dom
-from eyes.data import PttComment, PttPost
+from eyes.data import PttBoard, PttComment, PttPost
 
 PTT_BASE_URL = 'https://www.ptt.cc'
 PTT_OVER_18_BOARDS = [
@@ -212,3 +212,31 @@ def crawl_post_urls(
         next_url = get_next_url(dom)
         resp = requests.get(f'{PTT_BASE_URL}{next_url}', cookies=cookies)
         dom = get_dom(resp)
+
+
+def crawl_board_list(top_n: Optional[int] = None) -> Iterator[PttBoard]:
+    '''Crawl PTT post
+
+    Args:
+        top_n (int): top N boards.
+
+    Returns:
+        Iterator[PttBoard]
+    '''
+    board_url = f'{PTT_BASE_URL}/bbs/hotboards.html'
+    resp = requests.get(board_url)
+    dom = get_dom(resp)
+    logger.info('Crawl PTT board list')
+
+    for i, board in enumerate(dom.xpath('//*[@class="b-ent"]')):
+        name = ''.join(board.xpath('a/div[@class="board-name"]/text()'))
+        url = ''.join(board.xpath('a/@href'))
+        url = f'{PTT_BASE_URL}{url}'
+
+        yield PttBoard(
+            name=name,
+            url=url,
+        )
+
+        if top_n and i > top_n:
+            break

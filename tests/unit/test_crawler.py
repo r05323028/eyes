@@ -3,8 +3,8 @@
 import os
 import re
 
-from eyes.crawler.ptt import crawl_post, crawl_post_urls
-from eyes.data import PttPost
+from eyes.crawler.ptt import crawl_post, crawl_post_urls, crawl_board_list
+from eyes.data import PttBoard, PttPost
 
 
 class TestPttCrawler:
@@ -47,6 +47,15 @@ class TestPttCrawler:
                 '[A-Z].[0-9]{10}.[A-Z].[A-Z0-9]{3}.html',
                 os.path.basename(post_url),
             )
+
+    def test_crawl_board_listt(self):
+        '''Test ptt crawl board list
+        '''
+        boards = crawl_board_list(top_n=5)
+        boards = list(boards)
+
+        assert isinstance(boards, list)
+        assert isinstance(boards[0], PttBoard)
 
 
 class TestDcardCrawler:

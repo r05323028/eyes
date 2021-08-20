@@ -7,12 +7,12 @@ from itertools import zip_longest
 from typing import Dict, List, Optional
 
 import sqlalchemy as sa
-from sqlalchemy.orm import sessionmaker
 from celery import Celery, Task
+from sqlalchemy.orm import sessionmaker
 
 from eyes.config import DatabaseConfig
-from eyes.crawler.ptt import crawl_post
-from eyes.db import PttComment, PttPost
+from eyes.crawler.ptt import crawl_board_list, crawl_post
+from eyes.db import PttBoard, PttComment, PttPost
 
 app = Celery(broker=os.environ.get('CELERY_BROKER_URL'),
              backend=os.environ.get('CELERY_RESULT_BACKEND'))
@@ -110,3 +110,34 @@ def crawl_ptt_post(
         self.sess.commit()
 
     return post.dict()
+
+
+@app.task(base=CrawlerTask, bind=True)
+def crawl_ptt_board_list(
+    self,
+    top_n: Optional[int] = None,
+) -> Optional[List[Dict]]:
+    '''Crawl ptt board list
+    '''
+    ret = []
+    boards = crawl_board_list(top_n)
+
+    for board in boards:
+        exist_board = self.sess.query(PttBoard).filter(
+            PttBoard.name == board.name).first()
+
+        if exist_board:
+            exist_board.name = board.name
+            exist_board.url = board.url
+            exist_board.updated_at = datetime.utcnow()
+            self.sess.merge(exist_board)
+            self.sess.commit()
+
+        else:
+            new_board = PttBoard(**board.dict())
+            self.sess.add(new_board)
+            self.sess.commit()
+
+        ret.append(board.dict())
+
+    return ret

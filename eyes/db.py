@@ -101,6 +101,27 @@ class PttComment(Base, Timestamp):
     )
 
 
+class PttBoard(Base, Timestamp):
+    '''PTT board ORM model
+    '''
+    __tablename__ = 'ptt_boards'
+
+    id = sa.Column(
+        sa.Integer,
+        autoincrement=True,
+        primary_key=True,
+    )
+    name = sa.Column(
+        sa.String(64),
+        primary_key=True,
+        nullable=False,
+    )
+    url = sa.Column(
+        sa.String(256),
+        nullable=True,
+    )
+
+
 class DcardPost(Base, Timestamp):
     '''Dcard post ORM model
     '''

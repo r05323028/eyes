@@ -71,6 +71,17 @@ class PttPost(Post):
     url: str
 
 
+class PttBoard(BaseModel):
+    '''PTT Board
+
+    Attributes:
+        name (str): board name
+        url (str): board url
+    '''
+    name: str
+    url: str
+
+
 class DcardPost(Post):
     '''Dcard Post Model
     '''
