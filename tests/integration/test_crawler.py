@@ -7,7 +7,7 @@ import sqlalchemy as sa
 from sqlalchemy.orm import Session, sessionmaker
 
 from eyes.config import DatabaseConfig
-from eyes.tasks import crawl_ptt_post
+from eyes.tasks import crawl_ptt_board_list, crawl_ptt_post
 
 
 class TestCrawler:
@@ -50,3 +50,13 @@ class TestCrawler:
         post = res.get()
 
         assert isinstance(post, Dict)
+
+    def test_ptt_celery_board_list_crawler(
+        self,
+        session: Session,
+    ):
+        res = crawl_ptt_board_list.delay(top_n=5)
+        board_list = res.get()
+
+        assert isinstance(board_list, List)
+        assert isinstance(board_list[0], Dict)

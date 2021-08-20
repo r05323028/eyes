@@ -6,7 +6,7 @@ from typing import Callable, Dict, Optional
 import pydantic
 
 from eyes.crawler.ptt import crawl_post_urls
-from eyes.tasks import crawl_ptt_post
+from eyes.tasks import crawl_ptt_post, crawl_ptt_board_list
 
 
 class JobType(enum.Enum):
@@ -14,6 +14,7 @@ class JobType(enum.Enum):
     '''
     # crawler jobs
     CRAWL_PTT_LATEST_POSTS = enum.auto()
+    CRAWL_PTT_BOARD_LIST = enum.auto()
 
 
 class Job(pydantic.BaseModel):
@@ -37,6 +38,13 @@ class Job(pydantic.BaseModel):
                 if key not in v:
                     raise Exception(f'{key} is required in payload')
 
+        if values['job_type'] == JobType.CRAWL_PTT_BOARD_LIST:
+            if not v:
+                raise Exception("payload is required")
+
+            for key in ['top_n']:
+                if key not in v:
+                    raise Exception(f'{key} is required in payload')
         return v
 
 
@@ -49,6 +57,7 @@ class Jobs:
         '''
         return {
             JobType.CRAWL_PTT_LATEST_POSTS: self.crawl_ptt_latest_posts,
+            JobType.CRAWL_PTT_BOARD_LIST: self.crawl_ptt_board_list,
         }
 
     def crawl_ptt_latest_posts(
@@ -67,6 +76,17 @@ class Jobs:
 
         for url in urls:
             crawl_ptt_post.apply_async(args=[url, job.payload['board']])
+
+    def crawl_ptt_board_list(
+        self,
+        job: Job,
+    ):
+        '''Crawl ptt board list
+
+        Args:
+            job (Job): crawler job
+        '''
+        crawl_ptt_board_list.apply_async(args=[job.payload['top_n']])
 
     def dispatch(
         self,
