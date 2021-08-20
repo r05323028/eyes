@@ -5,6 +5,7 @@ from datetime import datetime
 import sqlalchemy as sa
 from sqlalchemy.dialects.mysql import MEDIUMTEXT
 from sqlalchemy.orm import declarative_base, relationship
+from sqlalchemy.sql.schema import UniqueConstraint
 
 Base = declarative_base()
 
@@ -51,7 +52,9 @@ class PttPost(Base, Timestamp):
     )
     comments = relationship(
         'PttComment',
-        backref='ptt_posts',
+        back_populates='post',
+        uselist=True,
+        lazy='joined',
     )
     url = sa.Column(
         sa.String(128),
@@ -63,13 +66,27 @@ class PttComment(Base, Timestamp):
     '''Ptt comment ORM model
     '''
     __tablename__ = 'ptt_comments'
+    __table_args__ = (UniqueConstraint(
+        'comment_id',
+        'post_id',
+        name='pair_key',
+    ), )
 
-    id = sa.Column(sa.Integer, autoincrement=True, primary_key=True)
+    id = sa.Column(
+        sa.Integer,
+        primary_key=True,
+        autoincrement=True,
+    )
+    comment_id = sa.Column(
+        sa.Integer,
+        nullable=False,
+    )
     post_id = sa.Column(
         sa.String(64),
         sa.ForeignKey('ptt_posts.id'),
         nullable=False,
     )
+    post = relationship('PttPost', back_populates='comments')
     reaction = sa.Column(
         sa.String(10),
         nullable=False,

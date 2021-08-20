@@ -67,6 +67,8 @@ def crawl_post(
 
     try:
         # article meta
+        post_id = get_post_id(resp.url)
+
         author = ''.join(
             dom.xpath('//*[@id="main-content"]/div[1]/span[2]/text()'))
 
@@ -92,7 +94,7 @@ def crawl_post(
         comments = []
         comments_etree = dom.xpath('//div[@class="push"]')
 
-        for com in comments_etree:
+        for com_id, com in enumerate(comments_etree):
             span = com.xpath('span')
             comment_created_at = re.findall(
                 '[0-9]{2}/[0-9]{2} [0-9]{2}:[0-9]{2}', span[3].text)[0]
@@ -105,7 +107,8 @@ def crawl_post(
 
             comments.append(
                 PttComment(
-                    post_id=get_post_id(resp.url),
+                    comment_id=com_id,
+                    post_id=post_id,
                     reaction=span[0].text.strip(),
                     author=span[1].text,
                     content=span[2].text[2:],
@@ -114,7 +117,7 @@ def crawl_post(
 
         # post
         return PttPost(
-            id=get_post_id(resp.url),
+            id=post_id,
             title=title,
             author=author,
             board=board,

@@ -21,11 +21,13 @@ class PttComment(Comment):
     '''Ptt Post Comment Model
 
     Attributes:
+        comment_id (int): comment id
         post_id (str): post id
         reaction (str): comment reaction
         author (str): comment author
         content (str): comment content
     '''
+    comment_id: int
     post_id: str
     reaction: str
     author: str
