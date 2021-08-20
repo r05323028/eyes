@@ -65,14 +65,8 @@ class Jobs:
             job.payload.get('n_days', None),
         )
 
-        posts = []
-
         for url in urls:
-            res = crawl_ptt_post.delay(url, job.payload['board'])
-            post = res.get()
-
-            if post:
-                posts.append(post)
+            crawl_ptt_post.apply_async(args=[url, job.payload['board']])
 
     def dispatch(
         self,

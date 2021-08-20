@@ -7,7 +7,7 @@ import sqlalchemy as sa
 from sqlalchemy.orm import Session, sessionmaker
 
 from eyes.config import DatabaseConfig
-from eyes.tasks import crawl_ptt_post, crawl_ptt_posts
+from eyes.tasks import crawl_ptt_post
 
 
 class TestCrawler:
@@ -50,22 +50,3 @@ class TestCrawler:
         post = res.get()
 
         assert isinstance(post, Dict)
-
-    def test_ptt_celery_bulk_crawler(
-        self,
-        session: Session,
-    ):
-        '''Test ptt celery bulk insert
-        '''
-        board = 'Gossiping'
-        urls = [
-            'https://www.ptt.cc/bbs/Gossiping/M.1628179660.A.249.html',
-            'https://www.ptt.cc/bbs/Gossiping/M.1628179746.A.DD9.html',
-            'https://www.ptt.cc/bbs/Gossiping/M.1628179676.A.C1A.html',
-        ]
-
-        res = crawl_ptt_posts.delay(urls, board)
-        posts = res.get()
-
-        assert isinstance(posts, List)
-        assert isinstance(posts[0], Dict)

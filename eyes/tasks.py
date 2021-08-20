@@ -3,11 +3,12 @@
 import logging
 import os
 from datetime import datetime
+from itertools import zip_longest
 from typing import Dict, List, Optional
 
 import sqlalchemy as sa
-from celery import Celery, Task
 from sqlalchemy.orm import sessionmaker
+from celery import Celery, Task
 
 from eyes.config import DatabaseConfig
 from eyes.crawler.ptt import crawl_post
@@ -67,79 +68,45 @@ def crawl_ptt_post(
     if not post:
         return
 
-    row = post.dict()
-    row['comments'] = [PttComment(**com) for com in row['comments']]
-    row = PttPost(**row)
+    exist_row = self.sess.query(PttPost).filter(PttPost.id == post.id).first()
 
-    exist_row = self.sess.query(PttPost).filter(PttPost.id == row.id).first()
-
-    # upsert
     if exist_row:
-        row.updated_at = datetime.utcnow()
-        self.sess.merge(row)
-    else:
-        self.sess.add(row)
+        exist_row.author = post.author
+        exist_row.title = post.title
+        exist_row.content = post.content
 
-    self.sess.commit()
+        # upsert comments
+        new_comments = []
+        for exist_comment, crawled_comment in zip_longest(
+                sorted(exist_row.comments, key=lambda x: x.comment_id),
+                sorted(post.comments, key=lambda x: x.comment_id)):
+            if exist_comment:
+                exist_comment.reaction = crawled_comment.reaction
+                exist_comment.author = crawled_comment.author
+                exist_comment.content = crawled_comment.content
+                exist_comment.updated_at = datetime.utcnow()
+            else:
+                new_comments.append(PttComment(**crawled_comment.dict()))
+        exist_row.comments.extend(new_comments)
+        exist_row.updated_at = datetime.utcnow()
+        self.sess.merge(exist_row)
+        self.sess.commit()
+    else:
+        row = post.dict()
+        row['comments'] = [
+            PttComment(
+                comment_id=com['comment_id'],
+                post_id=com['post_id'],
+                reaction=com['reaction'],
+                author=com['author'],
+                content=com['content'],
+                created_at=com['created_at'],
+                updated_at=datetime.utcnow(),
+            ) for com in row['comments']
+        ]
+        row = PttPost(**row)
+
+        self.sess.add(row)
+        self.sess.commit()
 
     return post.dict()
-
-
-@app.task(
-    base=CrawlerTask,
-    bind=True,
-)
-def crawl_ptt_posts(
-    self,
-    urls: List[str],
-    board: str,
-) -> List[Dict]:
-    '''Crawl posts and perform bulk insert
-
-    Args:
-        urls (List[str]): list of urls
-        board (str): board name
-
-    Returns:
-        List[Dict]: list of posts
-    '''
-    posts = {}
-
-    for url in urls:
-        post = crawl_post(url, board)
-
-        if post:
-            posts[post.id] = post
-
-    exist_posts = []
-
-    # update exist rows
-    for exist_row in self.sess.query(PttPost).filter(
-            PttPost.id.in_(posts.keys())).all():
-        exist_post = posts.pop(exist_row.id)
-        exist_posts.append(exist_post)
-
-        # convert data container to orm model
-        exist_post = exist_post.dict()
-        exist_post['comments'] = [
-            PttComment(**com) for com in exist_post['comments']
-        ]
-        exist_post = PttPost(**exist_post)
-        exist_post.updated_at = datetime.utcnow()
-        self.sess.merge(exist_post)
-
-    new_rows = []
-
-    # insert new rows
-    for new_row in posts.values():
-        new_row = new_row.dict()
-        new_row['comments'] = [
-            PttComment(**com) for com in new_row['comments']
-        ]
-        new_row = PttPost(**new_row)
-        new_rows.append(new_row)
-
-    self.sess.bulk_save_objects(new_rows)
-    self.sess.commit()
-
-    return [post.dict() for post in exist_posts + list(posts.values())]
