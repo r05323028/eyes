@@ -35,7 +35,10 @@ class PttPost(Base, Timestamp):
         primary_key=True,
     )
     title = sa.Column(
-        sa.String(64),
+        sa.String(
+            64,
+            collation='utf8mb4_unicode_ci',
+        ),
         nullable=False,
     )
     author = sa.Column(
@@ -47,7 +50,10 @@ class PttPost(Base, Timestamp):
         nullable=False,
     )
     content = sa.Column(
-        MEDIUMTEXT,
+        MEDIUMTEXT(
+            charset='utf8mb4',
+            collation='utf8mb4_unicode_ci',
+        ),
         nullable=False,
     )
     comments = relationship(
@@ -96,7 +102,10 @@ class PttComment(Base, Timestamp):
         nullable=False,
     )
     content = sa.Column(
-        MEDIUMTEXT,
+        MEDIUMTEXT(
+            charset='utf8mb4',
+            collation='utf8mb4_unicode_ci',
+        ),
         nullable=False,
     )
 
@@ -135,8 +144,22 @@ class DcardPost(Base, Timestamp):
         sa.String(64),
         nullable=False,
     )
-    title = sa.Column(
+    forum_name = sa.Column(
         sa.String(64),
+        nullable=False,
+    )
+    title = sa.Column(
+        sa.String(
+            64,
+            collation='utf8mb4_unicode_ci',
+        ),
+        nullable=False,
+    )
+    content = sa.Column(
+        MEDIUMTEXT(
+            charset='utf8mb4',
+            collation='utf8mb4_unicode_ci',
+        ),
         nullable=False,
     )
     school = sa.Column(sa.String(64))
@@ -248,7 +271,11 @@ class DcardComment(Base, Timestamp):
         sa.Integer,
         nullable=False,
     )
-    content = sa.Column(MEDIUMTEXT)
+    content = sa.Column(
+        MEDIUMTEXT(
+            charset='utf8mb4',
+            collation='utf8mb4_unicode_ci',
+        ))
     gender = sa.Column(
         sa.String(10),
         nullable=False,

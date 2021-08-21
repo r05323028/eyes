@@ -4,7 +4,7 @@ import os
 import re
 
 from eyes.crawler import ptt, dcard
-from eyes.data import PttBoard, PttPost, DcardBoard
+from eyes.data import PttBoard, PttPost, DcardBoard, DcardPost
 
 
 class TestPttCrawler:
@@ -66,7 +66,7 @@ class TestDcardCrawler:
         '''
         post = dcard.crawl_post(236764049)
 
-        print(post)
+        assert isinstance(post, DcardPost)
 
     def test_crawl_board_list(self):
         '''Test crawl dcard board list

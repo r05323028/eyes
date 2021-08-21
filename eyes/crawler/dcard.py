@@ -56,14 +56,15 @@ def crawl_post(post_id: int) -> DcardPost:
         forum_name=data['forumName'],
         title=data['title'],
         content=data['content'],
-        school=data['school'],
+        school=data.get('school', None),
         gender=data['gender'],
         topics=data['topics'],
         like_count=data['likeCount'],
         reactions=[
             DcardReaction(
-                id=react['id'],
+                reaction_id=react['id'],
                 count=react['count'],
+                post_id=data['id'],
             ) for react in data['reactions']
         ],
         with_nickname=data['withNickname'],

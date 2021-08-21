@@ -9,7 +9,8 @@ from pydantic import BaseModel, Field
 class DcardReaction(BaseModel):
     '''Dcard reaction Base Model
     '''
-    id: str
+    post_id: str
+    reaction_id: str
     count: int
 
 
@@ -51,7 +52,7 @@ class DcardComment(Comment):
     floor: int
     content: str
     gender: str
-    school: str
+    school: Optional[str]
     host: bool
     like_count: int
 
@@ -96,7 +97,7 @@ class DcardPost(Post):
     forum_name: str
     title: str
     content: str
-    school: str
+    school: Optional[str]
     gender: str
     topics: List[str]
     like_count: int
