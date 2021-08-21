@@ -7,7 +7,8 @@ import sqlalchemy as sa
 from sqlalchemy.orm import Session, sessionmaker
 
 from eyes.config import DatabaseConfig
-from eyes.tasks import crawl_ptt_board_list, crawl_ptt_post
+from eyes.tasks import crawl_dcard_board_list, crawl_dcard_post, crawl_ptt_board_list, crawl_ptt_post
+from eyes.data import DcardPost
 
 
 class TestCrawler:
@@ -15,7 +16,10 @@ class TestCrawler:
     '''
     @pytest.fixture
     def tables(self):
-        yield ['ptt_posts', 'ptt_comments']
+        yield [
+            'ptt_posts', 'ptt_comments', 'dcard_posts', 'dcard_comments',
+            'dcard_reactions'
+        ]
 
     @pytest.fixture
     def session(
@@ -31,11 +35,11 @@ class TestCrawler:
         session.commit()
         for tbl in tables:
             session.execute(f'TRUNCATE TABLE {tbl}')
-        session.commit()
+            session.commit()
         yield session
         for tbl in tables:
             session.execute(f'TRUNCATE TABLE {tbl}')
-        session.commit()
+            session.commit()
         session.close()
 
     def test_ptt_celery_crawler(
@@ -56,6 +60,28 @@ class TestCrawler:
         session: Session,
     ):
         res = crawl_ptt_board_list.delay(top_n=5)
+        board_list = res.get()
+
+        assert isinstance(board_list, List)
+        assert isinstance(board_list[0], Dict)
+
+    def test_dcard_celery_crawler(
+        self,
+        session: Session,
+    ):
+        '''Test dcard celery post crawler
+        '''
+        post_id = 236766080
+        res = crawl_dcard_post.delay(post_id)
+        post = res.get()
+
+        assert isinstance(post, Dict)
+
+    def test_dcard_celery_board_list_cralwer(
+        self,
+        session: Session,
+    ):
+        res = crawl_dcard_board_list.delay(top_n=5)
         board_list = res.get()
 
         assert isinstance(board_list, List)

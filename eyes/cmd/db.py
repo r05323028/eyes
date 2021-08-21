@@ -4,6 +4,7 @@ import logging
 
 import click
 import sqlalchemy as sa
+from sqlalchemy.orm import Session
 from sqlalchemy_utils.functions import create_database, database_exists
 
 from eyes.db import Base
@@ -61,7 +62,8 @@ def init(
 
     if not database_exists(engine.url):
         logger.info('Database: %s not exists, creates it.', database)
-        create_database(engine.url)
+
+        create_database(engine.url, encoding='utf8mb4')
 
     Base.metadata.create_all(bind=engine)
 

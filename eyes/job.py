@@ -1,12 +1,15 @@
 '''Eyes job
 '''
 import enum
+import time
+import random
 from typing import Callable, Dict, Optional
 
 import pydantic
 
 from eyes.crawler.ptt import crawl_post_urls
-from eyes.tasks import crawl_ptt_post, crawl_ptt_board_list
+from eyes.crawler.dcard import crawl_post_ids
+from eyes.tasks import crawl_dcard_board_list, crawl_dcard_post, crawl_ptt_post, crawl_ptt_board_list
 
 
 class JobType(enum.Enum):
@@ -15,6 +18,8 @@ class JobType(enum.Enum):
     # crawler jobs
     CRAWL_PTT_LATEST_POSTS = enum.auto()
     CRAWL_PTT_BOARD_LIST = enum.auto()
+    CRAWL_DCARD_LATEST_POSTS = enum.auto()
+    CRAWL_DCARD_BOARD_LIST = enum.auto()
 
 
 class Job(pydantic.BaseModel):
@@ -58,6 +63,8 @@ class Jobs:
         return {
             JobType.CRAWL_PTT_LATEST_POSTS: self.crawl_ptt_latest_posts,
             JobType.CRAWL_PTT_BOARD_LIST: self.crawl_ptt_board_list,
+            JobType.CRAWL_DCARD_LATEST_POSTS: self.crawl_dcard_latest_posts,
+            JobType.CRAWL_DCARD_BOARD_LIST: self.crawl_dcard_board_list,
         }
 
     def crawl_ptt_latest_posts(
@@ -87,6 +94,31 @@ class Jobs:
             job (Job): crawler job
         '''
         crawl_ptt_board_list.apply_async(args=[job.payload['top_n']])
+
+    def crawl_dcard_latest_posts(
+        self,
+        job: Job,
+    ):
+        '''Crawl dcard latest posts
+
+        Args:
+            job (Job): crawler job
+        '''
+        post_ids = crawl_post_ids(job.payload['forum_id'])
+
+        for post_id in post_ids:
+            crawl_dcard_post.delay(post_id)
+
+    def crawl_dcard_board_list(
+        self,
+        job: Job,
+    ):
+        '''Crawl dcard board list
+
+        Args:
+            job (Job): crawler job
+        '''
+        crawl_dcard_board_list.apply_async(args=[job.payload['top_n']])
 
     def dispatch(
         self,
