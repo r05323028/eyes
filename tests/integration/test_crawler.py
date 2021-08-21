@@ -16,7 +16,10 @@ class TestCrawler:
     '''
     @pytest.fixture
     def tables(self):
-        yield ['ptt_posts', 'ptt_comments']
+        yield [
+            'ptt_posts', 'ptt_comments', 'dcard_posts', 'dcard_comments',
+            'dcard_reactions'
+        ]
 
     @pytest.fixture
     def session(
@@ -32,11 +35,11 @@ class TestCrawler:
         session.commit()
         for tbl in tables:
             session.execute(f'TRUNCATE TABLE {tbl}')
-        session.commit()
+            session.commit()
         yield session
         for tbl in tables:
             session.execute(f'TRUNCATE TABLE {tbl}')
-        session.commit()
+            session.commit()
         session.close()
 
     def test_ptt_celery_crawler(
