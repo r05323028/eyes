@@ -5,6 +5,7 @@ from datetime import datetime
 from typing import Iterator, Optional
 
 import requests
+from fake_useragent import UserAgent
 
 from eyes.data import DcardBoard, DcardPost, DcardComment, DcardReaction
 
@@ -14,6 +15,10 @@ DCARD_BASE_URL = 'https://www.dcard.tw/_api'
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
+ua = UserAgent()
+headers = {
+    'User-Agent': ua.random,
+}
 
 
 def crawl_post(post_id: int) -> DcardPost:
@@ -29,7 +34,10 @@ def crawl_post(post_id: int) -> DcardPost:
     logger.info('Crawl %s', url)
 
     # crawl comments
-    comment_resp = requests.get(f'{url}/comments')
+    comment_resp = requests.get(
+        f'{url}/comments',
+        headers=headers,
+    )
     comments = [
         DcardComment(
             id=com['id'],
@@ -48,7 +56,10 @@ def crawl_post(post_id: int) -> DcardPost:
     ]
 
     # crawl post
-    resp = requests.get(url)
+    resp = requests.get(
+        url,
+        headers=headers,
+    )
     data = resp.json()
 
     return DcardPost(
@@ -78,6 +89,30 @@ def crawl_post(post_id: int) -> DcardPost:
     )
 
 
+def crawl_post_ids(
+    forum_id: str,
+    n_days: int = None,
+) -> Iterator[int]:
+    '''Crawl dcard post ids
+
+    Args:
+        forum_id (str): forum id
+        n_days (str): number of days which posts are created at this range. If `n_days` is None, crawler will ignore this setting.
+
+    Returns:
+        Iterator[int]: post id iterator
+    '''
+    url = f'{DCARD_BASE_URL}/forums/{forum_id}/posts'
+    resp = requests.get(
+        url,
+        headers=headers,
+    )
+    data = resp.json()
+
+    for post in data:
+        yield post['id']
+
+
 def crawl_board_list(top_n: Optional[int] = None) -> Iterator[DcardBoard]:
     '''Crawl Dcard forum list
 
@@ -88,7 +123,11 @@ def crawl_board_list(top_n: Optional[int] = None) -> Iterator[DcardBoard]:
         Iterator[DcardBoard]: board iterator
     '''
     url = f'{DCARD_BASE_URL}/forums'
-    resp = requests.get(url)
+    resp = requests.get(
+        url,
+        headers=headers,
+    )
+    logger.info('Crawl dcard board list')
 
     for i, board in enumerate(resp.json()):
         created_at = datetime.strptime(board['createdAt'], ISO_FORMAT)

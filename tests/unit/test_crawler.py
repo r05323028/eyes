@@ -68,6 +68,14 @@ class TestDcardCrawler:
 
         assert isinstance(post, DcardPost)
 
+    def test_crawl_post_ids(self):
+        '''Test crawl post ids
+        '''
+        post_ids = dcard.crawl_post_ids('6eeeafb2-9dac-4d81-ae4b-ffecf0ad4444')
+        post_ids = list(post_ids)
+
+        assert isinstance(post_ids, list)
+
     def test_crawl_board_list(self):
         '''Test crawl dcard board list
         '''
