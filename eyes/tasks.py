@@ -12,7 +12,7 @@ from sqlalchemy.orm import sessionmaker
 
 from eyes.config import DatabaseConfig
 from eyes.crawler import ptt, dcard
-from eyes.db import PttBoard, PttComment, PttPost, DcardPost, DcardComment, DcardReaction
+from eyes.db import PttBoard, PttComment, PttPost, DcardPost, DcardComment, DcardReaction, DcardBoard
 
 app = Celery(broker=os.environ.get('CELERY_BROKER_URL'),
              backend=os.environ.get('CELERY_RESULT_BACKEND'))
@@ -236,3 +236,35 @@ def crawl_dcard_post(
         self.sess.commit()
 
     return post.dict()
+
+
+@app.task(
+    base=CrawlerTask,
+    bind=True,
+)
+def crawl_dcard_board_list(
+    self,
+    top_n: int = None,
+) -> Optional[List[Dict]]:
+    ret = []
+    boards = dcard.crawl_board_list(top_n)
+
+    for board in boards:
+        exist_board = self.sess.query(DcardBoard).filter(
+            DcardBoard.id == board.id).first()
+
+        if exist_board:
+            exist_board.name = board.name
+            exist_board.alias = board.alias
+            exist_board.description = board.description
+            exist_board.is_school = board.is_school
+            self.sess.merge(exist_board)
+            self.sess.commit()
+        else:
+            new_board = DcardBoard(**board.dict())
+            self.sess.add(new_board)
+            self.sess.commit()
+
+        ret.append(board.dict())
+
+    return ret

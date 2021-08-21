@@ -26,6 +26,7 @@ def crawl_post(post_id: int) -> DcardPost:
         DcardPost: dcard post
     '''
     url = f'{DCARD_BASE_URL}/posts/{post_id}'
+    logger.info('Crawl %s', url)
 
     # crawl comments
     comment_resp = requests.get(f'{url}/comments')
