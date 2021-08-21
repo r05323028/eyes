@@ -55,6 +55,10 @@
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="sources/api/data.html#eyes.data.DcardBoard.alias">alias (eyes.data.DcardBoard attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="sources/api/data.html#eyes.data.PttComment.author">author (eyes.data.PttComment attribute)</a>
 
       <ul>
@@ -67,10 +71,12 @@
 <h2 id="B">B</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="sources/api/data.html#eyes.data.PttPost.board">board (eyes.data.PttPost attribute)</a>
+      <li><a href="sources/api/data.html#eyes.data.Board">Board (class in eyes.data)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="sources/api/data.html#eyes.data.PttPost.board">board (eyes.data.PttPost attribute)</a>
+</li>
       <li><a href="sources/api/config.html#eyes.config.CeleryConfig.broker_url">broker_url (eyes.config.CeleryConfig attribute)</a>
 </li>
   </ul></td>
@@ -95,8 +101,12 @@
       </ul></li>
       <li><a href="sources/api/crawler.html#eyes.crawler.ptt.crawl_board_list">crawl_board_list() (in module eyes.crawler.ptt)</a>
 </li>
+      <li><a href="sources/api/job.html#eyes.job.Jobs.crawl_dcard_board_list">crawl_dcard_board_list() (eyes.job.Jobs method)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="sources/api/job.html#eyes.job.Jobs.crawl_dcard_latest_posts">crawl_dcard_latest_posts() (eyes.job.Jobs method)</a>
+</li>
       <li><a href="sources/api/crawler.html#eyes.crawler.ptt.crawl_post">crawl_post() (in module eyes.crawler.ptt)</a>
 </li>
       <li><a href="sources/api/crawler.html#eyes.crawler.ptt.crawl_post_urls">crawl_post_urls() (in module eyes.crawler.ptt)</a>
@@ -110,6 +120,8 @@
       <li><a href="sources/api/data.html#eyes.data.Comment.created_at">created_at (eyes.data.Comment attribute)</a>
 
       <ul>
+        <li><a href="sources/api/data.html#eyes.data.DcardBoard.created_at">(eyes.data.DcardBoard attribute)</a>
+</li>
         <li><a href="sources/api/data.html#eyes.data.Post.created_at">(eyes.data.Post attribute)</a>
 </li>
       </ul></li>
@@ -123,6 +135,12 @@
 </li>
       <li><a href="sources/api/config.html#eyes.config.DatabaseConfig">DatabaseConfig (class in eyes.config)</a>
 </li>
+      <li><a href="sources/api/data.html#eyes.data.DcardBoard">DcardBoard (class in eyes.data)</a>
+
+      <ul>
+        <li><a href="sources/api/db.html#eyes.db.DcardBoard">(class in eyes.db)</a>
+</li>
+      </ul></li>
       <li><a href="sources/api/data.html#eyes.data.DcardComment">DcardComment (class in eyes.data)</a>
 
       <ul>
@@ -137,6 +155,14 @@
         <li><a href="sources/api/db.html#eyes.db.DcardPost">(class in eyes.db)</a>
 </li>
       </ul></li>
+      <li><a href="sources/api/data.html#eyes.data.DcardReaction">DcardReaction (class in eyes.data)</a>
+
+      <ul>
+        <li><a href="sources/api/db.html#eyes.db.DcardReaction">(class in eyes.db)</a>
+</li>
+      </ul></li>
+      <li><a href="sources/api/data.html#eyes.data.DcardBoard.description">description (eyes.data.DcardBoard attribute)</a>
+</li>
       <li><a href="sources/api/job.html#eyes.job.Jobs.dispatch">dispatch() (eyes.job.Jobs method)</a>
 </li>
   </ul></td>
@@ -224,7 +250,15 @@
 <h2 id="I">I</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="sources/api/data.html#eyes.data.PttPost.id">id (eyes.data.PttPost attribute)</a>
+      <li><a href="sources/api/data.html#eyes.data.DcardBoard.id">id (eyes.data.DcardBoard attribute)</a>
+
+      <ul>
+        <li><a href="sources/api/data.html#eyes.data.PttPost.id">(eyes.data.PttPost attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="sources/api/data.html#eyes.data.DcardBoard.is_school">is_school (eyes.data.DcardBoard attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -271,7 +305,7 @@
 <h2 id="N">N</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="sources/api/data.html#eyes.data.PttBoard.name">name (eyes.data.PttBoard attribute)</a>
+      <li><a href="sources/api/data.html#eyes.data.Board.name">name (eyes.data.Board attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -348,6 +382,8 @@
       <li><a href="sources/api/data.html#eyes.data.Comment.updated_at">updated_at (eyes.data.Comment attribute)</a>
 
       <ul>
+        <li><a href="sources/api/data.html#eyes.data.DcardBoard.updated_at">(eyes.data.DcardBoard attribute)</a>
+</li>
         <li><a href="sources/api/data.html#eyes.data.Post.updated_at">(eyes.data.Post attribute)</a>
 </li>
       </ul></li>
