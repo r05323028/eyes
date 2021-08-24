@@ -86,27 +86,13 @@ def crawl_ptt_post(
                 exist_comment.content = crawled_comment.content
                 exist_comment.updated_at = datetime.utcnow()
             else:
-                new_comments.append(PttComment(**crawled_comment.dict()))
+                new_comments.append(crawled_comment.to_orm())
         exist_row.comments.extend(new_comments)
         exist_row.updated_at = datetime.utcnow()
         self.sess.merge(exist_row)
         self.sess.commit()
     else:
-        row = post.dict()
-        row['comments'] = [
-            PttComment(
-                comment_id=com['comment_id'],
-                post_id=com['post_id'],
-                reaction=com['reaction'],
-                author=com['author'],
-                content=com['content'],
-                created_at=com['created_at'],
-                updated_at=datetime.utcnow(),
-            ) for com in row['comments']
-        ]
-        row = PttPost(**row)
-
-        self.sess.add(row)
+        self.sess.add(post.to_orm())
         self.sess.commit()
 
     return post.dict()
@@ -137,8 +123,7 @@ def crawl_ptt_board_list(
             self.sess.commit()
 
         else:
-            new_board = PttBoard(**board.dict())
-            self.sess.add(new_board)
+            self.sess.add(board.to_orm())
             self.sess.commit()
 
         ret.append(board.dict())
@@ -183,7 +168,7 @@ def crawl_dcard_post(
             if exist_reaction:
                 exist_reaction.count = crawled_reaction.count
             else:
-                new_reactions.append(DcardReaction(**crawled_reaction.dict()))
+                new_reactions.append(crawled_reaction.to_orm())
             exist_row.reactions.extend(new_reactions)
 
         # comments
@@ -208,31 +193,7 @@ def crawl_dcard_post(
         self.sess.merge(exist_row)
         self.sess.commit()
     else:
-        row = post.dict()
-        row['reactions'] = [
-            DcardReaction(
-                reaction_id=react['reaction_id'],
-                count=react['count'],
-                post_id=react['post_id'],
-            ) for react in row['reactions']
-        ]
-        row['comments'] = [
-            DcardComment(
-                id=com['id'],
-                post_id=com['post_id'],
-                anonymous=com['anonymous'],
-                with_nickname=com['with_nickname'],
-                floor=com['floor'],
-                content=com['content'],
-                gender=com['gender'],
-                school=com['school'],
-                host=com['host'],
-                like_count=com['like_count'],
-            ) for com in row['comments']
-        ]
-        row = DcardPost(**row)
-
-        self.sess.add(row)
+        self.sess.add(post.to_orm())
         self.sess.commit()
 
     return post.dict()
@@ -261,8 +222,7 @@ def crawl_dcard_board_list(
             self.sess.merge(exist_board)
             self.sess.commit()
         else:
-            new_board = DcardBoard(**board.dict())
-            self.sess.add(new_board)
+            self.sess.add(board.to_orm())
             self.sess.commit()
 
         ret.append(board.dict())
