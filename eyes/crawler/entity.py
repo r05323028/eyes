@@ -30,6 +30,7 @@ def crawl_wiki_entity(url: str) -> Optional[Entity]:
             'Could not crawl entity: %s',
             url,
         )
+        return
     dom = get_dom(resp)
     name = ''.join(dom.xpath('//*[@id="firstHeading"]/text()'))
     if re.match('.+\(.+\)', name):
@@ -58,7 +59,11 @@ def crawl_wiki_entity_urls(category_url: str) -> Iterator[str]:
     '''
     resp = requests.get(category_url)
     if resp.status_code != 200:
-        return None
+        logger.warning(
+            "Could not get category page: %s",
+            category_url,
+        )
+        return
     dom = get_dom(resp)
     next_url = dom.xpath(
         '//*[@id="mw-pages"]/a[text()="下一页" or text()="下一頁"]/@href')
