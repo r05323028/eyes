@@ -263,3 +263,14 @@ class DcardBoard(Board):
             created_at=self.created_at,
             updated_at=self.updated_at,
         )
+
+
+class Entity(BaseModel):
+    '''Entity base model
+
+    Attributes:
+        name (str): name
+        alias (Optional[List[str]]): alias
+    '''
+    name: str
+    alias: Optional[List[str]]
