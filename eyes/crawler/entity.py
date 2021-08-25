@@ -35,12 +35,14 @@ def crawl_wiki_entity(url: str) -> Optional[Entity]:
     if re.match('.+\(.+\)', name):
         name = re.sub('(?= ?\().+(?<=\))', '', name)
     nicknames = dom.xpath('//*[@class="nickname"]/text()')
+    entity_type = ''.join(dom.xpath('//th[@class="title role"]/text()'))
     alias = []
     for alia in nicknames:
         alias.extend(alia.split('、'))
 
     return Entity(
         name=name,
+        type=entity_type,
         alias=alias,
     )
 

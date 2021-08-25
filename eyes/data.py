@@ -270,7 +270,21 @@ class Entity(BaseModel):
 
     Attributes:
         name (str): name
+        type (str): type
         alias (Optional[List[str]]): alias
     '''
     name: str
+    type: str
     alias: Optional[List[str]]
+
+    def to_wiki_entity_orm(self) -> db.WikiEntity:
+        '''Transform to wiki entity ORM
+
+        Returns:
+            db.WikiEntity
+        '''
+        return db.WikiEntity(
+            name=self.name,
+            type=self.type,
+            alias=self.alias,
+        )

@@ -11,8 +11,8 @@ from celery import Celery, Task
 from sqlalchemy.orm import sessionmaker
 
 from eyes.config import DatabaseConfig
-from eyes.crawler import ptt, dcard
-from eyes.db import PttBoard, PttComment, PttPost, DcardPost, DcardComment, DcardReaction, DcardBoard
+from eyes.crawler import ptt, dcard, entity
+from eyes.db import PttBoard, PttPost, DcardPost, DcardComment, DcardBoard, WikiEntity
 
 app = Celery(broker=os.environ.get('CELERY_BROKER_URL'),
              backend=os.environ.get('CELERY_RESULT_BACKEND'))
@@ -107,6 +107,12 @@ def crawl_ptt_board_list(
     top_n: Optional[int] = None,
 ) -> Optional[List[Dict]]:
     '''Crawl ptt board list
+
+    Args:
+        top_n (Optional[int]): top N boards
+
+    Returns:
+        Optional[List[Dict]]
     '''
     ret = []
     boards = ptt.crawl_board_list(top_n)
@@ -139,6 +145,14 @@ def crawl_dcard_post(
     self,
     post_id: int,
 ) -> Optional[Dict]:
+    '''Crawl dcard post
+
+    Args:
+        post_id (int): post id
+
+    Returns:
+        Optional[Dict]: post dictionary
+    '''
     post = dcard.crawl_post(post_id)
 
     if not post:
@@ -205,8 +219,16 @@ def crawl_dcard_post(
 )
 def crawl_dcard_board_list(
     self,
-    top_n: int = None,
+    top_n: Optional[int] = None,
 ) -> Optional[List[Dict]]:
+    '''Crawl dcard board list
+
+    Args:
+        top_n (Optional[int]): top N boards
+
+    Returns:
+        Optional[List[Dict]]
+    '''
     ret = []
     boards = dcard.crawl_board_list(top_n)
 
@@ -228,3 +250,34 @@ def crawl_dcard_board_list(
         ret.append(board.dict())
 
     return ret
+
+
+@app.task(
+    base=CrawlerTask,
+    bind=True,
+)
+def crawl_wiki_entity(
+    self,
+    url: str,
+) -> Optional[Dict]:
+    '''Crawl wiki entity
+
+    Args:
+        url (str): entity url
+
+    Returns:
+        Optional[Dict]: wiki entity dictionary
+    '''
+    crawled_entity = entity.crawl_wiki_entity(url)
+    exist_entity = self.sess.query(WikiEntity).filter(
+        WikiEntity.name == crawled_entity.name).first()
+    if exist_entity:
+        exist_entity.alias = crawled_entity.alias
+        exist_entity.type = crawled_entity.type
+        self.sess.merge(exist_entity)
+        self.sess.commit()
+    else:
+        self.sess.add(crawled_entity.to_wiki_entity_orm())
+        self.sess.commit()
+
+    return crawled_entity.dict()
