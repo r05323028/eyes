@@ -1,7 +1,6 @@
 '''Eyes celery tasks
 '''
 import logging
-import os
 from datetime import datetime
 from itertools import zip_longest
 from typing import Dict, List, Optional
@@ -10,17 +9,13 @@ import sqlalchemy as sa
 from celery import Celery, Task
 from sqlalchemy.orm import sessionmaker
 
-from eyes.config import DatabaseConfig
+from eyes.config import DatabaseConfig, CeleryConfig
 from eyes.crawler import ptt, dcard, entity
 from eyes.db import PttBoard, PttPost, DcardPost, DcardComment, DcardBoard, WikiEntity
 
-app = Celery(broker=os.environ.get('CELERY_BROKER_URL'),
-             backend=os.environ.get('CELERY_RESULT_BACKEND'))
-app.conf.timezone = 'Asia/Taipei'
-app.conf.task_serializer = 'json'
-app.conf.result_backend_transport_options = {
-    'visibility_timeout': 3600,
-}
+config = CeleryConfig()
+app = Celery()
+app.config_from_object(config)
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)

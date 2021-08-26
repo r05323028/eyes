@@ -36,7 +36,7 @@ jobs:
       - name: Build the doc
         working-directory: ./doc
         run: |
-          poetry run make html
+          poetry run dotenv -f ../.env.testing make html
 
       # Push the book's HTML to github-pages
       - name: GitHub Pages action
