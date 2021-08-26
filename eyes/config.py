@@ -1,5 +1,6 @@
 '''Eyes config
 '''
+import typing
 from pydantic import BaseSettings, Field
 
 
@@ -30,8 +31,13 @@ class CeleryConfig(BaseSettings):
         broker_url (str): celery broker url
         result_backend (str): celery result backend
     '''
-    broker_url: str
-    result_backend: str
+    broker_url: str = Field(alias='broker')
+    result_backend: str = Field(alias='backend')
+    timezone: str = 'Asia/Taipei'
+    task_serializer: str = 'json'
+    result_backend_transport_options: typing.Dict = {
+        'visibility_timeout': 3600,
+    }
 
     class Config:
         env_prefix = 'CELERY_'
