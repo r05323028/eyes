@@ -6,16 +6,13 @@ from itertools import zip_longest
 from typing import Dict, List, Optional
 
 import sqlalchemy as sa
-from celery import Celery, Task
+from celery import Task
 from sqlalchemy.orm import sessionmaker
 
-from eyes.config import DatabaseConfig, CeleryConfig
+from eyes.celery import app
+from eyes.config import DatabaseConfig
 from eyes.crawler import ptt, dcard, entity
 from eyes.db import PttBoard, PttPost, DcardPost, DcardComment, DcardBoard, WikiEntity
-
-config = CeleryConfig()
-app = Celery()
-app.config_from_object(config)
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)

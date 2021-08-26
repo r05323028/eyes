@@ -38,6 +38,9 @@ class CeleryConfig(BaseSettings):
     result_backend_transport_options: typing.Dict = {
         'visibility_timeout': 3600,
     }
+    installed_apps: typing.List = [
+        'eyes.celery.crawler.tasks',
+    ]
 
     class Config:
-        env_prefix = 'CELERY_'
+        env_prefix = 'celery_'
