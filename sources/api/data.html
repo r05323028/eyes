@@ -433,6 +433,56 @@
 
 </dd></dl>
 
+<dl class="py class">
+<dt class="sig sig-object py" id="eyes.data.Entity">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">eyes.data.</span></span><span class="sig-name descname"><span class="pre">Entity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alias</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eyes.data.Entity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Entity base model</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eyes.data.Entity.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#eyes.data.Entity.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>name</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eyes.data.Entity.type">
+<span class="sig-name descname"><span class="pre">type</span></span><a class="headerlink" href="#eyes.data.Entity.type" title="Permalink to this definition">¶</a></dt>
+<dd><p>type</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="eyes.data.Entity.alias">
+<span class="sig-name descname"><span class="pre">alias</span></span><a class="headerlink" href="#eyes.data.Entity.alias" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>Optional[List[str]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eyes.data.Entity.to_wiki_entity_orm">
+<span class="sig-name descname"><span class="pre">to_wiki_entity_orm</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="db.html#eyes.db.WikiEntity" title="eyes.db.WikiEntity"><span class="pre">eyes.db.WikiEntity</span></a></span></span><a class="headerlink" href="#eyes.data.Entity.to_wiki_entity_orm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform to wiki entity ORM</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>db.WikiEntity</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
 
