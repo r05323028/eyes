@@ -47,6 +47,7 @@
  | <a href="#N"><strong>N</strong></a>
  | <a href="#P"><strong>P</strong></a>
  | <a href="#R"><strong>R</strong></a>
+ | <a href="#S"><strong>S</strong></a>
  | <a href="#T"><strong>T</strong></a>
  | <a href="#U"><strong>U</strong></a>
  | <a href="#W"><strong>W</strong></a>
@@ -55,6 +56,8 @@
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="sources/api/celery.html#eyes.celery.crawler.tasks.CrawlerTask.after_return">after_return() (eyes.celery.crawler.tasks.CrawlerTask method)</a>
+</li>
       <li><a href="sources/api/data.html#eyes.data.DcardBoard.alias">alias (eyes.data.DcardBoard attribute)</a>
 
       <ul>
@@ -110,26 +113,42 @@
 </li>
       </ul></li>
       <li><a href="sources/api/job.html#eyes.job.Jobs.crawl_dcard_board_list">crawl_dcard_board_list() (eyes.job.Jobs method)</a>
+
+      <ul>
+        <li><a href="sources/api/celery.html#eyes.celery.crawler.tasks.crawl_dcard_board_list">(in module eyes.celery.crawler.tasks)</a>
 </li>
+      </ul></li>
       <li><a href="sources/api/job.html#eyes.job.Jobs.crawl_dcard_latest_posts">crawl_dcard_latest_posts() (eyes.job.Jobs method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="sources/api/celery.html#eyes.celery.crawler.tasks.crawl_dcard_post">crawl_dcard_post() (in module eyes.celery.crawler.tasks)</a>
+</li>
       <li><a href="sources/api/crawler.html#eyes.crawler.dcard.crawl_post">crawl_post() (in module eyes.crawler.dcard)</a>
 
       <ul>
         <li><a href="sources/api/crawler.html#eyes.crawler.ptt.crawl_post">(in module eyes.crawler.ptt)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="sources/api/crawler.html#eyes.crawler.dcard.crawl_post_ids">crawl_post_ids() (in module eyes.crawler.dcard)</a>
 </li>
       <li><a href="sources/api/crawler.html#eyes.crawler.ptt.crawl_post_urls">crawl_post_urls() (in module eyes.crawler.ptt)</a>
 </li>
       <li><a href="sources/api/job.html#eyes.job.Jobs.crawl_ptt_board_list">crawl_ptt_board_list() (eyes.job.Jobs method)</a>
+
+      <ul>
+        <li><a href="sources/api/celery.html#eyes.celery.crawler.tasks.crawl_ptt_board_list">(in module eyes.celery.crawler.tasks)</a>
 </li>
+      </ul></li>
       <li><a href="sources/api/job.html#eyes.job.Jobs.crawl_ptt_latest_posts">crawl_ptt_latest_posts() (eyes.job.Jobs method)</a>
 </li>
+      <li><a href="sources/api/celery.html#eyes.celery.crawler.tasks.crawl_ptt_post">crawl_ptt_post() (in module eyes.celery.crawler.tasks)</a>
+</li>
       <li><a href="sources/api/job.html#eyes.job.Jobs.crawl_wiki_entities">crawl_wiki_entities() (eyes.job.Jobs method)</a>
+</li>
+      <li><a href="sources/api/celery.html#eyes.celery.crawler.tasks.crawl_wiki_entity">crawl_wiki_entity() (in module eyes.celery.crawler.tasks)</a>
+</li>
+      <li><a href="sources/api/celery.html#eyes.celery.crawler.tasks.CrawlerTask">CrawlerTask (class in eyes.celery.crawler.tasks)</a>
 </li>
       <li><a href="sources/api/data.html#eyes.data.Comment.created_at">created_at (eyes.data.Comment attribute)</a>
 
@@ -188,6 +207,20 @@
       <li><a href="sources/api/data.html#eyes.data.Entity">Entity (class in eyes.data)</a>
 </li>
       <li>
+    eyes.celery
+
+      <ul>
+        <li><a href="sources/api/celery.html#module-eyes.celery">module</a>
+</li>
+      </ul></li>
+      <li>
+    eyes.celery.crawler.tasks
+
+      <ul>
+        <li><a href="sources/api/celery.html#module-eyes.celery.crawler.tasks">module</a>
+</li>
+      </ul></li>
+      <li>
     eyes.config
 
       <ul>
@@ -201,6 +234,8 @@
         <li><a href="sources/api/crawler.html#module-eyes.crawler.dcard">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     eyes.crawler.ptt
 
@@ -208,8 +243,6 @@
         <li><a href="sources/api/crawler.html#module-eyes.crawler.ptt">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     eyes.crawler.utils
 
@@ -300,6 +333,10 @@
     module
 
       <ul>
+        <li><a href="sources/api/celery.html#module-eyes.celery">eyes.celery</a>
+</li>
+        <li><a href="sources/api/celery.html#module-eyes.celery.crawler.tasks">eyes.celery.crawler.tasks</a>
+</li>
         <li><a href="sources/api/config.html#module-eyes.config">eyes.config</a>
 </li>
         <li><a href="sources/api/crawler.html#module-eyes.crawler.dcard">eyes.crawler.dcard</a>
@@ -372,6 +409,14 @@
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="sources/api/config.html#eyes.config.CeleryConfig.result_backend">result_backend (eyes.config.CeleryConfig attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="S">S</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="sources/api/celery.html#eyes.celery.crawler.tasks.CrawlerTask.sess">sess (eyes.celery.crawler.tasks.CrawlerTask property)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -462,7 +507,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="sources/api/data.html">eyes.data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="sources/api/crawler.html">eyes.crawler</a></li>
-<li class="toctree-l1"><a class="reference internal" href="sources/api/tasks.html">eyes.tasks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sources/api/celery.html">eyes.celery</a></li>
 <li class="toctree-l1"><a class="reference internal" href="sources/api/db.html">eyes.db</a></li>
 <li class="toctree-l1"><a class="reference internal" href="sources/api/config.html">eyes.config</a></li>
 <li class="toctree-l1"><a class="reference internal" href="sources/api/job.html">eyes.job</a></li>
