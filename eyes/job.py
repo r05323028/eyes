@@ -8,7 +8,7 @@ import pydantic
 from eyes.crawler.ptt import crawl_post_urls
 from eyes.crawler.dcard import crawl_post_ids
 from eyes.crawler.entity import crawl_wiki_entity_urls
-from eyes.tasks import (
+from eyes.celery.crawler.tasks import (
     crawl_dcard_board_list,
     crawl_dcard_post,
     crawl_ptt_post,

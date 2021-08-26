@@ -7,7 +7,7 @@ import sqlalchemy as sa
 from sqlalchemy.orm import Session, sessionmaker
 
 from eyes.config import DatabaseConfig
-from eyes.tasks import (
+from eyes.celery.crawler.tasks import (
     crawl_dcard_board_list,
     crawl_dcard_post,
     crawl_ptt_board_list,
