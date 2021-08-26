@@ -3,8 +3,8 @@
 import os
 import re
 
-from eyes.crawler import ptt, dcard
-from eyes.data import PttBoard, PttPost, DcardBoard, DcardPost
+from eyes.crawler import ptt, dcard, entity
+from eyes.data import PttBoard, PttPost, DcardBoard, DcardPost, Entity
 
 
 class TestPttCrawler:
@@ -84,3 +84,23 @@ class TestDcardCrawler:
 
         assert isinstance(boards[0], DcardBoard)
         assert isinstance(boards, list)
+
+
+class TestEntityCrawler:
+    '''Entity crawler test cases
+    '''
+    def test_crawl_wiki_entity(self):
+        '''test crawl wiki entity
+        '''
+        url = "https://zh.wikipedia.org/wiki/%E5%BC%B5%E6%83%A0%E5%A6%B9"
+        res = entity.crawl_wiki_entity(url)
+
+        assert isinstance(res, Entity)
+
+    def test_crawl_wiki_entity_urls(self):
+        '''test crawl wiki entity urls
+        '''
+        category_url = 'https://zh.wikipedia.org/wiki/Category:%E5%8F%B0%E7%81%A3%E5%A5%B3%E6%AD%8C%E6%89%8B'
+        urls = [url for url in entity.crawl_wiki_entity_urls(category_url)]
+
+        assert isinstance(urls, list)

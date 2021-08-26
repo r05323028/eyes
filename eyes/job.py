@@ -1,15 +1,20 @@
 '''Eyes job
 '''
 import enum
-import time
-import random
 from typing import Callable, Dict, Optional
 
 import pydantic
 
 from eyes.crawler.ptt import crawl_post_urls
 from eyes.crawler.dcard import crawl_post_ids
-from eyes.tasks import crawl_dcard_board_list, crawl_dcard_post, crawl_ptt_post, crawl_ptt_board_list
+from eyes.crawler.entity import crawl_wiki_entity_urls
+from eyes.tasks import (
+    crawl_dcard_board_list,
+    crawl_dcard_post,
+    crawl_ptt_post,
+    crawl_ptt_board_list,
+    crawl_wiki_entity,
+)
 
 
 class JobType(enum.Enum):
@@ -20,6 +25,7 @@ class JobType(enum.Enum):
     CRAWL_PTT_BOARD_LIST = enum.auto()
     CRAWL_DCARD_LATEST_POSTS = enum.auto()
     CRAWL_DCARD_BOARD_LIST = enum.auto()
+    CRAWL_WIKI_ENTITIES = enum.auto()
 
 
 class Job(pydantic.BaseModel):
@@ -35,21 +41,24 @@ class Job(pydantic.BaseModel):
     ):
         '''Crawler payload validate function
         '''
-        if values['job_type'] == JobType.CRAWL_PTT_LATEST_POSTS:
-            if not v:
-                raise Exception("payload is required")
+        if not v:
+            raise Exception("payload is required")
 
+        if values['job_type'] == JobType.CRAWL_PTT_LATEST_POSTS:
             for key in ['board']:
                 if key not in v:
                     raise Exception(f'{key} is required in payload')
 
         if values['job_type'] == JobType.CRAWL_PTT_BOARD_LIST:
-            if not v:
-                raise Exception("payload is required")
-
             for key in ['top_n']:
                 if key not in v:
                     raise Exception(f'{key} is required in payload')
+
+        if values['job_type'] == JobType.CRAWL_WIKI_ENTITIES:
+            for key in ['category_url']:
+                if key not in v:
+                    raise Exception(f'{key} is required in payload')
+
         return v
 
 
@@ -65,6 +74,7 @@ class Jobs:
             JobType.CRAWL_PTT_BOARD_LIST: self.crawl_ptt_board_list,
             JobType.CRAWL_DCARD_LATEST_POSTS: self.crawl_dcard_latest_posts,
             JobType.CRAWL_DCARD_BOARD_LIST: self.crawl_dcard_board_list,
+            JobType.CRAWL_WIKI_ENTITIES: self.crawl_wiki_entities,
         }
 
     def crawl_ptt_latest_posts(
@@ -119,6 +129,20 @@ class Jobs:
             job (Job): crawler job
         '''
         crawl_dcard_board_list.apply_async(args=[job.payload['top_n']])
+
+    def crawl_wiki_entities(
+        self,
+        job: Job,
+    ):
+        '''Crawl entities from wikipedia
+
+        Args:
+            job (job): crawler job
+        '''
+        urls = crawl_wiki_entity_urls(job.payload['category_url'])
+
+        for url in urls:
+            crawl_wiki_entity.apply_async(args=[url])
 
     def dispatch(
         self,

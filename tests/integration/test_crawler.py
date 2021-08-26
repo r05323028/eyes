@@ -7,8 +7,13 @@ import sqlalchemy as sa
 from sqlalchemy.orm import Session, sessionmaker
 
 from eyes.config import DatabaseConfig
-from eyes.tasks import crawl_dcard_board_list, crawl_dcard_post, crawl_ptt_board_list, crawl_ptt_post
-from eyes.data import DcardPost
+from eyes.tasks import (
+    crawl_dcard_board_list,
+    crawl_dcard_post,
+    crawl_ptt_board_list,
+    crawl_ptt_post,
+    crawl_wiki_entity,
+)
 
 
 class TestCrawler:
@@ -86,3 +91,13 @@ class TestCrawler:
 
         assert isinstance(board_list, List)
         assert isinstance(board_list[0], Dict)
+
+    def test_wiki_celery_entity_crawler(
+        self,
+        session: Session,
+    ):
+        res = crawl_wiki_entity.delay(
+            url='https://zh.wikipedia.org/wiki/%E5%BC%B5%E6%83%A0%E5%A6%B9')
+        ent = res.get()
+
+        assert isinstance(ent, Dict)
