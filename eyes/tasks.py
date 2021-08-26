@@ -31,6 +31,12 @@ class CrawlerTask(Task):
     '''
     _sess = None
 
+    def after_return(self, *args, **kwargs):
+        '''Callback after finishing a job
+        '''
+        if self._sess is not None:
+            self._sess.close()
+
     @property
     def sess(self):
         '''Returns SQLAlchemy Session

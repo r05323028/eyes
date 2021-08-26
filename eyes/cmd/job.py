@@ -41,12 +41,14 @@ def job():
     default=None,
     help="Top N boards to be crawled.",
 )
+@click.option('--category_url', type=str, help="Wikipedia category url.")
 def dispatch(
     job_type,
     board,
     forum_id,
     n_days,
     top_n,
+    category_url,
 ):
     '''Dispatch a job
     '''
@@ -81,10 +83,6 @@ def dispatch(
                 },
             )
 
-        # dispatch job
-        logger.info('Dispatch job, %s', job)
-        jobs.dispatch(job)
-
     if job_type in [
             JobType.CRAWL_PTT_BOARD_LIST,
             JobType.CRAWL_DCARD_BOARD_LIST,
@@ -96,8 +94,18 @@ def dispatch(
             },
         )
 
-        logger.info('Dispatch job, %s', job)
-        jobs.dispatch(job)
+    if job_type in [
+            JobType.CRAWL_WIKI_ENTITIES,
+    ]:
+        job = Job(
+            job_type=job_type,
+            payload={
+                'category_url': category_url,
+            },
+        )
+
+    logger.info('Dispatch job, %s', job)
+    jobs.dispatch(job)
 
 
 job.add_command(dispatch)
