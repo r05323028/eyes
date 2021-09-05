@@ -23,6 +23,7 @@ Eyes
    sources/api/db
    sources/api/config
    sources/api/job
+   sources/api/schema
 
 
 
