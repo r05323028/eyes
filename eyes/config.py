@@ -1,6 +1,7 @@
 '''Eyes config
 '''
 import typing
+
 from pydantic import BaseSettings, Field
 
 
@@ -10,13 +11,13 @@ class DatabaseConfig(BaseSettings):
     Attributes:
         host (str): database host
         port (int): database port
-        username (str): database username
+        user (str): database username
         password (str): database password
         database (str): database name
     '''
     host: str
     port: int = Field(3306)
-    username: str
+    user: str
     password: str
     database: str = Field('eyes')
 

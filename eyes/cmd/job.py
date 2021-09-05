@@ -3,11 +3,13 @@
 import logging
 
 import click
+from rich.logging import RichHandler
 
 from eyes.job import Job, Jobs, JobType
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
+logger.addHandler(RichHandler(rich_tracebacks=True))
 
 
 @click.group()

@@ -22,7 +22,7 @@ class TestJob:
     ):
         db_config = DatabaseConfig()
         engine = sa.create_engine(
-            f'mysql://{db_config.username}:{db_config.password}@{db_config.host}:{db_config.port}/{db_config.database}?charset=utf8mb4'
+            f'mysql://{db_config.user}:{db_config.password}@{db_config.host}:{db_config.port}/{db_config.database}?charset=utf8mb4'
         )
         session = sessionmaker(engine)()
         session.execute('SET FOREIGN_KEY_CHECKS=0')

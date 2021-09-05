@@ -1,7 +1,6 @@
 '''Eyes celery app module
 '''
 from celery import Celery
-
 from eyes.config import CeleryConfig
 
 # load celery

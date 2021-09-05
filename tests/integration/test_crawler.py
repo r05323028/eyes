@@ -6,7 +6,6 @@ import pytest
 import sqlalchemy as sa
 from sqlalchemy.orm import Session, sessionmaker
 
-from eyes.config import DatabaseConfig
 from eyes.celery.crawler.tasks import (
     crawl_dcard_board_list,
     crawl_dcard_post,
@@ -14,6 +13,7 @@ from eyes.celery.crawler.tasks import (
     crawl_ptt_post,
     crawl_wiki_entity,
 )
+from eyes.config import DatabaseConfig
 
 
 class TestCrawler:
@@ -33,7 +33,7 @@ class TestCrawler:
     ):
         db_config = DatabaseConfig()
         engine = sa.create_engine(
-            f'mysql://{db_config.username}:{db_config.password}@{db_config.host}:{db_config.port}/{db_config.database}?charset=utf8mb4'
+            f'mysql://{db_config.user}:{db_config.password}@{db_config.host}:{db_config.port}/{db_config.database}?charset=utf8mb4'
         )
         session = sessionmaker(engine)()
         session.execute('SET FOREIGN_KEY_CHECKS=0')

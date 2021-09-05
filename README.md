@@ -16,6 +16,7 @@ eyes is a **Public Opinion Mining System** focusing on taiwanese forums such as 
 
 - FastAPI
 - SQLAlchemy ORM
+- GraphQL
 
 ### Web
 

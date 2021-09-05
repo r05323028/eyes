@@ -8,6 +8,7 @@ from typing import Iterator, Optional
 
 import requests
 from lxml import etree
+from rich.logging import RichHandler
 
 from eyes.crawler.utils import get_dom
 from eyes.data import PttBoard, PttComment, PttPost
@@ -23,6 +24,7 @@ PTT_CRAWLER_SETTINGS = {
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
+logger.addHandler(RichHandler(rich_tracebacks=True))
 
 
 def get_post_id(url: str, ) -> str:
