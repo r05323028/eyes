@@ -3,8 +3,8 @@
 import os
 import re
 
-from eyes.crawler import ptt, dcard, entity
-from eyes.data import PttBoard, PttPost, DcardBoard, DcardPost, Entity
+from eyes.crawler import dcard, entity, ptt
+from eyes.data import DcardBoard, DcardPost, Entity, PttBoard, PttPost
 
 
 class TestPttCrawler:

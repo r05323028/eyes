@@ -1,7 +1,7 @@
 '''Eyes data containers
 '''
 from datetime import datetime
-from typing import List, Optional, Dict
+from typing import Dict, List, Optional
 
 from pydantic import BaseModel, Field
 

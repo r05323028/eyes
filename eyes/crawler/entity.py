@@ -2,15 +2,17 @@
 '''
 import logging
 import re
-from typing import Optional, Iterator
+from typing import Iterator, Optional
 
 import requests
+from rich.logging import RichHandler
 
 from eyes.crawler.utils import get_dom
 from eyes.data import Entity
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
+logger.addHandler(RichHandler(rich_tracebacks=True))
 
 WIKI_BASE_URL = "https://zh.wikipedia.org"
 

@@ -6,8 +6,9 @@ from typing import Iterator, Optional
 
 import requests
 from fake_useragent import UserAgent
+from rich.logging import RichHandler
 
-from eyes.data import DcardBoard, DcardPost, DcardComment, DcardReaction
+from eyes.data import DcardBoard, DcardComment, DcardPost, DcardReaction
 
 ISO_FORMAT = '%Y-%m-%dT%H:%M:%S.%fZ'
 
@@ -15,6 +16,7 @@ DCARD_BASE_URL = 'https://www.dcard.tw/_api'
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
+logger.addHandler(RichHandler(rich_tracebacks=True))
 ua = UserAgent()
 headers = {
     'User-Agent': ua.random,

@@ -6,16 +6,18 @@ from itertools import zip_longest
 from typing import Dict, List, Optional
 
 import sqlalchemy as sa
-from celery import Task
+from rich.logging import RichHandler
 from sqlalchemy.orm import sessionmaker
 
+from celery import Task
 from eyes.celery import app
 from eyes.config import DatabaseConfig
-from eyes.crawler import ptt, dcard, entity
-from eyes.db import PttBoard, PttPost, DcardPost, DcardComment, DcardBoard, WikiEntity
+from eyes.crawler import dcard, entity, ptt
+from eyes.db import DcardBoard, DcardComment, DcardPost, PttBoard, PttPost, WikiEntity
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
+logger.addHandler(RichHandler(rich_tracebacks=True))
 
 
 class CrawlerTask(Task):
@@ -36,7 +38,7 @@ class CrawlerTask(Task):
         if self._sess is None:
             db_config = DatabaseConfig()
             engine = sa.create_engine(
-                f'mysql://{db_config.username}:{db_config.password}@{db_config.host}:\
+                f'mysql://{db_config.user}:{db_config.password}@{db_config.host}:\
                     {db_config.port}/{db_config.database}?charset=utf8mb4')
             self._sess = sessionmaker(engine)()
 

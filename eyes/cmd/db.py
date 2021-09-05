@@ -4,13 +4,14 @@ import logging
 
 import click
 import sqlalchemy as sa
-from sqlalchemy.orm import Session
+from rich.logging import RichHandler
 from sqlalchemy_utils.functions import create_database, database_exists
 
 from eyes.db import Base
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
+logger.addHandler(RichHandler(rich_tracebacks=True))
 
 
 @click.group()
@@ -24,17 +25,20 @@ def db():
     '--host',
     required=True,
     help='Database host',
+    envvar="MYSQL_HOST",
 )
 @click.option(
     '--port',
     default=3306,
     help='Database port',
+    envvar="MYSQL_PORT",
 )
 @click.option(
     '-u',
     '--user',
     required=True,
     help='Database user',
+    envvar="MYSQL_USER",
 )
 @click.option(
     '-p',
@@ -42,11 +46,13 @@ def db():
     prompt=True,
     hide_input=True,
     help='Database password',
+    envvar="MYSQL_PASSWORD",
 )
 @click.option(
     '--database',
     default='eyes',
     help='Database name',
+    envvar="MYSQL_DATABASE",
 )
 def init(
     host: str,
@@ -68,4 +74,53 @@ def init(
     Base.metadata.create_all(bind=engine)
 
 
+@click.command()
+@click.option(
+    '--host',
+    required=True,
+    help='Database host',
+    envvar="MYSQL_HOST",
+)
+@click.option(
+    '--port',
+    default=3306,
+    help='Database port',
+    envvar="MYSQL_PORT",
+)
+@click.option(
+    '-u',
+    '--user',
+    required=True,
+    help='Database user',
+    envvar="MYSQL_USER",
+)
+@click.option(
+    '-p',
+    '--password',
+    prompt=True,
+    hide_input=True,
+    help='Database password',
+    envvar="MYSQL_PASSWORD",
+)
+@click.option(
+    '--database',
+    default='eyes',
+    help='Database name',
+    envvar="MYSQL_DATABASE",
+)
+def drop_tables(
+    host: str,
+    port: int,
+    user: str,
+    password: str,
+    database: str,
+):
+    '''Drop all tables in database
+    '''
+    url = f'mysql://{user}:{password}@{host}:{port}/{database}?charset=utf8mb4'
+    engine = sa.create_engine(url)
+    Base.metadata.drop_all(bind=engine)
+
+
 db.add_command(init)
+db.add_command(drop_tables)
