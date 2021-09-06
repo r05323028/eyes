@@ -16,7 +16,7 @@ RUN pip3 --disable-pip-version-check --no-cache-dir install poetry mycli \
 
 # [Optional] Uncomment this section to install additional OS packages.
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-    && apt-get -y install --no-install-recommends redis-tools
+    && apt-get -y install --no-install-recommends redis-tools vim
 
 # argo cli
 RUN curl -sLO https://github.com/argoproj/argo-workflows/releases/download/v3.1.5/argo-linux-amd64.gz && \
