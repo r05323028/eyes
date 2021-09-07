@@ -25,7 +25,8 @@
 	"esbenp.prettier-vscode",
 	"editorconfig.editorconfig",
 	"redhat.vscode-yaml",
-	"ms-kubernetes-tools.vscode-kubernetes-tools"
+	"ms-kubernetes-tools.vscode-kubernetes-tools",
+	"eamodio.gitlens"
 ],
 
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
