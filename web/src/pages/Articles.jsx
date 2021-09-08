@@ -131,7 +131,7 @@ const Articles = (props) => {
           </div>
         </div>
         <div className="flex">
-          <div className="card bordered m-5">
+          <div className="card bordered m-5 w-full">
             <div className="card-body">
               <h2 className="card-title text-2xl">Latest Posts</h2>
               {articleLoading ? <Spinner /> : createTable(articles, columns)}
