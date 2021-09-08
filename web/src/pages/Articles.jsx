@@ -8,10 +8,72 @@ import { setCurrentTab } from "../reducers/article";
 import { sagaActions } from "../sagas";
 
 import Spinner from "../components/Spinner";
+import LineChart from "../components/LineChart";
+
+const fakeData = [
+  {
+    id: "japan",
+    color: "hsl(37, 70%, 50%)",
+    data: [
+      {
+        x: "plane",
+        y: 151,
+      },
+      {
+        x: "helicopter",
+        y: 211,
+      },
+      {
+        x: "boat",
+        y: 137,
+      },
+      {
+        x: "train",
+        y: 165,
+      },
+      {
+        x: "subway",
+        y: 87,
+      },
+      {
+        x: "bus",
+        y: 145,
+      },
+      {
+        x: "car",
+        y: 58,
+      },
+      {
+        x: "moto",
+        y: 168,
+      },
+      {
+        x: "bicycle",
+        y: 69,
+      },
+      {
+        x: "horse",
+        y: 248,
+      },
+      {
+        x: "skateboard",
+        y: 216,
+      },
+      {
+        x: "others",
+        y: 82,
+      },
+    ],
+  },
+];
+
+const createLineChart = (data) => {
+  return <LineChart data={data} />;
+};
 
 const createStats = (numPosts, numComments) => {
   return (
-    <div className="stats shadow">
+    <div className="shadow stats">
       <div className="stat">
         <div className="stat-title">Monthly Posts</div>
         <div className="stat-value">{numPosts}</div>
@@ -124,19 +186,26 @@ const Articles = (props) => {
           createTab(tab, currentTab === tab.name, handleOnTabClick, index)
         )}
       </div>
-      <div className="flex flex-col">
-        <div className="flex">
-          <div className="card bordered m-5 w-1/2">
-            {createStats(426, 9487)}
-          </div>
-        </div>
-        <div className="flex">
-          <div className="card bordered m-5 w-full">
-            <div className="card-body">
-              <h2 className="card-title text-2xl">Latest Posts</h2>
-              {articleLoading ? <Spinner /> : createTable(articles, columns)}
+      <div className="grid grid-cols-2 grid-flow-col gap-5 m-5">
+        <div className="card bordered">
+          <div className="card-body">
+            <div className="card-title">PTT</div>
+            <p>Most visited forum in Taiwan.</p>
+            <div className="card-actions">
+              <button className="btn btn-primary">Go</button>
             </div>
           </div>
+        </div>
+        <div className="card bordered p-5">{createStats(426, 9487)}</div>
+        <div className="card bordered p-5 row-span-2">
+          {createLineChart(fakeData)}
+        </div>
+      </div>
+      <div className="grid grid-cols-2 grid-flow-col"></div>
+      <div className="card bordered m-5">
+        <div className="card-body">
+          <h2 className="card-title text-2xl">Latest Posts</h2>
+          {articleLoading ? <Spinner /> : createTable(articles, columns)}
         </div>
       </div>
     </>

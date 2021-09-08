@@ -4,7 +4,7 @@ eyes is a **Public Opinion Mining System** focusing on taiwanese forums such as 
 
 ## Screenshots
 
-![Latest Posts](./doc/static/images/latest_posts.png)
+![Latest Posts](./doc/static/images/articles_dashboard.png)
 
 ## Tech Stack
 
