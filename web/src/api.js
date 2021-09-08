@@ -7,10 +7,10 @@ export const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-export async function fetchPTTArticles(last = 10) {
+export async function fetchPTTArticles(first = 10) {
   const { data } = await client.query({
     query: ALL_PTT_ARTICLES,
-    variables: { last },
+    variables: { first },
   });
   return data.allPttPosts.edges.map((row) => row.node);
 }

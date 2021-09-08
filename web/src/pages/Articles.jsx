@@ -9,6 +9,23 @@ import { sagaActions } from "../sagas";
 
 import Spinner from "../components/Spinner";
 
+const createStats = (numPosts, numComments) => {
+  return (
+    <div className="stats shadow">
+      <div className="stat">
+        <div className="stat-title">Monthly Posts</div>
+        <div className="stat-value">{numPosts}</div>
+        <div className="stat-desc">{moment().format("MMM YYYY")}</div>
+      </div>
+      <div className="stat">
+        <div className="stat-title">Monthly Comments</div>
+        <div className="stat-value">{numComments}</div>
+        <div className="stat-desc">{moment().format("MMM YYYY")}</div>
+      </div>
+    </div>
+  );
+};
+
 const createTable = (data, columns) => {
   return (
     <div className="overflow-x-auto">
@@ -61,10 +78,10 @@ const Articles = (props) => {
       name: "PTT",
       path: `${url}/ptt`,
     },
-    {
-      name: "Dcard",
-      path: `${url}/dcard`,
-    },
+    // {
+    //   name: "Dcard",
+    //   path: `${url}/dcard`,
+    // },
   ];
   const columns = [
     {
@@ -90,7 +107,13 @@ const Articles = (props) => {
 
   const handleOnTabClick = (tab) => {
     dispatch(setCurrentTab(tab.name));
-    dispatch(sagaActions.requestPTTArticles());
+    switch (tab.name) {
+      case "PTT":
+        dispatch(sagaActions.requestPTTArticles());
+        break;
+      default:
+        break;
+    }
   };
 
   return (
@@ -101,10 +124,19 @@ const Articles = (props) => {
           createTab(tab, currentTab === tab.name, handleOnTabClick, index)
         )}
       </div>
-      <div className="card bordered m-5">
-        <div className="card-body">
-          <h2 className="card-title text-2xl">Latest Posts</h2>
-          {articleLoading ? <Spinner /> : createTable(articles, columns)}
+      <div className="flex flex-col">
+        <div className="flex">
+          <div className="card bordered m-5 w-1/2">
+            {createStats(426, 9487)}
+          </div>
+        </div>
+        <div className="flex">
+          <div className="card bordered m-5">
+            <div className="card-body">
+              <h2 className="card-title text-2xl">Latest Posts</h2>
+              {articleLoading ? <Spinner /> : createTable(articles, columns)}
+            </div>
+          </div>
         </div>
       </div>
     </>
