@@ -1,3 +1,4 @@
+import moment from "moment";
 import { useSelector, useDispatch } from "react-redux";
 import { useMount } from "react-use";
 import { useRouteMatch } from "react-router";
@@ -27,7 +28,8 @@ const createTable = (data, columns) => {
               <td>{row.board}</td>
               <td>{row.title}</td>
               <td>{row.author}</td>
-              <td>{row.createdAt}</td>
+              <td>{row.numComments}</td>
+              <td>{moment(row.createdAt).format("YYYY-MM-DD hh:mm")}</td>
             </tr>
           ))}
         </tbody>
@@ -47,7 +49,7 @@ const createTab = (tab, active, onClick, key) => {
 };
 
 const Articles = (props) => {
-  const { path, url } = useRouteMatch();
+  const { url } = useRouteMatch();
   const dispatch = useDispatch();
   const currentTab = useSelector((state) => state.article.currentTab);
   const articles = useSelector((state) => state.article.articles);
@@ -75,6 +77,9 @@ const Articles = (props) => {
       name: "Author",
     },
     {
+      name: "# of Comments",
+    },
+    {
       name: "Created At",
     },
   ];
@@ -98,7 +103,7 @@ const Articles = (props) => {
       </div>
       <div className="card bordered m-5">
         <div className="card-body">
-          <h2 className="card-title">Latest Posts</h2>
+          <h2 className="card-title text-2xl">Latest Posts</h2>
           {articleLoading ? <Spinner /> : createTable(articles, columns)}
         </div>
       </div>

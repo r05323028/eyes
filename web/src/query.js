@@ -9,6 +9,7 @@ export const ALL_PTT_ARTICLES = gql`
           title
           author
           board
+          numComments
           createdAt
         }
       }

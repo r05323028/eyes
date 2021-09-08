@@ -6,6 +6,7 @@ import sqlalchemy as sa
 from sqlalchemy.dialects.mysql import MEDIUMTEXT
 from sqlalchemy.orm import declarative_base, relationship
 from sqlalchemy.sql.schema import UniqueConstraint
+from sqlalchemy.ext.hybrid import hybrid_property
 
 Base = declarative_base()
 
@@ -66,6 +67,12 @@ class PttPost(Base, Timestamp):
         sa.String(128),
         nullable=False,
     )
+
+    @hybrid_property
+    def num_comments(self) -> int:
+        '''Get number of comments
+        '''
+        return len(self.comments)
 
 
 class PttComment(Base, Timestamp):
