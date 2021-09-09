@@ -5,7 +5,7 @@ from itertools import zip_longest
 from typing import Dict, List, Optional
 
 import sqlalchemy as sa
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import scoped_session, sessionmaker
 
 from celery import Task
 from eyes.celery import app
@@ -36,7 +36,8 @@ class CrawlerTask(Task):
             engine = sa.create_engine(
                 f'mysql://{db_config.user}:{db_config.password}@{db_config.host}:\
                     {db_config.port}/{db_config.database}?charset=utf8mb4')
-            self._sess = sessionmaker(engine)()
+            session_factory = sessionmaker(engine)
+            self._sess = scoped_session(session_factory)()
 
         return self._sess
 
