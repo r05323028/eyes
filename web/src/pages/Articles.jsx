@@ -6,64 +6,26 @@ import { Link } from "react-router-dom";
 
 import { setCurrentTab } from "../reducers/article";
 import { sagaActions } from "../sagas";
+import { lineData } from "../fakeData";
 
 import Spinner from "../components/Spinner";
 import LineChart from "../components/LineChart";
 
-const fakeData = [
+const columns = [
   {
-    id: "japan",
-    color: "hsl(37, 70%, 50%)",
-    data: [
-      {
-        x: "plane",
-        y: 151,
-      },
-      {
-        x: "helicopter",
-        y: 211,
-      },
-      {
-        x: "boat",
-        y: 137,
-      },
-      {
-        x: "train",
-        y: 165,
-      },
-      {
-        x: "subway",
-        y: 87,
-      },
-      {
-        x: "bus",
-        y: 145,
-      },
-      {
-        x: "car",
-        y: 58,
-      },
-      {
-        x: "moto",
-        y: 168,
-      },
-      {
-        x: "bicycle",
-        y: 69,
-      },
-      {
-        x: "horse",
-        y: 248,
-      },
-      {
-        x: "skateboard",
-        y: 216,
-      },
-      {
-        x: "others",
-        y: 82,
-      },
-    ],
+    name: "Board",
+  },
+  {
+    name: "Title",
+  },
+  {
+    name: "Author",
+  },
+  {
+    name: "# of Comments",
+  },
+  {
+    name: "Created At",
   },
 ];
 
@@ -132,6 +94,8 @@ const Articles = (props) => {
   const dispatch = useDispatch();
   const currentTab = useSelector((state) => state.article.currentTab);
   const articles = useSelector((state) => state.article.articles);
+  const pageInfo = useSelector((state) => state.article.pageInfo);
+  const currentPage = useSelector((state) => state.article.currentPage);
   const articleLoading = useSelector(
     (state) => state.article.status.requesting
   );
@@ -145,37 +109,29 @@ const Articles = (props) => {
     //   path: `${url}/dcard`,
     // },
   ];
-  const columns = [
-    {
-      name: "Board",
-    },
-    {
-      name: "Title",
-    },
-    {
-      name: "Author",
-    },
-    {
-      name: "# of Comments",
-    },
-    {
-      name: "Created At",
-    },
-  ];
 
   useMount(() => {
-    dispatch(sagaActions.requestPTTArticles());
+    dispatch(sagaActions.requestPTTArticles(pageInfo));
   });
 
   const handleOnTabClick = (tab) => {
     dispatch(setCurrentTab(tab.name));
     switch (tab.name) {
       case "PTT":
-        dispatch(sagaActions.requestPTTArticles());
+        dispatch(sagaActions.requestPTTArticles(pageInfo));
         break;
       default:
         break;
     }
+  };
+
+  const handleOnPreviousClick = (e) => {
+    e.preventDefault();
+    dispatch(sagaActions.requestPTTArticlesPreviousPage(pageInfo));
+  };
+  const handleOnNextClick = (e) => {
+    e.preventDefault();
+    dispatch(sagaActions.requestPTTArticlesNextPage(pageInfo));
   };
 
   return (
@@ -192,13 +148,25 @@ const Articles = (props) => {
             <div className="card-title">PTT</div>
             <p>Most visited forum in Taiwan.</p>
             <div className="card-actions">
-              <button className="btn btn-primary">Go</button>
+              <a
+                className="btn btn-primary"
+                href="https://www.ptt.cc/bbs/hotboards.html"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Go
+              </a>
             </div>
           </div>
         </div>
-        <div className="card bordered p-5">{createStats(426, 9487)}</div>
-        <div className="card bordered p-5 row-span-2">
-          {createLineChart(fakeData)}
+        <div className="card bordered">
+          <div className="card-body">{createStats(426, 9487)}</div>
+        </div>
+        <div className="card bordered row-span-2">
+          <div className="card-body">
+            <div className="card-title">Trending</div>
+            {createLineChart(lineData)}
+          </div>
         </div>
       </div>
       <div className="grid grid-cols-2 grid-flow-col"></div>
@@ -206,6 +174,23 @@ const Articles = (props) => {
         <div className="card-body">
           <h2 className="card-title text-2xl">Latest Posts</h2>
           {articleLoading ? <Spinner /> : createTable(articles, columns)}
+          <div className="card-actions">
+            <div className="btn-group">
+              <button
+                className={`btn ${currentPage > 1 ? "" : "btn-disabled"}`}
+                onClick={handleOnPreviousClick}
+              >
+                Previous
+              </button>
+              <button
+                type="button"
+                className={`btn ${pageInfo.endCursor ? "" : "btn-disabled"}`}
+                onClick={handleOnNextClick}
+              >
+                Next
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </>
