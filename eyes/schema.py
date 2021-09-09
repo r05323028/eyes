@@ -4,7 +4,7 @@ import graphene
 from graphene import relay
 from graphene_sqlalchemy import SQLAlchemyConnectionField, SQLAlchemyObjectType
 
-import eyes.db as db
+from eyes.db import ptt
 
 
 class PttComment(SQLAlchemyObjectType):
@@ -13,7 +13,7 @@ class PttComment(SQLAlchemyObjectType):
     class Meta:
         '''Metadata
         '''
-        model = db.PttComment
+        model = ptt.PttComment
         interfaces = (relay.Node, )
 
 
@@ -23,7 +23,7 @@ class PttPost(SQLAlchemyObjectType):
     class Meta:
         '''Metadata
         '''
-        model = db.PttPost
+        model = ptt.PttPost
         interfaces = (relay.Node, )
 
     comments = graphene.List(PttComment)

@@ -5,7 +5,7 @@ from typing import Dict, List, Optional
 
 from pydantic import BaseModel, Field
 
-import eyes.db as db
+from eyes.db import dcard, ptt, wiki
 
 
 class DcardReaction(BaseModel):
@@ -15,13 +15,13 @@ class DcardReaction(BaseModel):
     reaction_id: str
     count: int
 
-    def to_orm(self) -> db.DcardReaction:
+    def to_orm(self) -> dcard.DcardReaction:
         '''Transform to ORM model
 
         Returns:
-            db.DcardReaction
+            dcard.DcardReaction
         '''
-        return db.DcardReaction(
+        return dcard.DcardReaction(
             post_id=self.post_id,
             reaction_id=self.reaction_id,
             count=self.count,
@@ -55,13 +55,13 @@ class PttComment(Comment):
     author: str
     content: str
 
-    def to_orm(self) -> db.PttComment:
+    def to_orm(self) -> ptt.PttComment:
         '''Transform to ORM model
 
         Returns:
-            db.PttComment
+            ptt.PttComment
         '''
-        return db.PttComment(
+        return ptt.PttComment(
             comment_id=self.comment_id,
             post_id=self.post_id,
             reaction=self.reaction,
@@ -86,13 +86,13 @@ class DcardComment(Comment):
     host: bool
     like_count: int
 
-    def to_orm(self) -> db.DcardComment:
+    def to_orm(self) -> dcard.DcardComment:
         '''Transform to ORM model
 
         Returns:
-            db.DcardComment
+            dcard.DcardComment
         '''
-        return db.DcardComment(
+        return dcard.DcardComment(
             id=self.id,
             post_id=self.post_id,
             anonymous=self.anonymous,
@@ -139,13 +139,13 @@ class PttPost(Post):
     comments: List[PttComment] = Field([])
     url: str
 
-    def to_orm(self) -> db.PttPost:
+    def to_orm(self) -> ptt.PttPost:
         '''Transform to ORM model
 
         Returns:
-            db.PttPost
+            ptt.PttPost
         '''
-        return db.PttPost(
+        return ptt.PttPost(
             id=self.id,
             title=self.title,
             author=self.author,
@@ -177,13 +177,13 @@ class DcardPost(Post):
     media: List[Dict] = Field([])
     comments: List[DcardComment] = Field([])
 
-    def to_orm(self) -> db.DcardPost:
+    def to_orm(self) -> dcard.DcardPost:
         '''Transform to ORM model
 
         Returns:
-            db.DcardPost
+            dcard.DcardPost
         '''
-        return db.DcardPost(
+        return dcard.DcardPost(
             id=self.id,
             forum_id=self.forum_id,
             forum_name=self.forum_name,
@@ -219,13 +219,13 @@ class PttBoard(Board):
     '''
     url: str
 
-    def to_orm(self) -> db.PttBoard:
+    def to_orm(self) -> ptt.PttBoard:
         '''Transform to ORM model
 
         Returns:
-            db.PttBoard
+            ptt.PttBoard
         '''
-        return db.PttBoard(
+        return ptt.PttBoard(
             url=self.url,
             name=self.name,
         )
@@ -249,13 +249,13 @@ class DcardBoard(Board):
     created_at: datetime
     updated_at: datetime
 
-    def to_orm(self) -> db.DcardBoard:
+    def to_orm(self) -> dcard.DcardBoard:
         '''Transform to ORM model
 
         Returns:
-            db.DcardBoard
+            dcard.DcardBoard
         '''
-        return db.DcardBoard(
+        return dcard.DcardBoard(
             id=self.id,
             name=self.name,
             alias=self.alias,
@@ -277,13 +277,13 @@ class Entity(BaseModel):
     type: str
     alias: Optional[List[str]]
 
-    def to_wiki_entity_orm(self) -> db.WikiEntity:
+    def to_wiki_entity_orm(self) -> wiki.WikiEntity:
         '''Transform to wiki entity ORM
 
         Returns:
-            db.WikiEntity
+            wiki.WikiEntity
         '''
-        return db.WikiEntity(
+        return wiki.WikiEntity(
             name=self.name,
             type=self.type,
             alias=self.alias,

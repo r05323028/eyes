@@ -1,23 +1,19 @@
 '''Eyes celery tasks
 '''
-import logging
 from datetime import datetime
 from itertools import zip_longest
 from typing import Dict, List, Optional
 
 import sqlalchemy as sa
-from rich.logging import RichHandler
 from sqlalchemy.orm import sessionmaker
 
 from celery import Task
 from eyes.celery import app
 from eyes.config import DatabaseConfig
 from eyes.crawler import dcard, entity, ptt
-from eyes.db import DcardBoard, DcardComment, DcardPost, PttBoard, PttPost, WikiEntity
-
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
-logger.addHandler(RichHandler(rich_tracebacks=True))
+from eyes.db.dcard import DcardBoard, DcardComment, DcardPost
+from eyes.db.ptt import PttBoard, PttPost
+from eyes.db.wiki import WikiEntity
 
 
 class CrawlerTask(Task):
