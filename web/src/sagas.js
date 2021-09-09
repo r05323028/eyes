@@ -5,9 +5,12 @@ import {
   requestArticlesSuccess,
   requestingArticles,
   setCurrentPage,
+  requestingMonthlySummary,
+  requestMonthlySummarySuccess,
+  requestMonthlySummaryFailed,
 } from "./reducers/article";
 
-import { fetchPTTArticles } from "./api";
+import { fetchPTTArticles, fetchMonthlySummary } from "./api";
 
 export const sagaActions = {
   requestPTTArticles: createAction("articles/requestPTTArticlesSaga"),
@@ -17,6 +20,7 @@ export const sagaActions = {
   requestPTTArticlesPreviousPage: createAction(
     "articles/requestPTTArticlesPreviousPageSaga"
   ),
+  requestPTTMonthlySummary: createAction("article/requestPTTMonthlySummary"),
 };
 
 function* requestPTTArticlesSaga(action) {
@@ -59,6 +63,21 @@ function* requestPTTArticlesPreviousPageSaga(action) {
   }
 }
 
+function* requestPTTMonthlySummarySaga(action) {
+  const { source, year, month } = action.payload;
+  try {
+    yield put(requestingMonthlySummary());
+    const monthlySummary = yield call(fetchMonthlySummary, {
+      source,
+      year,
+      month,
+    });
+    yield put(requestMonthlySummarySuccess(monthlySummary));
+  } catch (err) {
+    yield put(requestMonthlySummaryFailed());
+  }
+}
+
 export default function* rootSaga() {
   yield all([
     takeEvery(sagaActions.requestPTTArticles, requestPTTArticlesSaga),
@@ -69,6 +88,10 @@ export default function* rootSaga() {
     takeEvery(
       sagaActions.requestPTTArticlesPreviousPage,
       requestPTTArticlesPreviousPageSaga
+    ),
+    takeEvery(
+      sagaActions.requestPTTMonthlySummary,
+      requestPTTMonthlySummarySaga
     ),
   ]);
 }

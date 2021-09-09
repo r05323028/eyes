@@ -12,6 +12,7 @@ from eyes.celery.crawler.tasks import (
     crawl_ptt_post,
     crawl_wiki_entity,
 )
+from eyes.celery.stats.tasks import ptt_monthly_summary
 from eyes.crawler.dcard import crawl_post_ids
 from eyes.crawler.entity import crawl_wiki_entity_urls
 from eyes.crawler.ptt import crawl_post_urls
@@ -26,6 +27,9 @@ class JobType(enum.Enum):
     CRAWL_DCARD_LATEST_POSTS = enum.auto()
     CRAWL_DCARD_BOARD_LIST = enum.auto()
     CRAWL_WIKI_ENTITIES = enum.auto()
+
+    # stats jobs
+    PTT_MONTHLY_SUMMARY = enum.auto()
 
 
 class Job(pydantic.BaseModel):
@@ -59,6 +63,11 @@ class Job(pydantic.BaseModel):
                 if key not in v:
                     raise Exception(f'{key} is required in payload')
 
+        if values['job_type'] == JobType.PTT_MONTHLY_SUMMARY:
+            for key in ['year', 'month']:
+                if key not in v:
+                    raise Exception(f'{key} is required in payload')
+
         return v
 
 
@@ -75,6 +84,7 @@ class Jobs:
             JobType.CRAWL_DCARD_LATEST_POSTS: self.crawl_dcard_latest_posts,
             JobType.CRAWL_DCARD_BOARD_LIST: self.crawl_dcard_board_list,
             JobType.CRAWL_WIKI_ENTITIES: self.crawl_wiki_entities,
+            JobType.PTT_MONTHLY_SUMMARY: self.ptt_monthly_summary,
         }
 
     def crawl_ptt_latest_posts(
@@ -143,6 +153,20 @@ class Jobs:
 
         for url in urls:
             crawl_wiki_entity.apply_async(args=[url])
+
+    def ptt_monthly_summary(
+        self,
+        job: Job,
+    ):
+        '''Summary ptt statistics
+
+        Args:
+            job (Job): stats job
+        '''
+        ptt_monthly_summary.apply_async(args=[
+            job.payload['year'],
+            job.payload['month'],
+        ])
 
     def dispatch(
         self,

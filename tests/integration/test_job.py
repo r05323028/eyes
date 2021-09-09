@@ -4,7 +4,7 @@ import pytest
 import sqlalchemy as sa
 from sqlalchemy.orm import Session, sessionmaker
 
-from eyes.config import DatabaseConfig
+from eyes.config import MySQLConfig
 from eyes.job import Job, Jobs, JobType
 
 
@@ -20,7 +20,7 @@ class TestJob:
         self,
         tables,
     ):
-        db_config = DatabaseConfig()
+        db_config = MySQLConfig()
         engine = sa.create_engine(
             f'mysql://{db_config.user}:{db_config.password}@{db_config.host}:{db_config.port}/{db_config.database}?charset=utf8mb4'
         )

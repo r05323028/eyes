@@ -1,4 +1,4 @@
-'''Eyes celery tasks
+'''Eyes celery crawler tasks
 '''
 from datetime import datetime
 from itertools import zip_longest
@@ -9,7 +9,7 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 
 from celery import Task
 from eyes.celery import app
-from eyes.config import DatabaseConfig
+from eyes.config import MySQLConfig
 from eyes.crawler import dcard, entity, ptt
 from eyes.db.dcard import DcardBoard, DcardComment, DcardPost
 from eyes.db.ptt import PttBoard, PttPost
@@ -32,7 +32,7 @@ class CrawlerTask(Task):
         '''Returns SQLAlchemy Session
         '''
         if self._sess is None:
-            db_config = DatabaseConfig()
+            db_config = MySQLConfig()
             engine = sa.create_engine(
                 f'mysql://{db_config.user}:{db_config.password}@{db_config.host}:\
                     {db_config.port}/{db_config.database}?charset=utf8mb4')

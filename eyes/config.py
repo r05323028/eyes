@@ -5,8 +5,8 @@ import typing
 from pydantic import BaseSettings, Field
 
 
-class DatabaseConfig(BaseSettings):
-    '''Database config
+class MySQLConfig(BaseSettings):
+    '''MySQL config
 
     Attributes:
         host (str): database host
@@ -41,6 +41,7 @@ class CeleryConfig(BaseSettings):
     }
     installed_apps: typing.List = [
         'eyes.celery.crawler.tasks',
+        'eyes.celery.stats.tasks',
     ]
 
     class Config:

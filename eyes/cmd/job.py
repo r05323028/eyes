@@ -43,15 +43,21 @@ def job():
     default=None,
     help="Top N boards to be crawled.",
 )
+@click.option(
+    '--year',
+    type=int,
+    default=None,
+    help="Year",
+)
+@click.option(
+    '--month',
+    type=int,
+    default=None,
+    help="Month.",
+)
 @click.option('--category_url', type=str, help="Wikipedia category url.")
-def dispatch(
-    job_type,
-    board,
-    forum_id,
-    n_days,
-    top_n,
-    category_url,
-):
+def dispatch(job_type, board, forum_id, n_days, top_n, category_url, year,
+             month):
     '''Dispatch a job
     '''
     job_type = JobType[job_type]
@@ -103,6 +109,17 @@ def dispatch(
             job_type=job_type,
             payload={
                 'category_url': category_url,
+            },
+        )
+
+    if job_type in [
+            JobType.PTT_MONTHLY_SUMMARY,
+    ]:
+        job = Job(
+            job_type=job_type,
+            payload={
+                'year': year,
+                'month': month,
             },
         )
 
