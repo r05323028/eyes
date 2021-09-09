@@ -17,7 +17,7 @@ services:
     command: sleep infinity
 
   mysql:
-    image: mysql:5.7
+    image: mysql:8
     platform: linux/amd64
     volumes:
       - eyes-mysql:/var/lib/mysql

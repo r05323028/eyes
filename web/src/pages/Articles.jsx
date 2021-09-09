@@ -96,6 +96,7 @@ const Articles = (props) => {
   const articles = useSelector((state) => state.article.articles);
   const pageInfo = useSelector((state) => state.article.pageInfo);
   const currentPage = useSelector((state) => state.article.currentPage);
+  const monthlySummary = useSelector((state) => state.article.monthlySummary);
   const articleLoading = useSelector(
     (state) => state.article.status.requesting
   );
@@ -111,14 +112,30 @@ const Articles = (props) => {
   ];
 
   useMount(() => {
+    const now = new Date();
     dispatch(sagaActions.requestPTTArticles(pageInfo));
+    dispatch(
+      sagaActions.requestPTTMonthlySummary({
+        source: 1,
+        year: now.getFullYear(),
+        month: now.getMonth() + 1,
+      })
+    );
   });
 
   const handleOnTabClick = (tab) => {
+    const now = new Date();
     dispatch(setCurrentTab(tab.name));
     switch (tab.name) {
       case "PTT":
         dispatch(sagaActions.requestPTTArticles(pageInfo));
+        dispatch(
+          sagaActions.requestPTTMonthlySummary({
+            source: 1,
+            year: now.getFullYear(),
+            month: now.getMonth() + 1,
+          })
+        );
         break;
       default:
         break;
@@ -160,7 +177,12 @@ const Articles = (props) => {
           </div>
         </div>
         <div className="card bordered">
-          <div className="card-body">{createStats(426, 9487)}</div>
+          <div className="card-body">
+            {createStats(
+              monthlySummary.totalPosts,
+              monthlySummary.totalComments
+            )}
+          </div>
         </div>
         <div className="card bordered row-span-2">
           <div className="card-body">

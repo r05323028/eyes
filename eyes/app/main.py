@@ -8,7 +8,7 @@ from starlette.graphql import GraphQLApp
 
 from eyes import __version__
 from eyes.app.routers import base
-from eyes.config import DatabaseConfig
+from eyes.config import MySQLConfig
 from eyes.db import Base
 from eyes.schema import schema
 
@@ -19,7 +19,7 @@ def create_app() -> FastAPI:
     Returns:
         FastAPI
     '''
-    config = DatabaseConfig()
+    config = MySQLConfig()
     engine = sa.create_engine(
         f'mysql://{config.user}:{config.password}@{config.host}:{config.port}/{config.database}?charset=utf8mb4'
     )

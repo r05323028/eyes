@@ -63,8 +63,9 @@ def init(
 ):
     '''Databases initialization
     '''
+    logger.info('Initialing database: %s ...', database)
     url = f'mysql://{user}:{password}@{host}:{port}/{database}?charset=utf8mb4'
-    engine = sa.create_engine(url)
+    engine = sa.create_engine(url, echo=True)
 
     if not database_exists(engine.url):
         logger.info('Database: %s not exists, creates it.', database)

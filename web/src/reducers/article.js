@@ -2,11 +2,13 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   currentTab: "PTT",
+  monthlySummary: {},
   articles: [],
   pageInfo: {},
   currentPage: 1,
   status: {
     requesting: false,
+    requestingSummary: false,
   },
 };
 
@@ -32,6 +34,16 @@ const articleSlice = createSlice({
     requestArticlesFailed: (state, action) => {
       state.status.requesting = false;
     },
+    requestingMonthlySummary: (state, action) => {
+      state.status.requestingSummary = true;
+    },
+    requestMonthlySummarySuccess: (state, action) => {
+      state.status.requestingSummary = false;
+      state.monthlySummary = action.payload;
+    },
+    requestMonthlySummaryFailed: (state, action) => {
+      state.status.requestingSummary = false;
+    },
   },
 });
 
@@ -41,6 +53,9 @@ export const {
   requestingArticles,
   requestArticlesFailed,
   requestArticlesSuccess,
+  requestingMonthlySummary,
+  requestMonthlySummarySuccess,
+  requestMonthlySummaryFailed,
 } = articleSlice.actions;
 
 export default articleSlice.reducer;

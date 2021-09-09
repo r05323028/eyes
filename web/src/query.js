@@ -28,3 +28,15 @@ export const ALL_PTT_ARTICLES = gql`
     }
   }
 `;
+
+export const MONTH_SUMMARY = gql`
+  query MonthlySummary($source: Int!, $year: Int!, $month: Int!) {
+    monthlySummary(source: $source, year: $year, month: $month) {
+      source
+      totalPosts
+      totalComments
+      year
+      month
+    }
+  }
+`;
