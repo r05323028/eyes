@@ -33,7 +33,10 @@ class MonthlySummary(Base, Timestamp):
         primary_key=True,
     )
     source = sa.Column(
-        sa.Integer,
+        ChoiceType(
+            SourceType,
+            impl=sa.Integer(),
+        ),
         nullable=False,
     )
     total_posts = sa.Column(

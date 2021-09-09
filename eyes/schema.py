@@ -36,6 +36,7 @@ class MonthSummary(SQLAlchemyObjectType):
         '''Metadata
         '''
         model = stats.MonthlySummary
+        exclude_fields = ('source', )
 
 
 class Query(graphene.ObjectType):
@@ -51,6 +52,16 @@ class Query(graphene.ObjectType):
     )
 
     def resolve_monthly_summary(self, info, source, year, month):
+        '''Resolve monthly summary
+
+        Args:
+            source (SourceType)
+            year (int)
+            month (int)
+
+        Returns:
+            stats.MonthlySummary
+        '''
         query = MonthSummary.get_query(info)
         return query.filter(
             stats.MonthlySummary.source == source,

@@ -146,8 +146,8 @@ class TestStats:
     ):
         year = 2021
         month = 9
-        res = ptt_monthly_summary.delay(2021, 9)
+        res = ptt_monthly_summary.delay(year, month)
         stat = res.get()
 
-        assert type(stat['total_posts']) == int
-        assert type(stat['total_comments']) == int
+        assert isinstance(stat['total_posts'], int)
+        assert isinstance(stat['total_comments'], int)

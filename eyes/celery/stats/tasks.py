@@ -88,7 +88,7 @@ def ptt_monthly_summary(
 
     else:
         row = MonthlySummary(
-            source=summary.source,
+            source=SourceType.PTT,
             total_posts=summary.total_posts,
             total_comments=summary.total_comments,
             year=summary.year,
