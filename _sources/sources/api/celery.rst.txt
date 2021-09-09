@@ -1,6 +1,8 @@
 eyes.celery
 ===========
 
+eyes celery module
+
 .. automodule:: eyes.celery
     :members:
 
