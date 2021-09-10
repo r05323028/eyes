@@ -23,8 +23,8 @@ PTT_CRAWLER_SETTINGS = {
 }
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
 logger.addHandler(RichHandler(rich_tracebacks=True))
+logger.setLevel(logging.INFO)
 
 
 def get_post_id(url: str, ) -> str:
@@ -52,7 +52,6 @@ def crawl_post(
     Returns:
         Optional[PttPost]: ptt post data container, None if 404
     '''
-    logger.info('Crawl %s', url)
     cookies = {}
 
     if board in PTT_OVER_18_BOARDS:
@@ -63,7 +62,10 @@ def crawl_post(
     resp = requests.get(url, cookies=cookies)
 
     if resp.status_code == 404:
-        return
+        raise requests.HTTPError(
+            "Could not fetch %s",
+            url,
+        )
 
     dom = get_dom(resp)
 
@@ -128,9 +130,8 @@ def crawl_post(
             created_at=post_created_at,
             url=resp.url,
         )
-    except IndexError:
-        logger.error("Could not crawl %s", url)
-        return
+    except IndexError as err:
+        raise err
 
 
 def get_next_url(dom: etree.Element) -> str:
@@ -228,7 +229,6 @@ def crawl_board_list(top_n: Optional[int] = None) -> Iterator[PttBoard]:
     board_url = f'{PTT_BASE_URL}/bbs/hotboards.html'
     resp = requests.get(board_url)
     dom = get_dom(resp)
-    logger.info('Crawl PTT board list')
 
     for i, board in enumerate(dom.xpath('//*[@class="b-ent"]')):
         name = ''.join(board.xpath('a/div[@class="board-name"]/text()'))

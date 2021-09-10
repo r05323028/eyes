@@ -9,10 +9,13 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 
 import eyes.data as data
 from celery import Task
+from celery.utils.log import get_task_logger
 from eyes.celery import app
 from eyes.config import MySQLConfig
 from eyes.db.ptt import PttComment, PttPost
 from eyes.db.stats import MonthlySummary, SourceType
+
+logger = get_task_logger(__name__)
 
 
 class StatsTask(Task):
@@ -56,6 +59,12 @@ def ptt_monthly_summary(
         year (int): year
         month (int): month
     '''
+    logger.info(
+        'Get monthly summary: %s-%s',
+        year,
+        month,
+    )
+
     total_posts = self.sess.query(PttPost).filter(
         extract('year', PttPost.created_at) == int(year),
         extract('month', PttPost.created_at) == int(month),

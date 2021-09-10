@@ -6,6 +6,7 @@ from typing import Iterator, Optional
 
 import requests
 from fake_useragent import UserAgent
+from requests.models import HTTPError
 from rich.logging import RichHandler
 
 from eyes.data import DcardBoard, DcardComment, DcardPost, DcardReaction
@@ -15,7 +16,6 @@ ISO_FORMAT = '%Y-%m-%dT%H:%M:%S.%fZ'
 DCARD_BASE_URL = 'https://www.dcard.tw/_api'
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
 logger.addHandler(RichHandler(rich_tracebacks=True))
 ua = UserAgent()
 headers = {
@@ -33,7 +33,6 @@ def crawl_post(post_id: int) -> DcardPost:
         DcardPost: dcard post
     '''
     url = f'{DCARD_BASE_URL}/posts/{post_id}'
-    logger.info('Crawl %s', url)
 
     # crawl comments
     comment_resp = requests.get(
@@ -62,6 +61,12 @@ def crawl_post(post_id: int) -> DcardPost:
         url,
         headers=headers,
     )
+    if resp.status_code == 404:
+        raise HTTPError(
+            'Could not fetch %s',
+            post_id,
+        )
+
     data = resp.json()
 
     return DcardPost(

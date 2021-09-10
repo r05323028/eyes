@@ -5,15 +5,19 @@ from itertools import zip_longest
 from typing import Dict, List, Optional
 
 import sqlalchemy as sa
+from requests.exceptions import HTTPError
 from sqlalchemy.orm import scoped_session, sessionmaker
 
 from celery import Task
+from celery.utils.log import get_task_logger
 from eyes.celery import app
 from eyes.config import MySQLConfig
 from eyes.crawler import dcard, entity, ptt
 from eyes.db.dcard import DcardBoard, DcardComment, DcardPost
 from eyes.db.ptt import PttBoard, PttPost
 from eyes.db.wiki import WikiEntity
+
+logger = get_task_logger(__name__)
 
 
 class CrawlerTask(Task):
@@ -60,9 +64,18 @@ def crawl_ptt_post(
     Returns:
         Optional[Dict]: post dictionary
     '''
-    post = ptt.crawl_post(url, board)
+    logger.info('Crawl %s', url)
+    try:
+        post = ptt.crawl_post(url, board)
+    except (IndexError, HTTPError):
+        logger.error("Could not crawl %s", url)
+        return
 
     if not post:
+        logger.error(
+            'Post is invalid %s',
+            url,
+        )
         return
 
     exist_row = self.sess.query(PttPost).filter(PttPost.id == post.id).first()
@@ -112,6 +125,7 @@ def crawl_ptt_board_list(
         Optional[List[Dict]]
     '''
     ret = []
+    logger.info('Crawl PTT board list')
     boards = ptt.crawl_board_list(top_n)
 
     for board in boards:
@@ -150,9 +164,20 @@ def crawl_dcard_post(
     Returns:
         Optional[Dict]: post dictionary
     '''
-    post = dcard.crawl_post(post_id)
+    logger.info('Crawl %s', post_id)
+    try:
+        post = dcard.crawl_post(post_id)
+    except HTTPError:
+        logger.error(
+            "Could not crawl %s",
+            post_id,
+        )
 
     if not post:
+        logger.error(
+            'Post is invalid: %s',
+            post_id,
+        )
         return
 
     exist_row = self.sess.query(DcardPost).filter(
