@@ -123,6 +123,16 @@ def dispatch(job_type, board, forum_id, n_days, top_n, category_url, year,
             },
         )
 
+    if job_type in [
+            JobType.CRAWL_PTT_TOP_BOARD_POSTS,
+    ]:
+        job = Job(
+            job_type=job_type,
+            payload={
+                'n_days': n_days,
+            },
+        )
+
     logger.info('Dispatch job, %s', job)
     jobs.dispatch(job)
 

@@ -12,11 +12,23 @@ from rich.logging import RichHandler
 
 from eyes.crawler.utils import get_dom
 from eyes.data import PttBoard, PttComment, PttPost
+from eyes.exception import InvalidFormatError
 
 PTT_BASE_URL = 'https://www.ptt.cc'
 PTT_OVER_18_BOARDS = [
     'Gossiping',
     'sex',
+    'DMM_GAMES',
+    'Beauty',
+    'HatePolitics',
+    'SuperBike',
+    'japanavgirls',
+    'Gamesale',
+    'Military',
+    'SportLottery',
+    'AC_In',
+    'Brand',
+    'BuyTogether',
 ]
 PTT_CRAWLER_SETTINGS = {
     'n_expired_posts': 100,
@@ -75,8 +87,7 @@ def crawl_post(
 
         author = ''.join(
             dom.xpath('//*[@id="main-content"]/div[1]/span[2]/text()'))
-
-        board = ''.join(
+        board_name = ''.join(
             dom.xpath('//*[@id="main-content"]/div[2]/span[2]/text()'))
         title = ''.join(
             dom.xpath('//*[@id="main-content"]/div[3]/span[2]/text()'))
@@ -118,6 +129,9 @@ def crawl_post(
                     content=span[2].text[2:],
                     created_at=comment_created_at,
                 ))
+
+        if board_name != board:
+            raise InvalidFormatError(f"Incorrect format: {url}")
 
         # post
         return PttPost(
@@ -184,30 +198,35 @@ def crawl_post_urls(
         r_ents = dom.xpath('//*[@class="r-ent"]')
 
         for row in r_ents:
-            href = row.xpath('div[@class="title"]/a/@href')
+            try:
+                href = row.xpath('div[@class="title"]/a/@href')
 
-            if href:
-                post_url = f'{PTT_BASE_URL}{href[0]}'
+                if href:
+                    post_url = f'{PTT_BASE_URL}{href[0]}'
 
-                # check if post is expired
-                if n_days:
-                    created_at = row.xpath(
-                        'div[@class="meta"]/div[@class="date"]/text()')[0]
-                    created_at = datetime.strptime(created_at.strip(), '%m/%d')
-                    created_at = created_at.replace(
-                        year=now.
-                        year if created_at.month <= now.month else now.year -
-                        1)
+                    # check if post is expired
+                    if n_days:
+                        created_at = row.xpath(
+                            'div[@class="meta"]/div[@class="date"]/text()')[0]
+                        created_at = datetime.strptime(created_at.strip(),
+                                                       '%m/%d')
+                        created_at = created_at.replace(
+                            year=now.year
+                            if created_at.month <= now.month else now.year - 1)
 
-                    if created_at < critical_point:
-                        logger.info(
-                            "Catch an expired post %s (created at: %s)",
-                            post_url,
-                            created_at.strftime("%Y-%m-%d"),
-                        )
-                        expired_counter += 1
+                        if created_at < critical_point:
+                            logger.debug(
+                                "Catch an expired post %s (created at: %s)",
+                                post_url,
+                                created_at.strftime("%Y-%m-%d"),
+                            )
+                            expired_counter += 1
 
-                yield post_url
+                    yield post_url
+
+            except IndexError:
+                logger.error('Catch an error: %s', href)
+                continue
 
         # terminate loop if expired_posts exceeds limitation
         if n_days and expired_counter > PTT_CRAWLER_SETTINGS['n_expired_posts']:
