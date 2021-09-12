@@ -68,8 +68,7 @@ class Query(graphene.ObjectType):
     daily_summaries = graphene.Field(
         graphene.List(DailySummary),
         source=graphene.Argument(type=graphene.Int, required=True),
-        year=graphene.Argument(type=graphene.Int, required=True),
-        month=graphene.Argument(type=graphene.Int, required=True),
+        limit=graphene.Argument(type=graphene.Int, required=True),
     )
 
     def resolve_monthly_summary(self, info, source, year, month):
@@ -106,28 +105,23 @@ class Query(graphene.ObjectType):
             stats.MonthlySummary.month.desc(),
         ).limit(limit)
 
-    def resolve_daily_summaries(self, info, source, year, month):
+    def resolve_daily_summaries(self, info, source, limit):
         '''Resolve daily summaries
 
         Args:
             source (int)
-            year (int)
-            month (int)
+            last (int)
 
         Returns:
             List[stats.DailySummary]
         '''
         query = DailySummary.get_query(info)
 
-        return query.filter(
-            stats.DailySummary.source == source,
-            stats.DailySummary.year == year,
-            stats.DailySummary.month == month,
-        ).order_by(
+        return query.filter(stats.DailySummary.source == source, ).order_by(
             stats.DailySummary.year.desc(),
             stats.DailySummary.month.desc(),
             stats.DailySummary.day.desc(),
-        ).all()
+        ).limit(limit).all()
 
 
 schema = graphene.Schema(query=Query)

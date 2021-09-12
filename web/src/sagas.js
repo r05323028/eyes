@@ -8,9 +8,16 @@ import {
   requestingMonthlySummary,
   requestMonthlySummarySuccess,
   requestMonthlySummaryFailed,
+  requestingDailySummaries,
+  requestDailySummariesSuccess,
+  requestDailySummariesFailed,
 } from "./reducers/article";
 
-import { fetchPTTArticles, fetchMonthlySummary } from "./api";
+import {
+  fetchPTTArticles,
+  fetchMonthlySummary,
+  fetchDailySummaries,
+} from "./api";
 
 export const sagaActions = {
   requestPTTArticles: createAction("articles/requestPTTArticlesSaga"),
@@ -21,6 +28,7 @@ export const sagaActions = {
     "articles/requestPTTArticlesPreviousPageSaga"
   ),
   requestPTTMonthlySummary: createAction("article/requestPTTMonthlySummary"),
+  requestPTTDailySummaries: createAction("article/requestPTTDailySummaries"),
 };
 
 function* requestPTTArticlesSaga(action) {
@@ -78,6 +86,20 @@ function* requestPTTMonthlySummarySaga(action) {
   }
 }
 
+function* requestPTTDailySummariesSaga(action) {
+  const { source, limit } = action.payload;
+  try {
+    yield put(requestingDailySummaries());
+    const dailySummaries = yield call(fetchDailySummaries, {
+      source,
+      limit,
+    });
+    yield put(requestDailySummariesSuccess(dailySummaries));
+  } catch (err) {
+    yield put(requestDailySummariesFailed());
+  }
+}
+
 export default function* rootSaga() {
   yield all([
     takeEvery(sagaActions.requestPTTArticles, requestPTTArticlesSaga),
@@ -92,6 +114,10 @@ export default function* rootSaga() {
     takeEvery(
       sagaActions.requestPTTMonthlySummary,
       requestPTTMonthlySummarySaga
+    ),
+    takeEvery(
+      sagaActions.requestPTTDailySummaries,
+      requestPTTDailySummariesSaga
     ),
   ]);
 }

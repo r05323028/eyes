@@ -30,7 +30,17 @@ const columns = [
 ];
 
 const createLineChart = (data) => {
-  return <LineChart data={data} />;
+  const lineData = [
+    {
+      id: "PTT",
+      color: "hsl(37, 70%, 50%)",
+      data: data?.map((row) => ({
+        x: `${row.year}-${row.month}-${row.day}`,
+        y: row.totalPosts,
+      })),
+    },
+  ];
+  return <LineChart data={lineData} />;
 };
 
 const createStats = (numPosts, numComments) => {
@@ -97,6 +107,7 @@ const Articles = (props) => {
   const pageInfo = useSelector((state) => state.article.pageInfo);
   const currentPage = useSelector((state) => state.article.currentPage);
   const monthlySummary = useSelector((state) => state.article.monthlySummary);
+  const dailySummaries = useSelector((state) => state.article.dailySummaries);
   const articleLoading = useSelector(
     (state) => state.article.status.requesting
   );
@@ -121,6 +132,12 @@ const Articles = (props) => {
         month: now.getMonth() + 1,
       })
     );
+    dispatch(
+      sagaActions.requestPTTDailySummaries({
+        source: 1,
+        limit: 30,
+      })
+    );
   });
 
   const handleOnTabClick = (tab) => {
@@ -134,6 +151,12 @@ const Articles = (props) => {
             source: 1,
             year: now.getFullYear(),
             month: now.getMonth() + 1,
+          })
+        );
+        dispatch(
+          sagaActions.requestPTTDailySummaries({
+            source: 1,
+            limit: 30,
           })
         );
         break;
@@ -187,7 +210,7 @@ const Articles = (props) => {
         <div className="card bordered row-span-2">
           <div className="card-body">
             <div className="card-title">Trending</div>
-            {createLineChart(lineData)}
+            {createLineChart(dailySummaries)}
           </div>
         </div>
       </div>

@@ -1,14 +1,17 @@
+import _ from "lodash";
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   currentTab: "PTT",
   monthlySummary: {},
+  dailySummaries: [],
   articles: [],
   pageInfo: {},
   currentPage: 1,
   status: {
     requesting: false,
-    requestingSummary: false,
+    requestingMonthlySummary: false,
+    requestingDailySummaries: false,
   },
 };
 
@@ -35,14 +38,27 @@ const articleSlice = createSlice({
       state.status.requesting = false;
     },
     requestingMonthlySummary: (state, action) => {
-      state.status.requestingSummary = true;
+      state.status.requestingMonthlySummary = true;
     },
     requestMonthlySummarySuccess: (state, action) => {
-      state.status.requestingSummary = false;
+      state.status.requestingMonthlySummary = false;
       state.monthlySummary = action.payload;
     },
     requestMonthlySummaryFailed: (state, action) => {
-      state.status.requestingSummary = false;
+      state.status.requestingMonthlySummary = false;
+    },
+    requestingDailySummaries: (state, action) => {
+      state.status.requestingDailySummaries = true;
+    },
+    requestDailySummariesSuccess: (state, action) => {
+      state.status.requestingDailySummaries = false;
+      state.dailySummaries = _.sortBy(
+        action.payload,
+        (row) => `${row.year}-${row.month}-${row.day}`
+      );
+    },
+    requestDailySummariesFailed: (state, action) => {
+      state.status.requestingDailySummaries = false;
     },
   },
 });
@@ -56,6 +72,9 @@ export const {
   requestingMonthlySummary,
   requestMonthlySummarySuccess,
   requestMonthlySummaryFailed,
+  requestingDailySummaries,
+  requestDailySummariesSuccess,
+  requestDailySummariesFailed,
 } = articleSlice.actions;
 
 export default articleSlice.reducer;

@@ -7,7 +7,14 @@ const LineChart = (props) => {
         curve="basis"
         data={props.data}
         enableArea={true}
-        margin={{ top: 30, right: 30, bottom: 30, left: 30 }}
+        axisBottom={{
+          tickRotation: -45,
+          legend: "date",
+          legendPosition: "middle",
+          orient: "bottom",
+          legendOffset: 65,
+        }}
+        margin={{ top: 30, right: 30, bottom: 75, left: 65 }}
         useMesh={false}
         colors={{ scheme: "nivo" }}
         enablePoints={false}
