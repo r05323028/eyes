@@ -54,7 +54,7 @@ const articleSlice = createSlice({
       state.status.requestingDailySummaries = false;
       state.dailySummaries = _.sortBy(
         action.payload,
-        (row) => `${row.year}-${row.month}-${row.day}`
+        (row) => new Date(row.year, row.month, row.day)
       );
     },
     requestDailySummariesFailed: (state, action) => {

@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 
 import { setCurrentTab } from "../reducers/article";
 import { sagaActions } from "../sagas";
-import { lineData } from "../fakeData";
 
 import Spinner from "../components/Spinner";
 import LineChart from "../components/LineChart";
