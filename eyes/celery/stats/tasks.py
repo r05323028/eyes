@@ -4,7 +4,7 @@ from datetime import datetime
 from typing import Dict
 
 import sqlalchemy as sa
-from sqlalchemy import extract
+from sqlalchemy import extract, func
 from sqlalchemy.orm import scoped_session, sessionmaker
 
 import eyes.data as data
@@ -13,7 +13,7 @@ from celery.utils.log import get_task_logger
 from eyes.celery import app
 from eyes.config import MySQLConfig
 from eyes.db.ptt import PttComment, PttPost
-from eyes.db.stats import MonthlySummary, SourceType
+from eyes.db.stats import DailySummary, MonthlySummary, SourceType
 
 logger = get_task_logger(__name__)
 
@@ -65,6 +65,54 @@ def ptt_monthly_summary(
         month,
     )
 
+    # daily
+    daily_summaries = self.sess.query(
+        func.year(PttPost.created_at),
+        func.month(PttPost.created_at),
+        func.day(PttPost.created_at),
+        func.count(PttPost.id),
+    ).filter(
+        func.year(PttPost.created_at) == year,
+        func.month(PttPost.created_at) == month,
+    ).group_by(
+        func.year(PttPost.created_at),
+        func.month(PttPost.created_at),
+        func.day(PttPost.created_at),
+    ).all()
+
+    for year_idx, month_idx, day_idx, num_posts in daily_summaries:
+        exist_row = self.sess.query(DailySummary).filter(
+            DailySummary.source == SourceType.PTT,
+            DailySummary.day == day_idx,
+            DailySummary.month == month_idx,
+            DailySummary.year == year_idx,
+        ).first()
+
+        daily_sum = data.DailySummary(
+            source=SourceType.PTT,
+            total_posts=num_posts,
+            year=year_idx,
+            month=month_idx,
+            day=day_idx,
+        )
+
+        if exist_row:
+            exist_row.total_posts = daily_sum.total_posts
+            exist_row.updated_at = datetime.utcnow()
+            self.sess.merge(exist_row)
+            self.sess.commit()
+        else:
+            row = DailySummary(
+                source=SourceType.PTT,
+                total_posts=daily_sum.total_posts,
+                year=daily_sum.year,
+                month=daily_sum.month,
+                day=daily_sum.day,
+            )
+            self.sess.add(row)
+            self.sess.commit()
+
+    # monthly
     total_posts = self.sess.query(PttPost).filter(
         extract('year', PttPost.created_at) == int(year),
         extract('month', PttPost.created_at) == int(month),
@@ -74,7 +122,7 @@ def ptt_monthly_summary(
         extract('month', PttComment.created_at) == int(month),
     ).count()
 
-    summary = data.MonthlySummary(
+    monthly_sum = data.MonthlySummary(
         source=SourceType.PTT,
         total_posts=total_posts,
         total_comments=total_comments,
@@ -98,17 +146,17 @@ def ptt_monthly_summary(
     else:
         row = MonthlySummary(
             source=SourceType.PTT,
-            total_posts=summary.total_posts,
-            total_comments=summary.total_comments,
-            year=summary.year,
-            month=summary.month,
+            total_posts=monthly_sum.total_posts,
+            total_comments=monthly_sum.total_comments,
+            year=monthly_sum.year,
+            month=monthly_sum.month,
         )
         self.sess.add(row)
         self.sess.commit()
 
     return {
-        'year': summary.year,
-        'month': summary.month,
-        'total_posts': summary.total_posts,
-        'total_comments': summary.total_comments,
+        'year': monthly_sum.year,
+        'month': monthly_sum.month,
+        'total_posts': monthly_sum.total_posts,
+        'total_comments': monthly_sum.total_comments,
     }

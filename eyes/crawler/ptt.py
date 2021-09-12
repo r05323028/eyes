@@ -130,7 +130,10 @@ def crawl_post(
             created_at=post_created_at,
             url=resp.url,
         )
-    except IndexError as err:
+    except (
+            IndexError,
+            ValueError,
+    ) as err:
         raise err
 
 

@@ -316,3 +316,31 @@ class MonthlySummary(BaseModel):
             created_at=self.created_at,
             updated_at=self.updated_at,
         )
+
+
+class DailySummary(BaseModel):
+    '''Daily summary data container
+    '''
+    source: stats.SourceType
+    total_posts: int
+    year: int
+    month: int
+    day: int
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
+
+    def to_orm(self) -> stats.DailySummary:
+        '''Transform to ORM model
+
+        Returns:
+            stats.DailySummary
+        '''
+        return stats.DailySummary(
+            source=self.source,
+            total_posts=self.total_posts,
+            year=self.year,
+            month=self.month,
+            day=self.day,
+            created_at=self.created_at,
+            updated_at=self.updated_at,
+        )
