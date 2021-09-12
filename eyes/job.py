@@ -1,9 +1,13 @@
 '''Eyes job
 '''
 import enum
+import logging
 from typing import Callable, Dict, Optional
 
 import pydantic
+import sqlalchemy as sa
+from rich.logging import RichHandler
+from sqlalchemy.orm import scoped_session, sessionmaker
 
 from eyes.celery.crawler.tasks import (
     crawl_dcard_board_list,
@@ -13,9 +17,14 @@ from eyes.celery.crawler.tasks import (
     crawl_wiki_entity,
 )
 from eyes.celery.stats.tasks import ptt_monthly_summary
+from eyes.config import MySQLConfig
 from eyes.crawler.dcard import crawl_post_ids
 from eyes.crawler.entity import crawl_wiki_entity_urls
 from eyes.crawler.ptt import crawl_post_urls
+from eyes.db.ptt import PttBoard
+
+logger = logging.getLogger(__name__)
+logger.addHandler(RichHandler(rich_tracebacks=True))
 
 
 class JobType(enum.Enum):
@@ -24,6 +33,7 @@ class JobType(enum.Enum):
     # crawler jobs
     CRAWL_PTT_LATEST_POSTS = enum.auto()
     CRAWL_PTT_BOARD_LIST = enum.auto()
+    CRAWL_PTT_TOP_BOARD_POSTS = enum.auto()
     CRAWL_DCARD_LATEST_POSTS = enum.auto()
     CRAWL_DCARD_BOARD_LIST = enum.auto()
     CRAWL_WIKI_ENTITIES = enum.auto()
@@ -68,12 +78,29 @@ class Job(pydantic.BaseModel):
                 if key not in v:
                     raise Exception(f'{key} is required in payload')
 
+        if values['job_type'] == JobType.CRAWL_PTT_TOP_BOARD_POSTS:
+            for key in ['n_days']:
+                if key not in v:
+                    raise Exception(f'{key} is required in payload')
+
         return v
 
 
 class Jobs:
     '''Job dispatcher class
     '''
+    def __init__(self):
+        config = MySQLConfig()
+        engine = sa.create_engine(
+            f'mysql://{config.user}:{config.password}@{config.host}:{config.port}/{config.database}?charset=utf8mb4'
+        )
+        session_factory = sessionmaker(engine)
+        Session = scoped_session(session_factory)
+        self.sess = Session()
+
+    def __del__(self):
+        self.sess.close()
+
     @property
     def job_map(self) -> Dict[JobType, Callable]:
         '''Return job map
@@ -81,6 +108,7 @@ class Jobs:
         return {
             JobType.CRAWL_PTT_LATEST_POSTS: self.crawl_ptt_latest_posts,
             JobType.CRAWL_PTT_BOARD_LIST: self.crawl_ptt_board_list,
+            JobType.CRAWL_PTT_TOP_BOARD_POSTS: self.crawl_ptt_top_board_posts,
             JobType.CRAWL_DCARD_LATEST_POSTS: self.crawl_dcard_latest_posts,
             JobType.CRAWL_DCARD_BOARD_LIST: self.crawl_dcard_board_list,
             JobType.CRAWL_WIKI_ENTITIES: self.crawl_wiki_entities,
@@ -114,6 +142,28 @@ class Jobs:
             job (Job): crawler job
         '''
         crawl_ptt_board_list.apply_async(args=[job.payload['top_n']])
+
+    def crawl_ptt_top_board_posts(
+        self,
+        job: Job,
+    ):
+        '''Crawl ptt top board posts
+
+        Args:
+            job (Job): crawler job
+        '''
+        boards = self.sess.query(PttBoard).all()
+
+        for board in boards:
+            for url in crawl_post_urls(
+                    board.name,
+                    job.payload.get('n_days', None),
+            ):
+                try:
+                    crawl_ptt_post.apply_async(args=[url, board.name])
+                except IndexError as err:
+                    logger.warning('Cookie over18 needed: %s', board)
+                    continue
 
     def crawl_dcard_latest_posts(
         self,
