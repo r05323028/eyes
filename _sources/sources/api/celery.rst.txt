@@ -19,5 +19,5 @@ eyes.celery.stats.tasks
 
 Eyes celery stats
 
-.. automodule:: eyes.celery.crawler.stats
+.. automodule:: eyes.celery.stats.tasks
     :members:
