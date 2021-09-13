@@ -21,7 +21,8 @@ def create_app() -> FastAPI:
     '''
     config = MySQLConfig()
     engine = sa.create_engine(
-        f'mysql://{config.user}:{config.password}@{config.host}:{config.port}/{config.database}?charset=utf8mb4'
+        f'mysql://{config.user}:{config.password}@{config.host}:{config.port}/{config.database}?charset=utf8mb4',
+        pool_size=20,
     )
     origins = ['*']
     sess = scoped_session(sessionmaker(engine))
