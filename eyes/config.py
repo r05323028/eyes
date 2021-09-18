@@ -1,5 +1,6 @@
 '''Eyes config
 '''
+import pathlib
 import typing
 
 from pydantic import BaseSettings, Field
@@ -31,6 +32,10 @@ class CeleryConfig(BaseSettings):
     Attributes:
         broker_url (str): celery broker url
         result_backend (str): celery result backend
+        timezone (str): celery timezone
+        task_serializer (str): celery task serializer
+        result_backend_transport_options (Dict): result backend transport options
+        installed_apps (List): celery installed apps
     '''
     broker_url: str = Field(alias='broker')
     result_backend: str = Field(alias='backend')
@@ -46,3 +51,15 @@ class CeleryConfig(BaseSettings):
 
     class Config:
         env_prefix = 'celery_'
+
+
+class SpacyConfig(BaseSettings):
+    '''Spacy config
+
+    Attributes:
+        name (Union[str, Path]): spacy model name or path
+    '''
+    name: typing.Union[str, pathlib.Path] = 'zh_core_web_sm'
+
+    class Config:
+        env_prefix = 'spacy_'

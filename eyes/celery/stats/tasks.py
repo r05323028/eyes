@@ -7,11 +7,11 @@ import sqlalchemy as sa
 from sqlalchemy import extract, func
 from sqlalchemy.orm import scoped_session, sessionmaker
 
-import eyes.data as data
 from celery import Task
 from celery.utils.log import get_task_logger
 from eyes.celery import app
 from eyes.config import MySQLConfig
+from eyes.data import stats
 from eyes.db.ptt import PttComment, PttPost
 from eyes.db.stats import DailySummary, MonthlySummary, SourceType
 
@@ -88,7 +88,7 @@ def ptt_monthly_summary(
             DailySummary.year == year_idx,
         ).first()
 
-        daily_sum = data.DailySummary(
+        daily_sum = stats.DailySummary(
             source=SourceType.PTT,
             total_posts=num_posts,
             year=year_idx,
@@ -122,7 +122,7 @@ def ptt_monthly_summary(
         extract('month', PttComment.created_at) == int(month),
     ).count()
 
-    monthly_sum = data.MonthlySummary(
+    monthly_sum = stats.MonthlySummary(
         source=SourceType.PTT,
         total_posts=total_posts,
         total_comments=total_comments,

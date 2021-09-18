@@ -11,7 +11,7 @@ from lxml import etree
 from rich.logging import RichHandler
 
 from eyes.crawler.utils import get_dom
-from eyes.data import PttBoard, PttComment, PttPost
+from eyes.data.ptt import PttBoard, PttComment, PttPost
 from eyes.exception import InvalidFormatError
 
 PTT_BASE_URL = 'https://www.ptt.cc'
