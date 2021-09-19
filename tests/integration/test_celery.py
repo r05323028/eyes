@@ -170,4 +170,5 @@ class TestMl:
 
         post_transformed = res.get()
 
-        print(post_transformed)
+        assert isinstance(post_transformed['id'], str)
+        assert isinstance(post_transformed['title'], str)
