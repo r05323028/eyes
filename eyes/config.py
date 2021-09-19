@@ -47,6 +47,7 @@ class CeleryConfig(BaseSettings):
     installed_apps: typing.List = [
         'eyes.celery.crawler.tasks',
         'eyes.celery.stats.tasks',
+        'eyes.celery.ml.tasks',
     ]
 
     class Config:

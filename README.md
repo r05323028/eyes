@@ -37,6 +37,10 @@ eyes system architecture
 - React + Redux-Saga
 - Tailwind CSS
 
+### ML
+
+- spaCy
+
 ## License
 
 [MIT](./LICENSE)
