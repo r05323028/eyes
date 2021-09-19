@@ -4,7 +4,7 @@ from typing import Dict, List
 
 import pytest
 import sqlalchemy as sa
-from sqlalchemy.orm import Session, sessionmaker
+from sqlalchemy.orm import Session, scoped_session, sessionmaker
 
 from eyes.celery.crawler.tasks import (
     crawl_dcard_board_list,
@@ -13,8 +13,10 @@ from eyes.celery.crawler.tasks import (
     crawl_ptt_post,
     crawl_wiki_entity,
 )
+from eyes.celery.ml.tasks import transform_ptt_post_to_spacy_post
 from eyes.celery.stats.tasks import ptt_monthly_summary
 from eyes.config import MySQLConfig
+from eyes.db.ptt import PttPost
 
 
 class TestCrawler:
@@ -34,24 +36,14 @@ class TestCrawler:
         ]
 
     @pytest.fixture
-    def session(
-        self,
-        tables,
-    ):
+    def session(self):
         db_config = MySQLConfig()
         engine = sa.create_engine(
             f'mysql://{db_config.user}:{db_config.password}@{db_config.host}:{db_config.port}/{db_config.database}?charset=utf8mb4'
         )
-        session = sessionmaker(engine)()
-        session.execute('SET FOREIGN_KEY_CHECKS=0')
-        session.commit()
-        for tbl in tables:
-            session.execute(f'TRUNCATE TABLE {tbl}')
-            session.commit()
+        session_factory = sessionmaker(engine)
+        session = scoped_session(session_factory)()
         yield session
-        for tbl in tables:
-            session.execute(f'TRUNCATE TABLE {tbl}')
-            session.commit()
         session.close()
 
     def test_ptt_celery_crawler(
@@ -151,3 +143,31 @@ class TestStats:
 
         assert isinstance(stat['total_posts'], int)
         assert isinstance(stat['total_comments'], int)
+
+
+class TestMl:
+    '''Ml module integration test cases
+    '''
+    @pytest.fixture
+    def session(self):
+        db_config = MySQLConfig()
+        engine = sa.create_engine(
+            f'mysql://{db_config.user}:{db_config.password}@{db_config.host}:{db_config.port}/{db_config.database}?charset=utf8mb4'
+        )
+        session_factory = sessionmaker(engine)
+        session = scoped_session(session_factory)()
+        yield session
+        session.close()
+
+    def test_celery_transform_ptt_post_to_spacy(
+        self,
+        session: Session,
+    ):
+        '''Test celery transform ptt post to spacy
+        '''
+        post = session.query(PttPost).first()
+        res = transform_ptt_post_to_spacy_post.delay(post.id)
+
+        post_transformed = res.get()
+
+        print(post_transformed)

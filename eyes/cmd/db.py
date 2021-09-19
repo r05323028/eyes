@@ -7,7 +7,7 @@ import sqlalchemy as sa
 from rich.logging import RichHandler
 from sqlalchemy_utils.functions import create_database, database_exists
 
-from eyes.db import Base
+from eyes.db import Base, dcard, ptt, spacy, stats, wiki
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)

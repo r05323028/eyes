@@ -20,3 +20,15 @@ eyes.db.wiki
 
 .. automodule:: eyes.db.wiki
     :members:
+
+eyes.db.stats
+-------------
+
+.. automodule:: eyes.db.stats
+    :members:
+
+eyes.db.spacy
+-------------
+
+.. automodule:: eyes.db.spacy
+    :members:

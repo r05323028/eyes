@@ -9,7 +9,7 @@ from fake_useragent import UserAgent
 from requests.models import HTTPError
 from rich.logging import RichHandler
 
-from eyes.data import DcardBoard, DcardComment, DcardPost, DcardReaction
+from eyes.data.dcard import DcardBoard, DcardComment, DcardPost, DcardReaction
 
 ISO_FORMAT = '%Y-%m-%dT%H:%M:%S.%fZ'
 

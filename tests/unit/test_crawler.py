@@ -4,7 +4,9 @@ import os
 import re
 
 from eyes.crawler import dcard, entity, ptt
-from eyes.data import DcardBoard, DcardPost, Entity, PttBoard, PttPost
+from eyes.data import Entity
+from eyes.data.dcard import DcardBoard, DcardPost
+from eyes.data.ptt import PttBoard, PttPost
 
 
 class TestPttCrawler:
