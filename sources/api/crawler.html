@@ -36,10 +36,9 @@
   <section id="eyes-crawler">
 <h1>eyes.crawler<a class="headerlink" href="#eyes-crawler" title="Permalink to this headline">¶</a></h1>
 <p>eyes crawler module</p>
-<section id="eyes-crawler-ptt">
-<h2>eyes.crawler.ptt<a class="headerlink" href="#eyes-crawler-ptt" title="Permalink to this headline">¶</a></h2>
-<p>eyes ptt crawler module</p>
-<span class="target" id="module-eyes.crawler.ptt"></span><p>PTT crawler module</p>
+<section id="module-eyes.crawler.ptt">
+<span id="eyes-crawler-ptt"></span><h2>eyes.crawler.ptt<a class="headerlink" href="#module-eyes.crawler.ptt" title="Permalink to this headline">¶</a></h2>
+<p>PTT crawler module</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="eyes.crawler.ptt.get_post_id">
 <span class="sig-prename descclassname"><span class="pre">eyes.crawler.ptt.</span></span><span class="sig-name descname"><span class="pre">get_post_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#eyes.crawler.ptt.get_post_id" title="Permalink to this definition">¶</a></dt>
@@ -59,7 +58,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="eyes.crawler.ptt.crawl_post">
-<span class="sig-prename descclassname"><span class="pre">eyes.crawler.ptt.</span></span><span class="sig-name descname"><span class="pre">crawl_post</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">board</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="data.html#eyes.data.PttPost" title="eyes.data.PttPost"><span class="pre">eyes.data.PttPost</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#eyes.crawler.ptt.crawl_post" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">eyes.crawler.ptt.</span></span><span class="sig-name descname"><span class="pre">crawl_post</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">board</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="data.html#eyes.data.ptt.PttPost" title="eyes.data.ptt.PttPost"><span class="pre">eyes.data.ptt.PttPost</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#eyes.crawler.ptt.crawl_post" title="Permalink to this definition">¶</a></dt>
 <dd><p>Crawl a ptt post into a PttPost</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -72,7 +71,7 @@
 <dd class="field-even"><p>ptt post data container, None if 404</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Optional[<a class="reference internal" href="data.html#eyes.data.PttPost" title="eyes.data.PttPost">PttPost</a>]</p>
+<dd class="field-odd"><p>Optional[<a class="reference internal" href="data.html#eyes.data.ptt.PttPost" title="eyes.data.ptt.PttPost">PttPost</a>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -116,7 +115,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="eyes.crawler.ptt.crawl_board_list">
-<span class="sig-prename descclassname"><span class="pre">eyes.crawler.ptt.</span></span><span class="sig-name descname"><span class="pre">crawl_board_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">top_n</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="data.html#eyes.data.PttBoard" title="eyes.data.PttBoard"><span class="pre">eyes.data.PttBoard</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#eyes.crawler.ptt.crawl_board_list" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">eyes.crawler.ptt.</span></span><span class="sig-name descname"><span class="pre">crawl_board_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">top_n</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="data.html#eyes.data.ptt.PttBoard" title="eyes.data.ptt.PttBoard"><span class="pre">eyes.data.ptt.PttBoard</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#eyes.crawler.ptt.crawl_board_list" title="Permalink to this definition">¶</a></dt>
 <dd><p>Crawl PTT post</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -129,13 +128,12 @@
 </dd></dl>
 
 </section>
-<section id="eyes-crawler-dcard">
-<h2>eyes.crawler.dcard<a class="headerlink" href="#eyes-crawler-dcard" title="Permalink to this headline">¶</a></h2>
-<p>eyes dcard crawler module</p>
-<span class="target" id="module-eyes.crawler.dcard"></span><p>Dcard Crawler module</p>
+<section id="module-eyes.crawler.dcard">
+<span id="eyes-crawler-dcard"></span><h2>eyes.crawler.dcard<a class="headerlink" href="#module-eyes.crawler.dcard" title="Permalink to this headline">¶</a></h2>
+<p>Dcard Crawler module</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="eyes.crawler.dcard.crawl_post">
-<span class="sig-prename descclassname"><span class="pre">eyes.crawler.dcard.</span></span><span class="sig-name descname"><span class="pre">crawl_post</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">post_id</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="data.html#eyes.data.DcardPost" title="eyes.data.DcardPost"><span class="pre">eyes.data.DcardPost</span></a></span></span><a class="headerlink" href="#eyes.crawler.dcard.crawl_post" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">eyes.crawler.dcard.</span></span><span class="sig-name descname"><span class="pre">crawl_post</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">post_id</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="data.html#eyes.data.dcard.DcardPost" title="eyes.data.dcard.DcardPost"><span class="pre">eyes.data.dcard.DcardPost</span></a></span></span><a class="headerlink" href="#eyes.crawler.dcard.crawl_post" title="Permalink to this definition">¶</a></dt>
 <dd><p>Crawl a dcard post</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -145,7 +143,7 @@
 <dd class="field-even"><p>dcard post</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><a class="reference internal" href="data.html#eyes.data.DcardPost" title="eyes.data.DcardPost">DcardPost</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="data.html#eyes.data.dcard.DcardPost" title="eyes.data.dcard.DcardPost">DcardPost</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -172,7 +170,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="eyes.crawler.dcard.crawl_board_list">
-<span class="sig-prename descclassname"><span class="pre">eyes.crawler.dcard.</span></span><span class="sig-name descname"><span class="pre">crawl_board_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">top_n</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="data.html#eyes.data.DcardBoard" title="eyes.data.DcardBoard"><span class="pre">eyes.data.DcardBoard</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#eyes.crawler.dcard.crawl_board_list" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">eyes.crawler.dcard.</span></span><span class="sig-name descname"><span class="pre">crawl_board_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">top_n</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="data.html#eyes.data.dcard.DcardBoard" title="eyes.data.dcard.DcardBoard"><span class="pre">eyes.data.dcard.DcardBoard</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#eyes.crawler.dcard.crawl_board_list" title="Permalink to this definition">¶</a></dt>
 <dd><p>Crawl Dcard forum list</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -182,7 +180,45 @@
 <dd class="field-even"><p>board iterator</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Iterator[<a class="reference internal" href="data.html#eyes.data.DcardBoard" title="eyes.data.DcardBoard">DcardBoard</a>]</p>
+<dd class="field-odd"><p>Iterator[<a class="reference internal" href="data.html#eyes.data.dcard.DcardBoard" title="eyes.data.dcard.DcardBoard">DcardBoard</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-eyes.crawler.entity">
+<span id="eyes-crawler-entity"></span><h2>eyes.crawler.entity<a class="headerlink" href="#module-eyes.crawler.entity" title="Permalink to this headline">¶</a></h2>
+<p>Eyes entity crawler module</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="eyes.crawler.entity.crawl_wiki_entity">
+<span class="sig-prename descclassname"><span class="pre">eyes.crawler.entity.</span></span><span class="sig-name descname"><span class="pre">crawl_wiki_entity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="data.html#eyes.data.Entity" title="eyes.data.Entity"><span class="pre">eyes.data.Entity</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#eyes.crawler.entity.crawl_wiki_entity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Crawl wiki entity</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>url</strong> (<em>str</em>) – wiki entity url</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>entity</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Optional[<a class="reference internal" href="data.html#eyes.data.Entity" title="eyes.data.Entity">Entity</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eyes.crawler.entity.crawl_wiki_entity_urls">
+<span class="sig-prename descclassname"><span class="pre">eyes.crawler.entity.</span></span><span class="sig-name descname"><span class="pre">crawl_wiki_entity_urls</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">category_url</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterator</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#eyes.crawler.entity.crawl_wiki_entity_urls" title="Permalink to this definition">¶</a></dt>
+<dd><p>Crawl wiki entity urls by category url</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>category_url</strong> (<em>str</em>) – category_url</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>category url iterator</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Iterator[str]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -232,16 +268,19 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="data.html">eyes.data</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">eyes.crawler</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#eyes-crawler-ptt">eyes.crawler.ptt</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#eyes-crawler-dcard">eyes.crawler.dcard</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-eyes.crawler.ptt">eyes.crawler.ptt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-eyes.crawler.dcard">eyes.crawler.dcard</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-eyes.crawler.entity">eyes.crawler.entity</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-eyes.crawler.utils">eyes.crawler.utils</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="celery.html">eyes.celery</a></li>
 <li class="toctree-l1"><a class="reference internal" href="db.html">eyes.db</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ml.html">eyes.ml</a></li>
 <li class="toctree-l1"><a class="reference internal" href="config.html">eyes.config</a></li>
 <li class="toctree-l1"><a class="reference internal" href="job.html">eyes.job</a></li>
 <li class="toctree-l1"><a class="reference internal" href="schema.html">eyes.schema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="exception.html">eyes.exception</a></li>
 </ul>
 
 <div class="relations">

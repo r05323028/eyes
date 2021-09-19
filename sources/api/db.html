@@ -15,7 +15,7 @@
     <script src="../../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="eyes.config" href="config.html" />
+    <link rel="next" title="eyes.ml" href="ml.html" />
     <link rel="prev" title="eyes.celery" href="celery.html" />
    
   <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
@@ -96,6 +96,44 @@
 </dd></dl>
 
 </section>
+<section id="module-eyes.db.stats">
+<span id="eyes-db-stats"></span><h2>eyes.db.stats<a class="headerlink" href="#module-eyes.db.stats" title="Permalink to this headline">¶</a></h2>
+<p>Eyes stats db module</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="eyes.db.stats.SourceType">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">eyes.db.stats.</span></span><span class="sig-name descname"><span class="pre">SourceType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eyes.db.stats.SourceType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Source types enum</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="eyes.db.stats.MonthlySummary">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">eyes.db.stats.</span></span><span class="sig-name descname"><span class="pre">MonthlySummary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eyes.db.stats.MonthlySummary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Monthly summary ORM model</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="eyes.db.stats.DailySummary">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">eyes.db.stats.</span></span><span class="sig-name descname"><span class="pre">DailySummary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eyes.db.stats.DailySummary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Daily summary ORM model</p>
+</dd></dl>
+
+</section>
+<section id="module-eyes.db.spacy">
+<span id="eyes-db-spacy"></span><h2>eyes.db.spacy<a class="headerlink" href="#module-eyes.db.spacy" title="Permalink to this headline">¶</a></h2>
+<p>Eyes spacy ORM model</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="eyes.db.spacy.SpacyPttPost">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">eyes.db.spacy.</span></span><span class="sig-name descname"><span class="pre">SpacyPttPost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eyes.db.spacy.SpacyPttPost" title="Permalink to this definition">¶</a></dt>
+<dd><p>Spacy ptt post ORM model</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="eyes.db.spacy.SpacyPttComment">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">eyes.db.spacy.</span></span><span class="sig-name descname"><span class="pre">SpacyPttComment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eyes.db.spacy.SpacyPttComment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Spacy ptt comment ORM model</p>
+</dd></dl>
+
+</section>
 </section>
 
 
@@ -124,11 +162,15 @@
 <li class="toctree-l2"><a class="reference internal" href="#module-eyes.db.ptt">eyes.db.ptt</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-eyes.db.dcard">eyes.db.dcard</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-eyes.db.wiki">eyes.db.wiki</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-eyes.db.stats">eyes.db.stats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-eyes.db.spacy">eyes.db.spacy</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="ml.html">eyes.ml</a></li>
 <li class="toctree-l1"><a class="reference internal" href="config.html">eyes.config</a></li>
 <li class="toctree-l1"><a class="reference internal" href="job.html">eyes.job</a></li>
 <li class="toctree-l1"><a class="reference internal" href="schema.html">eyes.schema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="exception.html">eyes.exception</a></li>
 </ul>
 
 <div class="relations">
@@ -136,7 +178,7 @@
 <ul>
   <li><a href="../../index.html">Documentation overview</a><ul>
       <li>Previous: <a href="celery.html" title="previous chapter">eyes.celery</a></li>
-      <li>Next: <a href="config.html" title="next chapter">eyes.config</a></li>
+      <li>Next: <a href="ml.html" title="next chapter">eyes.ml</a></li>
   </ul></li>
 </ul>
 </div>
