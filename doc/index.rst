@@ -12,7 +12,6 @@ Eyes
    :maxdepth: 2
    :caption: Contents:
 
-
 .. toctree::
    :maxdepth: 2
    :caption: API Documentation
@@ -21,11 +20,11 @@ Eyes
    sources/api/crawler
    sources/api/celery
    sources/api/db
+   sources/api/ml
    sources/api/config
    sources/api/job
    sources/api/schema
-
-
+   sources/api/exception
 
 Indices and tables
 ==================
