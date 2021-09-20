@@ -1,4 +1,4 @@
 apiVersion: v2
-name: config
+name: eyes-config
 version: 0.1.0
-appVersion: "1.16.0"
+appVersion: 0.1.0

@@ -18,5 +18,5 @@ spec:
                 name: eyes-config-prod
           args:
             [
-              "poetry run eyes job dispatch --n_days 1 --job_type CRAWL_PTT_LATEST_POSTS --board sex",
+              "poetry run eyes job dispatch --job_type CRAWL_PTT_TOP_BOARD_POSTS --n_days 3",
             ]

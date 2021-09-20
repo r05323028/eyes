@@ -2,11 +2,12 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: "{{ .Release.Name }}"
+  labels:
+    app: "{{ .Release.Name }}"
 spec:
   selector:
     matchLabels:
       app: "{{ .Release.Name }}"
-  replicas: 1
   template:
     metadata:
       labels:
@@ -14,10 +15,14 @@ spec:
     spec:
       containers:
         - name: "{{ .Release.Name }}"
-          image: '{{ .Values.image }}:{{ .Values.tag | default "default" }}'
+          image: '{{ .Values.image.repository }}:{{ .Values.image.tag | default "latest" }}'
+          imagePullPolicy: "{{ .Values.image.pullPolicy }}"
           command: ["/bin/bash", "-c", "--"]
-          args: ["poetry run celery -A eyes.celery worker"]
-          imagePullPolicy: Never
+          args: ["poetry run uvicorn eyes.app.main:app --host 0.0.0.0"]
           envFrom:
             - configMapRef:
                 name: eyes-config-prod
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
