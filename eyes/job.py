@@ -2,11 +2,13 @@
 '''
 import enum
 import logging
+from operator import itemgetter
 from typing import Callable, Dict, Optional
 
 import pydantic
 import sqlalchemy as sa
 from rich.logging import RichHandler
+from sqlalchemy import exists, extract
 from sqlalchemy.orm import scoped_session, sessionmaker
 
 from eyes.celery.crawler.tasks import (
@@ -16,12 +18,14 @@ from eyes.celery.crawler.tasks import (
     crawl_ptt_post,
     crawl_wiki_entity,
 )
+from eyes.celery.ml.tasks import transform_ptt_post_to_spacy_post
 from eyes.celery.stats.tasks import ptt_monthly_summary
 from eyes.config import MySQLConfig
 from eyes.crawler.dcard import crawl_post_ids
 from eyes.crawler.entity import crawl_wiki_entity_urls
 from eyes.crawler.ptt import crawl_post_urls
-from eyes.db.ptt import PttBoard
+from eyes.db.ptt import PttBoard, PttPost
+from eyes.db.spacy import SpacyPttPost
 
 logger = logging.getLogger(__name__)
 logger.addHandler(RichHandler(rich_tracebacks=True))
@@ -40,6 +44,9 @@ class JobType(enum.Enum):
 
     # stats jobs
     PTT_MONTHLY_SUMMARY = enum.auto()
+
+    # ml jobs
+    PTT_SPACY_PIPELINE = enum.auto()
 
 
 class Job(pydantic.BaseModel):
@@ -73,8 +80,11 @@ class Job(pydantic.BaseModel):
                 if key not in v:
                     raise Exception(f'{key} is required in payload')
 
-        if values['job_type'] == JobType.PTT_MONTHLY_SUMMARY:
-            for key in ['year', 'month']:
+        if values['job_type'] in [
+                JobType.PTT_MONTHLY_SUMMARY,
+                JobType.PTT_SPACY_PIPELINE,
+        ]:
+            for key in ['year', 'month', 'overwrite']:
                 if key not in v:
                     raise Exception(f'{key} is required in payload')
 
@@ -113,6 +123,7 @@ class Jobs:
             JobType.CRAWL_DCARD_BOARD_LIST: self.crawl_dcard_board_list,
             JobType.CRAWL_WIKI_ENTITIES: self.crawl_wiki_entities,
             JobType.PTT_MONTHLY_SUMMARY: self.ptt_monthly_summary,
+            JobType.PTT_SPACY_PIPELINE: self.ptt_spacy_pipeline,
         }
 
     def crawl_ptt_latest_posts(
@@ -217,6 +228,28 @@ class Jobs:
             job.payload['year'],
             job.payload['month'],
         ])
+
+    def ptt_spacy_pipeline(
+        self,
+        job: Job,
+    ):
+        '''Run ptt post to spacy doc transforming
+
+        Args:
+            job (Job): ml job
+        '''
+        year, month, overwrite = itemgetter('year', 'month',
+                                            'overwrite')(job.payload)
+        stmt = self.sess.query(PttPost.id).filter(
+            extract('year', PttPost.created_at) == year,
+            extract('month', PttPost.created_at) == month,
+            )
+        if not overwrite:
+            stmt = stmt.filter(~exists().where(PttPost.id == SpacyPttPost.id))
+        rows = stmt.all()
+        for row in rows:
+            post_id = row[0]
+            transform_ptt_post_to_spacy_post.apply_async(args=[post_id])
 
     def dispatch(
         self,

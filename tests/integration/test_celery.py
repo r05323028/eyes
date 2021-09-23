@@ -23,19 +23,6 @@ class TestCrawler:
     '''Crawler module integration test cases
     '''
     @pytest.fixture
-    def tables(self):
-        yield [
-            'ptt_posts',
-            'ptt_comments',
-            'ptt_boards',
-            'dcard_posts',
-            'dcard_comments',
-            'dcard_reactions',
-            'dcard_boards',
-            'wiki_entities',
-        ]
-
-    @pytest.fixture
     def session(self):
         db_config = MySQLConfig()
         engine = sa.create_engine(
@@ -106,30 +93,13 @@ class TestStats:
     '''Stats module integration test cases
     '''
     @pytest.fixture
-    def tables(self):
-        yield [
-            'stats_monthly_summaries',
-        ]
-
-    @pytest.fixture
-    def session(
-        self,
-        tables,
-    ):
+    def session(self, ):
         db_config = MySQLConfig()
         engine = sa.create_engine(
             f'mysql://{db_config.user}:{db_config.password}@{db_config.host}:{db_config.port}/{db_config.database}?charset=utf8mb4'
         )
         session = sessionmaker(engine)()
-        session.execute('SET FOREIGN_KEY_CHECKS=0')
-        session.commit()
-        for tbl in tables:
-            session.execute(f'TRUNCATE TABLE {tbl}')
-            session.commit()
         yield session
-        for tbl in tables:
-            session.execute(f'TRUNCATE TABLE {tbl}')
-            session.commit()
         session.close()
 
     def test_ptt_celery_stats(

@@ -72,6 +72,7 @@ def transform_ptt_post_to_spacy_post(
     post = self.sess.query(PttPost).filter(PttPost.id == post_id).first()
     if not post:
         raise PostNotExistsError(f"Post: {post_id} is not exist")
+    logger.info('Transforming %s', post_id)
     spacy_post = transform_ptt_post_to_spacy(post, self.nlp)
     exist_row = self.sess.query(SpacyPttPost).filter(
         SpacyPttPost.id == post_id).first()
