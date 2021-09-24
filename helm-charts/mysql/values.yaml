@@ -1,5 +1,5 @@
 image:
-  tag: 5.7
+  tag: 8
 auth:
   database: eyes
   rootPassword: example

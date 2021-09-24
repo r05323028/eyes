@@ -1,4 +1,4 @@
-name: deploy-book
+name: deploy-doc
 
 # Only run this when the master branch changes
 on:

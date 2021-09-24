@@ -1,6 +1,9 @@
 '''Eyes ml spacy module
 '''
+from typing import Dict
+
 from spacy.language import Language
+from spacy.tokens import Doc
 
 from eyes.data import spacy
 from eyes.db import ptt
@@ -36,3 +39,61 @@ def transform_ptt_post_to_spacy(
         content=content_bytes,
         comments=comments,
     )
+
+
+def binary_to_doc(
+    binary: bytes,
+    nlp: Language,
+) -> Doc:
+    '''Transform bytes to spacy doc
+
+    Args:
+        binary (bytes): spacy binary string
+        nlp (Language): spacy language model
+
+    Returns:
+        Doc: spacy doc
+    '''
+    return Doc(nlp.vocab).from_bytes(binary)
+
+
+def transform_ptt_comment(
+    comment: spacy.SpacyPttComment,
+    nlp: Language,
+) -> Dict:
+    '''Transform ptt comment to decoded dictionary
+
+    Args:
+        comment (spacy.SpacyPttComment): spacy binary comment
+        nlp (Language): spacy language model
+
+    Returns:
+        Dict: decoded dictionary
+    '''
+    return {
+        'comment_id': comment.comment_id,
+        'post_id': comment.post_id,
+        'content': binary_to_doc(comment.content, nlp),
+    }
+
+
+def transform_ptt_post(
+    post: spacy.SpacyPttPost,
+    nlp: Language,
+) -> Dict:
+    '''Transform ptt post to decoded dictionary
+
+    Args:
+        post (spacy.SpacyPttPost): spacy binary post
+        nlp (Language): spacy language model
+
+    Returns:
+        Dict: decoded dictionary
+    '''
+    return {
+        'id': post.id,
+        'title': binary_to_doc(post.title, nlp),
+        'content': binary_to_doc(post.content, nlp),
+        'comments':
+        [transform_ptt_comment(comment, nlp) for comment in post.comments],
+    }

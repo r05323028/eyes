@@ -1,10 +1,11 @@
 '''Eyes spacy data container
 '''
-from typing import List
+from typing import Dict, List
 
 from pydantic import BaseModel, Field
+from spacy.language import Language
 
-from eyes.db import spacy
+from eyes.db import spacy as spacy_orm
 
 
 class SpacyPttComment(BaseModel):
@@ -14,13 +15,16 @@ class SpacyPttComment(BaseModel):
     post_id: str
     content: bytes
 
-    def to_orm(self) -> spacy.SpacyPttComment:
+    class Config:
+        orm_mode = True
+
+    def to_orm(self) -> spacy_orm.SpacyPttComment:
         '''Transform to orm model
 
         Returns:
             spacy.SpacyPttComment
         '''
-        return spacy.SpacyPttComment(
+        return spacy_orm.SpacyPttComment(
             comment_id=self.comment_id,
             post_id=self.post_id,
             content=self.content,
@@ -35,13 +39,16 @@ class SpacyPttPost(BaseModel):
     content: bytes
     comments: List[SpacyPttComment] = Field([])
 
-    def to_orm(self) -> spacy.SpacyPttPost:
+    class Config:
+        orm_mode = True
+
+    def to_orm(self) -> spacy_orm.SpacyPttPost:
         '''Transform to orm model
 
         Returns:
             spacy.SpacyPttPost
         '''
-        return spacy.SpacyPttPost(
+        return spacy_orm.SpacyPttPost(
             id=self.id,
             title=self.title,
             content=self.content,
