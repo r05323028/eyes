@@ -53,6 +53,66 @@
 </dl>
 </dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="eyes.ml.spacy.binary_to_doc">
+<span class="sig-prename descclassname"><span class="pre">eyes.ml.spacy.</span></span><span class="sig-name descname"><span class="pre">binary_to_doc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">binary</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nlp</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">spacy.language.Language</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">spacy.tokens.doc.Doc</span></span></span><a class="headerlink" href="#eyes.ml.spacy.binary_to_doc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform bytes to spacy doc</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>binary</strong> (<em>bytes</em>) – spacy binary string</p></li>
+<li><p><strong>nlp</strong> (<em>Language</em>) – spacy language model</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>spacy doc</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Doc</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eyes.ml.spacy.transform_ptt_comment">
+<span class="sig-prename descclassname"><span class="pre">eyes.ml.spacy.</span></span><span class="sig-name descname"><span class="pre">transform_ptt_comment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">comment</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="data.html#eyes.data.spacy.SpacyPttComment" title="eyes.data.spacy.SpacyPttComment"><span class="pre">eyes.data.spacy.SpacyPttComment</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">nlp</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">spacy.language.Language</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="headerlink" href="#eyes.ml.spacy.transform_ptt_comment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform ptt comment to decoded dictionary</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>comment</strong> (<a class="reference internal" href="data.html#eyes.data.spacy.SpacyPttComment" title="eyes.data.spacy.SpacyPttComment"><em>spacy.SpacyPttComment</em></a>) – spacy binary comment</p></li>
+<li><p><strong>nlp</strong> (<em>Language</em>) – spacy language model</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>decoded dictionary</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eyes.ml.spacy.transform_ptt_post">
+<span class="sig-prename descclassname"><span class="pre">eyes.ml.spacy.</span></span><span class="sig-name descname"><span class="pre">transform_ptt_post</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">post</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="data.html#eyes.data.spacy.SpacyPttPost" title="eyes.data.spacy.SpacyPttPost"><span class="pre">eyes.data.spacy.SpacyPttPost</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">nlp</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">spacy.language.Language</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="headerlink" href="#eyes.ml.spacy.transform_ptt_post" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform ptt post to decoded dictionary</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>post</strong> (<a class="reference internal" href="data.html#eyes.data.spacy.SpacyPttPost" title="eyes.data.spacy.SpacyPttPost"><em>spacy.SpacyPttPost</em></a>) – spacy binary post</p></li>
+<li><p><strong>nlp</strong> (<em>Language</em>) – spacy language model</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>decoded dictionary</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Dict</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 </section>
 
