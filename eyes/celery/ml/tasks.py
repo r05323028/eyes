@@ -6,7 +6,6 @@ from typing import Dict
 
 import spacy
 import sqlalchemy as sa
-from spacy.tokens import Doc
 from sqlalchemy.orm import scoped_session, sessionmaker
 
 from celery import Task
@@ -16,7 +15,7 @@ from eyes.config import MySQLConfig, SpacyConfig
 from eyes.db.ptt import PttPost
 from eyes.db.spacy import SpacyPttPost
 from eyes.exception import PostNotExistsError
-from eyes.ml.spacy import transform_ptt_post_to_spacy
+from eyes.ml.spacy import binary_to_doc, transform_ptt_post_to_spacy
 
 logger = get_task_logger(__name__)
 
@@ -100,5 +99,5 @@ def transform_ptt_post_to_spacy_post(
 
     return {
         'id': spacy_post.id,
-        'title': Doc(self.nlp.vocab).from_bytes(spacy_post.title).text,
+        'title': binary_to_doc(spacy_post.title, self.nlp).text,
     }

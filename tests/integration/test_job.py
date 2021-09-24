@@ -12,30 +12,18 @@ class TestJob:
     '''Eyes job test cases
     '''
     @pytest.fixture
-    def tables(self):
-        yield ['ptt_posts', 'ptt_comments']
-
-    @pytest.fixture
     def session(
         self,
-        tables,
     ):
         db_config = MySQLConfig()
         engine = sa.create_engine(
             f'mysql://{db_config.user}:{db_config.password}@{db_config.host}:{db_config.port}/{db_config.database}?charset=utf8mb4'
         )
         session = sessionmaker(engine)()
-        session.execute('SET FOREIGN_KEY_CHECKS=0')
-        session.commit()
-        for tbl in tables:
-            session.execute(f'TRUNCATE TABLE {tbl}')
-        session.commit()
         yield session
-        for tbl in tables:
-            session.execute(f'TRUNCATE TABLE {tbl}')
-        session.commit()
         session.close()
 
+    @pytest.mark.slow
     def test_dispatch(
         self,
         session: Session,
