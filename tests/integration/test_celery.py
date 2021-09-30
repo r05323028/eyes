@@ -17,6 +17,7 @@ from eyes.celery.ml.tasks import transform_ptt_post_to_spacy_post
 from eyes.celery.stats.tasks import ptt_monthly_summary
 from eyes.config import MySQLConfig
 from eyes.db.ptt import PttPost
+from eyes.type import Label
 
 
 class TestCrawler:
@@ -83,7 +84,9 @@ class TestCrawler:
         session: Session,
     ):
         res = crawl_wiki_entity.delay(
-            url='https://zh.wikipedia.org/wiki/%E5%BC%B5%E6%83%A0%E5%A6%B9')
+            url='https://zh.wikipedia.org/wiki/%E5%BC%B5%E6%83%A0%E5%A6%B9',
+            label=Label['PERSON'].value,
+        )
         ent = res.get()
 
         assert isinstance(ent, Dict)
