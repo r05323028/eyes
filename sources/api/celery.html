@@ -125,11 +125,14 @@
 
 <dl class="py task">
 <dt class="sig sig-object py" id="eyes.celery.crawler.tasks.crawl_wiki_entity">
-<em class="property"><span class="pre">(task)</span></em><span class="sig-prename descclassname"><span class="pre">eyes.celery.crawler.tasks.</span></span><span class="sig-name descname"><span class="pre">crawl_wiki_entity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">,</span> </span><span class="pre">NoneType</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#eyes.celery.crawler.tasks.crawl_wiki_entity" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">(task)</span></em><span class="sig-prename descclassname"><span class="pre">eyes.celery.crawler.tasks.</span></span><span class="sig-name descname"><span class="pre">crawl_wiki_entity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">,</span> </span><span class="pre">NoneType</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#eyes.celery.crawler.tasks.crawl_wiki_entity" title="Permalink to this definition">¶</a></dt>
 <dd><p>Crawl wiki entity</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>url</strong> (<em>str</em>) – entity url</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>url</strong> (<em>str</em>) – entity url</p></li>
+<li><p><strong>label</strong> (<em>int</em>) – entity label id</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>wiki entity dictionary</p>
