@@ -3,7 +3,29 @@
 import pathlib
 import typing
 
+import yaml
 from pydantic import BaseSettings, Field
+from yaml import Loader
+
+
+class EyesConfig(BaseSettings):
+    '''Eyes Config
+    '''
+    wiki: typing.Dict
+
+    @classmethod
+    def from_yaml(
+        cls,
+        file: str,
+    ) -> "EyesConfig":
+        '''Create EyesConfig from yaml
+
+        Args:
+            file (str): config file path
+        '''
+        with open(file) as f:
+            data = yaml.load(f, Loader=Loader)
+        return cls(wiki=data['wiki'])
 
 
 class MySQLConfig(BaseSettings):

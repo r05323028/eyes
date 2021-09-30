@@ -7,26 +7,26 @@ import requests
 from rich.logging import RichHandler
 
 from eyes.crawler.utils import get_dom
-from eyes.data import Entity
+from eyes.data import Entity, Label
 
 WIKI_BASE_URL = "https://zh.wikipedia.org"
 
 
-def crawl_wiki_entity(url: str) -> Optional[Entity]:
+def crawl_wiki_entity(
+    url: str,
+    label: Label,
+) -> Optional[Entity]:
     '''Crawl wiki entity
 
     Args:
         url (str): wiki entity url
+        label (Label): entity label
 
     Returns:
         Optional[Entity]: entity
     '''
     resp = requests.get(url)
     if resp.status_code != 200:
-        # logger.warning(
-        #     'Could not crawl entity: %s',
-        #     url,
-        # )
         return
     dom = get_dom(resp)
     name = ''.join(dom.xpath('//*[@id="firstHeading"]/text()'))
@@ -41,6 +41,7 @@ def crawl_wiki_entity(url: str) -> Optional[Entity]:
     return Entity(
         name=name,
         type=entity_type,
+        label=label,
         alias=alias,
     )
 
@@ -56,21 +57,9 @@ def crawl_wiki_entity_urls(category_url: str) -> Iterator[str]:
     '''
     resp = requests.get(category_url)
     if resp.status_code != 200:
-        # logger.warning(
-        #     "Could not get category page: %s",
-        #     category_url,
-        # )
         return
     dom = get_dom(resp)
-    next_url = dom.xpath(
-        '//*[@id="mw-pages"]/a[text()="下一页" or text()="下一頁"]/@href')
-    if next_url:
-        next_url = next_url[0]
-    while next_url:
-        # logger.info(
-        #     "Crawl entity urls: %s",
-        #     next_url,
-        # )
+    while True:
         urls = dom.xpath('//*[@id="mw-pages"]/div/div/div/ul/li/a/@href')
         for url in urls:
             yield f'{WIKI_BASE_URL}{url}'

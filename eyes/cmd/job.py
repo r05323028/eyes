@@ -61,18 +61,12 @@ def job():
     default=False,
     help='If overwrite.',
 )
-@click.option(
-    '--category_url',
-    type=str,
-    help="Wikipedia category url.",
-)
 def dispatch(
     job_type,
     board,
     forum_id,
     n_days,
     top_n,
-    category_url,
     year,
     month,
     overwrite,
@@ -124,12 +118,7 @@ def dispatch(
     if job_type in [
             JobType.CRAWL_WIKI_ENTITIES,
     ]:
-        job = Job(
-            job_type=job_type,
-            payload={
-                'category_url': category_url,
-            },
-        )
+        job = Job(job_type=job_type)
 
     if job_type in [
             JobType.PTT_MONTHLY_SUMMARY,

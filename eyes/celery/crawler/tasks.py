@@ -16,6 +16,7 @@ from eyes.crawler import dcard, entity, ptt
 from eyes.db.dcard import DcardBoard, DcardComment, DcardPost
 from eyes.db.ptt import PttBoard, PttPost
 from eyes.db.wiki import WikiEntity
+from eyes.type import Label
 
 logger = get_task_logger(__name__)
 
@@ -281,25 +282,30 @@ def crawl_dcard_board_list(
 def crawl_wiki_entity(
     self,
     url: str,
+    label: int,
 ) -> Optional[Dict]:
     '''Crawl wiki entity
 
     Args:
         url (str): entity url
+        label (int): entity label id
 
     Returns:
         Optional[Dict]: wiki entity dictionary
     '''
-    crawled_entity = entity.crawl_wiki_entity(url)
+    crawled_entity = entity.crawl_wiki_entity(url, Label(label))
     exist_entity = self.sess.query(WikiEntity).filter(
         WikiEntity.name == crawled_entity.name).first()
     if exist_entity:
         exist_entity.alias = crawled_entity.alias
         exist_entity.type = crawled_entity.type
+        exist_entity.label = crawled_entity.label
         self.sess.merge(exist_entity)
         self.sess.commit()
     else:
         self.sess.add(crawled_entity.to_wiki_entity_orm())
         self.sess.commit()
 
-    return crawled_entity.dict()
+    return {
+        "name": crawled_entity.name,
+    }

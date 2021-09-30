@@ -6,6 +6,7 @@ from typing import List, Optional
 from pydantic import BaseModel
 
 from eyes.db import wiki
+from eyes.type import Label
 
 
 class Post(BaseModel):
@@ -45,10 +46,12 @@ class Entity(BaseModel):
     Attributes:
         name (str): name
         type (str): type
+        label (Label): entity label
         alias (Optional[List[str]]): alias
     '''
     name: str
     type: str
+    label: Label
     alias: Optional[List[str]]
 
     def to_wiki_entity_orm(self) -> wiki.WikiEntity:
@@ -60,5 +63,6 @@ class Entity(BaseModel):
         return wiki.WikiEntity(
             name=self.name,
             type=self.type,
+            label=self.label,
             alias=self.alias,
         )
