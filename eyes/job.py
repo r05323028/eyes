@@ -2,6 +2,7 @@
 '''
 import enum
 import logging
+import os
 from operator import itemgetter
 from typing import Callable, Dict, Optional
 
@@ -20,15 +21,17 @@ from eyes.celery.crawler.tasks import (
 )
 from eyes.celery.ml.tasks import transform_ptt_post_to_spacy_post
 from eyes.celery.stats.tasks import ptt_monthly_summary
-from eyes.config import MySQLConfig
+from eyes.config import EyesConfig, MySQLConfig
 from eyes.crawler.dcard import crawl_post_ids
 from eyes.crawler.entity import crawl_wiki_entity_urls
 from eyes.crawler.ptt import crawl_post_urls
 from eyes.db.ptt import PttBoard, PttPost
 from eyes.db.spacy import SpacyPttPost
+from eyes.type import Label
 
 logger = logging.getLogger(__name__)
 logger.addHandler(RichHandler(rich_tracebacks=True))
+logger.setLevel(logging.INFO)
 
 
 class JobType(enum.Enum):
@@ -75,11 +78,6 @@ class Job(pydantic.BaseModel):
                 if key not in v:
                     raise Exception(f'{key} is required in payload')
 
-        if values['job_type'] == JobType.CRAWL_WIKI_ENTITIES:
-            for key in ['category_url']:
-                if key not in v:
-                    raise Exception(f'{key} is required in payload')
-
         if values['job_type'] in [
                 JobType.PTT_MONTHLY_SUMMARY,
                 JobType.PTT_SPACY_PIPELINE,
@@ -107,6 +105,9 @@ class Jobs:
         session_factory = sessionmaker(engine)
         Session = scoped_session(session_factory)
         self.sess = Session()
+
+        self.config = EyesConfig.from_yaml(
+            os.environ.get("EYES_CONFIG_PATH", './config/eyes.yaml'))
 
     def __del__(self):
         self.sess.close()
@@ -210,10 +211,20 @@ class Jobs:
         Args:
             job (job): crawler job
         '''
-        urls = crawl_wiki_entity_urls(job.payload['category_url'])
+        categories = self.config.wiki['categories']
 
-        for url in urls:
-            crawl_wiki_entity.apply_async(args=[url])
+        for category in categories:
+            logger.info(category['urls'])
+            c_type = Label[category['type']]
+            c_urls = category['urls']
+            for c_url in c_urls:
+                logger.info(
+                    "Crawl urls: %s",
+                    c_url,
+                )
+                entity_urls = crawl_wiki_entity_urls(c_url)
+                for url in entity_urls:
+                    crawl_wiki_entity.apply_async(args=[url, c_type.value])
 
     def ptt_monthly_summary(
         self,
@@ -243,7 +254,7 @@ class Jobs:
         stmt = self.sess.query(PttPost.id).filter(
             extract('year', PttPost.created_at) == year,
             extract('month', PttPost.created_at) == month,
-            )
+        )
         if not overwrite:
             stmt = stmt.filter(~exists().where(PttPost.id == SpacyPttPost.id))
         rows = stmt.all()
