@@ -106,12 +106,4 @@ class TestEntityCrawler:
         category_url = 'https://zh.wikipedia.org/wiki/Category:%E5%8F%B0%E7%81%A3%E5%A5%B3%E6%AD%8C%E6%89%8B'
         urls = [url for url in entity.crawl_wiki_entity_urls(category_url)]
 
-        print(urls)
-
         assert isinstance(urls, list)
-
-        category_url = 'https://zh.wikipedia.org/wiki/Category:%E8%87%BA%E7%81%A3%E7%94%B7%E6%80%A7%E7%AB%8B%E6%B3%95%E5%A7%94%E5%93%A1'
-    
-        urls = [url for url in entity.crawl_wiki_entity_urls(category_url)]
-        
-        print(urls)
