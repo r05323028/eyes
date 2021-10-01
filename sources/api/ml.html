@@ -118,6 +118,45 @@
 </dd></dl>
 
 </section>
+<section id="module-eyes.ml.lf">
+<span id="eyes-ml-lf"></span><h2>eyes.ml.lf<a class="headerlink" href="#module-eyes.ml.lf" title="Permalink to this headline">¶</a></h2>
+<p>Eyes label functions module</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="eyes.ml.lf.build_tries">
+<span class="sig-prename descclassname"><span class="pre">eyes.ml.lf.</span></span><span class="sig-name descname"><span class="pre">build_tries</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">entities</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="data.html#eyes.data.Entity" title="eyes.data.Entity"><span class="pre">eyes.data.Entity</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">skweak.gazetteers.Trie</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#eyes.ml.lf.build_tries" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build Gazetteer Tries</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>entities</strong> (<em>List</em><em>[</em><a class="reference internal" href="data.html#eyes.data.Entity" title="eyes.data.Entity"><em>Entity</em></a><em>]</em>) – entities</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>tries used in gazetteer</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Dict[str, Trie]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="eyes.ml.lf.NERAnnotator">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">eyes.ml.lf.</span></span><span class="sig-name descname"><span class="pre">NERAnnotator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sess</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">sqlalchemy.orm.session.Session</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eyes.ml.lf.NERAnnotator" title="Permalink to this definition">¶</a></dt>
+<dd><p>NER Annotator for spacy document</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="eyes.ml.lf.NERAnnotator.add_all">
+<span class="sig-name descname"><span class="pre">add_all</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#eyes.ml.lf.NERAnnotator.add_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add all annotators</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="eyes.ml.lf.NERAnnotator.add_gazetteers">
+<span class="sig-name descname"><span class="pre">add_gazetteers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#eyes.ml.lf.NERAnnotator.add_gazetteers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add gazetteers to annotator</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
 </section>
 
 
@@ -145,6 +184,7 @@
 <li class="toctree-l1"><a class="reference internal" href="db.html">eyes.db</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">eyes.ml</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-eyes.ml.spacy">eyes.ml.spacy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-eyes.ml.lf">eyes.ml.lf</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="config.html">eyes.config</a></li>
