@@ -5,9 +5,8 @@ from typing import Dict
 import pytest
 import spacy
 import sqlalchemy as sa
-from skweak.aggregation import HMM
 from spacy.language import Language
-from spacy.tokens import Doc, Span
+from spacy.tokens import Doc
 from sqlalchemy.orm import Session, scoped_session, sessionmaker
 
 from eyes.config import MySQLConfig, SpacyConfig
