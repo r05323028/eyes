@@ -40,6 +40,7 @@ eyes system architecture
 ### ML
 
 - spaCy
+- skweak
 
 ## License
 

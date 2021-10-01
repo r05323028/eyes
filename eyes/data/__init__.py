@@ -50,7 +50,7 @@ class Entity(BaseModel):
         alias (Optional[List[str]]): alias
     '''
     name: str
-    type: str
+    type: Optional[str]
     label: Label
     alias: Optional[List[str]]
 
