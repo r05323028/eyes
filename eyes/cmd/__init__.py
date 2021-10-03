@@ -6,6 +6,7 @@ import click
 
 from eyes.cmd.db import db
 from eyes.cmd.job import job
+from eyes.cmd.train import train
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -23,3 +24,4 @@ def cli():
 
 cli.add_command(db)
 cli.add_command(job)
+cli.add_command(train)
