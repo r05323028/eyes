@@ -117,6 +117,26 @@
 </dl>
 </dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="eyes.ml.spacy.build_docs">
+<span class="sig-prename descclassname"><span class="pre">eyes.ml.spacy.</span></span><span class="sig-name descname"><span class="pre">build_docs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nlp</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">spacy.language.Language</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sess</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">sqlalchemy.orm.session.Session</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">100000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">32</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><span class="pre">spacy.tokens.doc.Doc</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#eyes.ml.spacy.build_docs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build spacy docs</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sess</strong> (<em>Session</em>) – sqlalchemy session</p></li>
+<li><p><strong>limit</strong> (<em>int</em>) – max number of docs</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>spacy docs</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Iterable[Doc]</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="module-eyes.ml.lf">
 <span id="eyes-ml-lf"></span><h2>eyes.ml.lf<a class="headerlink" href="#module-eyes.ml.lf" title="Permalink to this headline">¶</a></h2>
