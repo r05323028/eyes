@@ -15,7 +15,6 @@ from eyes.db import ptt
 from eyes.db import spacy as spacy_db
 from eyes.ml import spacy as spacy_ml
 from eyes.ml.lf import NERAnnotator
-from eyes.ml.train import build_docs
 
 
 class TestMl:
@@ -93,6 +92,6 @@ class TestMl:
     ):
         '''Test build docs
         '''
-        docs = build_docs(nlp, session, limit=3, batch_size=3)
+        docs = spacy_ml.build_docs(nlp, session, limit=3, batch_size=3)
         for doc in docs:
             assert len(doc.ents) > 0

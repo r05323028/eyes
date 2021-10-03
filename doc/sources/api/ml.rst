@@ -18,10 +18,3 @@ eyes.ml.lf
 
 .. automodule:: eyes.ml.lf
     :members:
-
-
-eyes.ml.train
--------------
-
-.. automodule:: eyes.ml.train
-    :members:
