@@ -51,7 +51,7 @@ def train():
 )
 @click.option(
     '--model',
-    default='zh_core_web_sm',
+    default='zh_core_web_md',
     help="Spacy model name",
 )
 @click.option(
