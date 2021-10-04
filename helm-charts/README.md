@@ -16,6 +16,7 @@ kubectl create ns eyes
 - MySQL: `helm install -n eyes mysql bitnami/mysql -f mysql/values.yaml`
 - Redis: `helm install -n eyes redis bitnami/redis -f redis/values.yaml`
 - Dev Server: `helm install -n eyes dev dev`
+- Celery: `helm install -n eyes celery-worker celery`
 - API: `helm install -n eyes api api`
 
 ### Argo workflow
