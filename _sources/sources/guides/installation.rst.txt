@@ -47,6 +47,9 @@ Finally, deploy services of **Eyes**.
     # redis
     helm install -n eyes redis bitnami/redis -f helm-charts/redis/values.yaml
 
+    # celery worker
+    helm install -n eyes celery-worker helm-charts/celery
+
     # api
     helm install -n eyes api helm-charts/api
 

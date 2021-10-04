@@ -71,6 +71,9 @@ helm install -n eyes mysql bitnami/mysql -f helm-charts/mysql/values.yaml
 <span class="c1"># redis</span>
 helm install -n eyes redis bitnami/redis -f helm-charts/redis/values.yaml
 
+<span class="c1"># celery worker</span>
+helm install -n eyes celery-worker helm-charts/celery
+
 <span class="c1"># api</span>
 helm install -n eyes api helm-charts/api
 
