@@ -9,11 +9,15 @@ Eyes
 `eyes` is a **Public Opinion Mining** system focusing on taiwanese forums such as PTT, DCard.
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+   :maxdepth: 1
+   :caption: User Guides
+
+   sources/guides/installation
+   sources/guides/build_db
+   sources/guides/send_jobs
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: API Documentation
 
    sources/api/data

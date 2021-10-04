@@ -1,0 +1,170 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Send jobs &#8212; eyes 0.1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="eyes.data" href="../api/data.html" />
+    <link rel="prev" title="Build database" href="build_db.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="send-jobs">
+<h1>Send jobs<a class="headerlink" href="#send-jobs" title="Permalink to this headline">¶</a></h1>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Before you dispatch a job, remember to start a celery worker as a consumer.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>celery -A eyes.celery worker
+</pre></div>
+</div>
+</div>
+<section id="jobs">
+<h2>Jobs<a class="headerlink" href="#jobs" title="Permalink to this headline">¶</a></h2>
+<p>Jobs repository of Eyes.</p>
+<blockquote>
+<div><ul class="simple">
+<li><dl class="simple">
+<dt>Crawl jobs</dt><dd><ul>
+<li><p>CRAWL_PTT_LATEST_POSTS</p></li>
+<li><p>CRAWL_PTT_BOARD_LIST</p></li>
+<li><p>CRAWL_PTT_TOP_BOARD_POSTS</p></li>
+<li><p>CRAWL_DCARD_LATEST_POSTS</p></li>
+<li><p>CRAWL_DCARD_BOARD_LIST</p></li>
+<li><p>CRAWL_WIKI_ENTITIES</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Stats jobs</dt><dd><ul>
+<li><p>PTT_MONTHLY_SUMMARY</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>ML jobs</dt><dd><ul>
+<li><p>PTT_SPACY_PIPELINE</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+</section>
+<section id="send-a-job-by-command">
+<h2>Send a job by command<a class="headerlink" href="#send-a-job-by-command" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>eyes job dispatch --job_type JOB_TYPE --arg ...
+</pre></div>
+</div>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">eyes</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">User Guides</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="build_db.html">Build database</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Send jobs</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/data.html">eyes.data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/crawler.html">eyes.crawler</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/celery.html">eyes.celery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/db.html">eyes.db</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/ml.html">eyes.ml</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/config.html">eyes.config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/job.html">eyes.job</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/schema.html">eyes.schema</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/exception.html">eyes.exception</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="build_db.html" title="previous chapter">Build database</a></li>
+      <li>Next: <a href="../api/data.html" title="next chapter">eyes.data</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Sean Chang.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../../_sources/sources/guides/send_jobs.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
