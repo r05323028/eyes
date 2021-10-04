@@ -15,7 +15,7 @@ Eyes
    sources/guides/installation
    sources/guides/build_db
    sources/guides/send_jobs
-   sources/guides/train_model
+   sources/guides/train_models
 
 .. toctree::
    :maxdepth: 1
