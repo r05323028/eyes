@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Installation &#8212; eyes 0.1.0 documentation</title>
+    <title>Train models &#8212; eyes 0.1.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css" />
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
@@ -15,8 +15,6 @@
     <script src="../../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Build database" href="build_db.html" />
-    <link rel="prev" title="Eyes" href="../../index.html" />
    
   <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
   
@@ -33,57 +31,8 @@
 
           <div class="body" role="main">
             
-  <section id="installation">
-<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
-<section id="kubernetes-recommended">
-<h2>Kubernetes (Recommended)<a class="headerlink" href="#kubernetes-recommended" title="Permalink to this headline">¶</a></h2>
-<p><strong>Kubernetes</strong> is widely used in several famous services. We also recommended you install <strong>Eyes</strong> in a Kubernetes cluster.</p>
-<section id="create-namespace">
-<h3>Create namespace<a class="headerlink" href="#create-namespace" title="Permalink to this headline">¶</a></h3>
-<p>First, we need to create an namespace.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kubectl create ns eyes
-</pre></div>
-</div>
-</section>
-<section id="argo-workflows">
-<h3>Argo workflows<a class="headerlink" href="#argo-workflows" title="Permalink to this headline">¶</a></h3>
-<p>Second, install <strong>Argo Workflows</strong>. Our service mainly use it to manage ETL jobs.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># add repo</span>
-helm repo add argo https://argoproj.github.io/argo-helm
-
-<span class="c1"># update</span>
-helm repo update
-
-<span class="c1"># install</span>
-helm install -n eyes argo argo/argo-workflows
-</pre></div>
-</div>
-</section>
-<section id="deploy-services">
-<h3>Deploy services<a class="headerlink" href="#deploy-services" title="Permalink to this headline">¶</a></h3>
-<p>Finally, deploy services of <strong>Eyes</strong>.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># configmap</span>
-helm install -n eyes config helm-charts/config
-
-<span class="c1"># mysql</span>
-helm install -n eyes mysql bitnami/mysql -f helm-charts/mysql/values.yaml
-
-<span class="c1"># redis</span>
-helm install -n eyes redis bitnami/redis -f helm-charts/redis/values.yaml
-
-<span class="c1"># api</span>
-helm install -n eyes api helm-charts/api
-
-<span class="c1"># cron-workflows</span>
-helm install -n eyes crawlers helm-charts/crawlers
-</pre></div>
-</div>
-</section>
-</section>
-<section id="docker-compose">
-<h2>Docker Compose<a class="headerlink" href="#docker-compose" title="Permalink to this headline">¶</a></h2>
-<p>WIP</p>
-</section>
+  <section id="train-models">
+<h1>Train models<a class="headerlink" href="#train-models" title="Permalink to this headline">¶</a></h1>
 </section>
 
 
@@ -104,8 +53,8 @@ helm install -n eyes crawlers helm-charts/crawlers
 
 <h3>Navigation</h3>
 <p class="caption" role="heading"><span class="caption-text">User Guides</span></p>
-<ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a></li>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="build_db.html">Build database</a></li>
 <li class="toctree-l1"><a class="reference internal" href="send_jobs.html">Send jobs</a></li>
 </ul>
@@ -126,8 +75,6 @@ helm install -n eyes crawlers helm-charts/crawlers
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../../index.html">Documentation overview</a><ul>
-      <li>Previous: <a href="../../index.html" title="previous chapter">Eyes</a></li>
-      <li>Next: <a href="build_db.html" title="next chapter">Build database</a></li>
   </ul></li>
 </ul>
 </div>
@@ -161,7 +108,7 @@ helm install -n eyes crawlers helm-charts/crawlers
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
-      <a href="../../_sources/sources/guides/installation.rst.txt"
+      <a href="../../_sources/sources/guides/train_model.rst.txt"
           rel="nofollow">Page source</a>
     </div>
 
