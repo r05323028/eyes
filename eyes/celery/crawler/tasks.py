@@ -106,7 +106,10 @@ def crawl_ptt_post(
         self.sess.add(post.to_orm())
         self.sess.commit()
 
-    return post.dict()
+    return {
+        'id': post.id,
+        'title': post.title,
+    }
 
 
 @app.task(
@@ -233,7 +236,10 @@ def crawl_dcard_post(
         self.sess.add(post.to_orm())
         self.sess.commit()
 
-    return post.dict()
+    return {
+        'id': post.id,
+        'title': post.title,
+    }
 
 
 @app.task(
