@@ -4,7 +4,9 @@ eyes is a **Public Opinion Mining System** focusing on taiwanese forums such as 
 
 ## Features
 
-- :fire: **Article monitor** helps you capture the trend at a glance.
+- :fire: **Article monitor**: helps you capture the trend at a glance.
+- :fire: **Weak supervision**: let you generate & update model without human effort.
+- :fire: **Well-integrated with spaCy**: let you train models by yourself or use trained models in [model hub](https://spacy.io/models) simply.
 
 ## Screenshots
 
@@ -20,7 +22,7 @@ eyes system architecture
 
 ### Infrastructure
 
-- Argo Workflow
+- Argo Workflows
 - Celery, Flower
 - Kubernetes, Helm Charts
 - MySQL
@@ -35,7 +37,7 @@ eyes system architecture
 ### Web
 
 - React + Redux-Saga
-- Tailwind CSS
+- Tailwindcss
 
 ### ML
 
