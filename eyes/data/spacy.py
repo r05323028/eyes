@@ -1,9 +1,9 @@
 '''Eyes spacy data container
 '''
-from typing import Dict, List
+from datetime import datetime
+from typing import List
 
 from pydantic import BaseModel, Field
-from spacy.language import Language
 
 from eyes.db import spacy as spacy_orm
 
@@ -38,6 +38,8 @@ class SpacyPttPost(BaseModel):
     title: bytes
     content: bytes
     comments: List[SpacyPttComment] = Field([])
+    created_at: datetime
+    updated_at: datetime
 
     class Config:
         orm_mode = True
@@ -53,4 +55,6 @@ class SpacyPttPost(BaseModel):
             title=self.title,
             content=self.content,
             comments=[com.to_orm() for com in self.comments],
+            created_at=self.created_at,
+            updated_at=self.updated_at,
         )

@@ -1,17 +1,18 @@
 '''Eyes stats data module
 '''
-from datetime import datetime
-from typing import Optional
+from datetime import date, datetime
+from typing import Dict, List, Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from eyes.db import stats
+from eyes.type import SourceType
 
 
 class MonthlySummary(BaseModel):
     '''Monthly summary data container
     '''
-    source: stats.SourceType
+    source: SourceType
     total_posts: int
     total_comments: int
     year: int
@@ -39,7 +40,7 @@ class MonthlySummary(BaseModel):
 class DailySummary(BaseModel):
     '''Daily summary data container
     '''
-    source: stats.SourceType
+    source: SourceType
     total_posts: int
     year: int
     month: int
@@ -59,6 +60,43 @@ class DailySummary(BaseModel):
             year=self.year,
             month=self.month,
             day=self.day,
+            created_at=self.created_at,
+            updated_at=self.updated_at,
+        )
+
+
+class EntitySummary(BaseModel):
+    '''Entity summary data container
+    '''
+    name: str
+    count: int
+    board_stats: List[Dict] = Field([])
+    link_stats: List[Dict] = Field([])
+    posts: List[Dict] = Field([])
+    year: int
+    month: int
+    created_at: datetime
+    updated_at: datetime
+
+    class Config:
+        '''Pydantic config
+        '''
+        orm_mode = True
+
+    def to_orm(self) -> stats.EntitySummary:
+        '''Transform to ORM model
+
+        Returns:
+            stats.EntitySummary
+        '''
+        return stats.EntitySummary(
+            name=self.name,
+            count=self.count,
+            board_stats=self.board_stats,
+            link_stats=self.link_stats,
+            posts=self.posts,
+            year=self.year,
+            month=self.month,
             created_at=self.created_at,
             updated_at=self.updated_at,
         )

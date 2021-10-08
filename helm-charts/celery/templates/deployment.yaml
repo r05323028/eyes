@@ -16,7 +16,10 @@ spec:
         - name: "{{ .Release.Name }}"
           image: '{{ .Values.image }}:{{ .Values.tag | default "default" }}'
           command: ["/bin/bash", "-c", "--"]
-          args: ["poetry run celery -A eyes.celery worker"]
+          args:
+            [
+              "poetry run celery -A eyes.celery worker --concurrency={{ .Values.celery.concurrency }}",
+            ]
           imagePullPolicy: Never
           envFrom:
             - configMapRef:

@@ -44,6 +44,8 @@ def transform_ptt_post_to_spacy(
         title=title_bytes,
         content=content_bytes,
         comments=comments,
+        created_at=post.created_at,
+        updated_at=post.updated_at,
     )
 
 

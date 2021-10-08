@@ -1,8 +1,11 @@
 '''Eyes celery stats tasks
 '''
-from datetime import datetime
+from collections import defaultdict
+from datetime import date, datetime
+from itertools import groupby
 from typing import Dict
 
+import spacy
 import sqlalchemy as sa
 from sqlalchemy import extract, func
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -10,10 +13,13 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from celery import Task
 from celery.utils.log import get_task_logger
 from eyes.celery import app
-from eyes.config import MySQLConfig
+from eyes.config import MySQLConfig, SpacyConfig
 from eyes.data import stats
 from eyes.db.ptt import PttComment, PttPost
-from eyes.db.stats import DailySummary, MonthlySummary, SourceType
+from eyes.db.spacy import SpacyPttPost
+from eyes.db.stats import DailySummary, EntitySummary, MonthlySummary
+from eyes.ml.spacy import binary_to_doc
+from eyes.type import SourceType
 
 logger = get_task_logger(__name__)
 
@@ -22,6 +28,7 @@ class StatsTask(Task):
     '''Stats Base Task
     '''
     _sess = None
+    _nlp = None
 
     def after_return(self, *args, **kwargs):
         '''Callback after finishing a job
@@ -42,6 +49,17 @@ class StatsTask(Task):
             self._sess = scoped_session(session_factory)()
 
         return self._sess
+
+    @property
+    def nlp(self):
+        '''Returns spacy language model
+        '''
+        if self._nlp is None:
+            config = SpacyConfig()
+            nlp = spacy.load(config.name)
+            self._nlp = nlp
+
+        return self._nlp
 
 
 @app.task(
@@ -159,4 +177,179 @@ def ptt_monthly_summary(
         'month': monthly_sum.month,
         'total_posts': monthly_sum.total_posts,
         'total_comments': monthly_sum.total_comments,
+    }
+
+
+@app.task(
+    bind=True,
+    base=StatsTask,
+)
+def stats_entity_summary(
+    self,
+    year,
+    month,
+    limit=None,
+) -> Dict:
+    '''Entity stats
+    '''
+    entities = set()
+    count = defaultdict(int)
+    board_stats = defaultdict(int)
+    link_stats = defaultdict(dict)
+    posts = defaultdict(set)
+
+    query = self.sess.query(
+        SpacyPttPost,
+        PttPost.board,
+    ).filter(
+        PttPost.id == SpacyPttPost.id,
+        func.year(SpacyPttPost.created_at) == year,
+        func.month(SpacyPttPost.created_at) == month,
+    ).order_by(PttPost.created_at.desc())
+    if limit:
+        logger.warning('Set limit %s', limit)
+        query = query.limit(limit)
+
+    for row in query:
+        spacy_post, board = row
+        row_date = spacy_post.created_at.date()
+        title = binary_to_doc(spacy_post.title, self.nlp)
+        content = binary_to_doc(spacy_post.content, self.nlp)
+        comments = [
+            binary_to_doc(com.content, self.nlp) for com in spacy_post.comments
+        ]
+
+        for i, ent in enumerate(title.ents):
+            ent = ent.text.strip()
+            if ent not in entities:
+                entities.add(ent)
+
+            # count stats
+            count[ent] += 1
+
+            # board stats
+            board_stats[(ent, board, row_date)] += 1
+
+            # link stats
+            other_ents = [
+                e.text.strip() for j, e in enumerate(title.ents) if i != j
+            ]
+            for other_ent in other_ents:
+                if other_ent not in link_stats[ent]:
+                    link_stats[ent][other_ent] = 1
+                else:
+                    link_stats[ent][other_ent] += 1
+
+            # post stats
+            posts[ent].add(spacy_post.id)
+
+        for i, ent in enumerate(content.ents):
+            ent = ent.text.strip()
+            if ent not in entities:
+                entities.add(ent)
+
+            # count stats
+            count[ent] += 1
+
+            # board stats
+            board_stats[(ent, board, row_date)] += 1
+
+            # link stats
+            other_ents = [
+                e.text.strip() for j, e in enumerate(content.ents) if i != j
+            ]
+            for other_ent in other_ents:
+                if other_ent not in link_stats[ent]:
+                    link_stats[ent][other_ent] = 1
+                else:
+                    link_stats[ent][other_ent] += 1
+
+            # post stats
+            posts[ent].add(spacy_post.id)
+
+        for comment in comments:
+            for i, ent in enumerate(comment.ents):
+                ent = ent.text.strip()
+                if ent not in entities:
+                    entities.add(ent)
+
+                # count stats
+                count[ent] += 1
+
+                # board stats
+                board_stats[(ent, board, row_date)] += 1
+
+                # link stats
+                other_ents = [
+                    e.text.strip() for j, e in enumerate(comment.ents)
+                    if i != j
+                ]
+                for other_ent in other_ents:
+                    if other_ent not in link_stats[ent]:
+                        link_stats[ent][other_ent] = 1
+                    else:
+                        link_stats[ent][other_ent] += 1
+
+                # post stats
+                posts[ent].add(spacy_post.id)
+
+    # reshape board stats
+    board_stats = dict(sorted(
+        board_stats.items(),
+        key=lambda x: x[0][0],
+    ))
+    ent_board_stats = defaultdict(list)
+    for e_name, e_group in groupby(
+            board_stats.items(),
+            key=lambda x: x[0][0],
+    ):
+        ent_board_stats[e_name] = [{
+            'source': SourceType.PTT.name,
+            'board': key[1],
+            'dt': key[2].strftime('%Y-%m-%d'),
+            'count': value,
+        } for key, value in e_group]
+
+    # transform to orm and upsert
+    for ent in entities:
+        exist_row = self.sess.query(EntitySummary).filter(
+            EntitySummary.name == ent,
+            EntitySummary.year == year,
+            EntitySummary.month == month,
+        ).first()
+
+        if exist_row:
+            exist_row.count = count[ent]
+            exist_row.board_stats = ent_board_stats[ent]
+            exist_row.link_stats = [{
+                'source': SourceType.PTT.name,
+                'entity': ent_name,
+                'count': ent_count,
+            } for ent_name, ent_count in link_stats[ent].items()]
+            exist_row.posts = list(posts[ent])
+            exist_row.year = exist_row.created_at.year
+            exist_row.month = exist_row.created_at.month
+            exist_row.updated_at = datetime.utcnow()
+            self.sess.merge(exist_row)
+            self.sess.commit()
+        else:
+            self.sess.add(
+                EntitySummary(
+                    name=ent,
+                    count=count[ent],
+                    board_stats=ent_board_stats[ent],
+                    link_stats=[{
+                        'source': SourceType.PTT.name,
+                        'entity': ent_name,
+                        'count': ent_count,
+                    } for ent_name, ent_count in link_stats[ent].items()],
+                    posts=list(posts[ent]),
+                    year=year,
+                    month=month,
+                ))
+            self.sess.commit()
+
+    return {
+        'year': year,
+        'month': month,
     }
