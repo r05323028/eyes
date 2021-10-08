@@ -15,7 +15,7 @@
     <script src="../../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Build database" href="build_db.html" />
+    <link rel="next" title="Send jobs" href="send_jobs.html" />
     <link rel="prev" title="Eyes" href="../../index.html" />
    
   <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
@@ -41,13 +41,18 @@
 <section id="create-namespace">
 <h3>Create namespace<a class="headerlink" href="#create-namespace" title="Permalink to this headline">¶</a></h3>
 <p>First, we need to create an namespace.</p>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">Create namespace</span><a class="headerlink" href="#id1" title="Permalink to this code">¶</a></div>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kubectl create ns eyes
 </pre></div>
+</div>
 </div>
 </section>
 <section id="argo-workflows">
 <h3>Argo workflows<a class="headerlink" href="#argo-workflows" title="Permalink to this headline">¶</a></h3>
 <p>Second, install <strong>Argo Workflows</strong>. Our service mainly use it to manage ETL jobs.</p>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">Add argo repository</span><a class="headerlink" href="#id2" title="Permalink to this code">¶</a></div>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># add repo</span>
 helm repo add argo https://argoproj.github.io/argo-helm
 
@@ -58,10 +63,13 @@ helm repo update
 helm install -n eyes argo argo/argo-workflows
 </pre></div>
 </div>
+</div>
 </section>
 <section id="deploy-services">
 <h3>Deploy services<a class="headerlink" href="#deploy-services" title="Permalink to this headline">¶</a></h3>
 <p>Finally, deploy services of <strong>Eyes</strong>.</p>
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text">Deploy services</span><a class="headerlink" href="#id3" title="Permalink to this code">¶</a></div>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># configmap</span>
 helm install -n eyes config helm-charts/config
 
@@ -80,6 +88,17 @@ helm install -n eyes api helm-charts/api
 <span class="c1"># cron-workflows</span>
 helm install -n eyes crawlers helm-charts/crawlers
 </pre></div>
+</div>
+</div>
+</section>
+<section id="initialize-database">
+<h3>Initialize database<a class="headerlink" href="#initialize-database" title="Permalink to this headline">¶</a></h3>
+<p>After installed services, remember to initialize database by eyes command line tools.</p>
+<div class="literal-block-wrapper docutils container" id="id4">
+<div class="code-block-caption"><span class="caption-text">Initialize database &amp; tables</span><a class="headerlink" href="#id4" title="Permalink to this code">¶</a></div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>eyes db init --host HOST --port PORT --user USER
+</pre></div>
+</div>
 </div>
 </section>
 </section>
@@ -109,7 +128,6 @@ helm install -n eyes crawlers helm-charts/crawlers
 <p class="caption" role="heading"><span class="caption-text">User Guides</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="build_db.html">Build database</a></li>
 <li class="toctree-l1"><a class="reference internal" href="send_jobs.html">Send jobs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="train_models.html">Train models</a></li>
 </ul>
@@ -131,7 +149,7 @@ helm install -n eyes crawlers helm-charts/crawlers
 <ul>
   <li><a href="../../index.html">Documentation overview</a><ul>
       <li>Previous: <a href="../../index.html" title="previous chapter">Eyes</a></li>
-      <li>Next: <a href="build_db.html" title="next chapter">Build database</a></li>
+      <li>Next: <a href="send_jobs.html" title="next chapter">Send jobs</a></li>
   </ul></li>
 </ul>
 </div>

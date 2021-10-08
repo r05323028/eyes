@@ -13,7 +13,6 @@ Eyes
    :caption: User Guides
 
    sources/guides/installation
-   sources/guides/build_db
    sources/guides/send_jobs
    sources/guides/train_models
 
