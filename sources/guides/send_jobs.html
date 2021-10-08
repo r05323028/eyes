@@ -46,29 +46,105 @@
 <h2>Jobs<a class="headerlink" href="#jobs" title="Permalink to this headline">¶</a></h2>
 <p>Jobs repository of Eyes.</p>
 <blockquote>
-<div><ul class="simple">
-<li><dl class="simple">
+<div><ul>
+<li><dl>
 <dt>Crawl jobs</dt><dd><ul>
-<li><p>CRAWL_PTT_LATEST_POSTS</p></li>
-<li><p>CRAWL_PTT_BOARD_LIST</p></li>
-<li><p>CRAWL_PTT_TOP_BOARD_POSTS</p></li>
-<li><p>CRAWL_DCARD_LATEST_POSTS</p></li>
-<li><p>CRAWL_DCARD_BOARD_LIST</p></li>
+<li><dl class="simple">
+<dt>CRAWL_PTT_LATEST_POSTS</dt><dd><dl class="simple">
+<dt>Args:</dt><dd><ul class="simple">
+<li><p><cite>board</cite>: Board name.</p></li>
+<li><p><cite>n_days</cite>: Crawl only latest n days posts.</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>CRAWL_PTT_BOARD_LIST</dt><dd><dl class="simple">
+<dt>Args:</dt><dd><ul class="simple">
+<li><p><cite>top_n</cite>: Crawl only top n boards.</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+</li>
+<li><p>CRAWL_PTT_TOP_BOARD_POSTS</p>
+<blockquote>
+<div><div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Before you run this job, remember to crawl board list first.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>eyes job dispatch --job_type<span class="o">=</span>CRAWL_PTT_BOARD_LIST
+</pre></div>
+</div>
+</div>
+<dl class="simple">
+<dt>Args:</dt><dd><ul class="simple">
+<li><p><cite>n_days</cite>: Crawl only latest n days posts.</p></li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+</li>
+<li><dl class="simple">
+<dt>CRAWL_DCARD_LATEST_POSTS</dt><dd><dl class="simple">
+<dt>Args:</dt><dd><ul class="simple">
+<li><p><cite>forum_id</cite>: Forum ID.</p></li>
+<li><p><cite>n_days</cite>: Crawl only latest n days posts.</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>CRAWL_DCARD_BOARD_LIST</dt><dd><dl class="simple">
+<dt>Args:</dt><dd><ul class="simple">
+<li><p><cite>top_n</cite>: Crawl only top n forums.</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+</li>
 <li><p>CRAWL_WIKI_ENTITIES</p></li>
 </ul>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>Stats jobs</dt><dd><ul>
-<li><p>PTT_MONTHLY_SUMMARY</p></li>
+<dt>Stats jobs</dt><dd><ul class="simple">
+<li><dl class="simple">
+<dt>PTT_MONTHLY_SUMMARY</dt><dd><dl class="simple">
+<dt>Args:</dt><dd><ul>
+<li><p><cite>year</cite>: Year.</p></li>
+<li><p><cite>month</cite>: Month.</p></li>
+<li><p><cite>overwrite</cite>: Whether to overwrite rows.</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+</li>
 </ul>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>ML jobs</dt><dd><ul>
-<li><p>PTT_SPACY_PIPELINE</p></li>
+<dt>ML jobs</dt><dd><ul class="simple">
+<li><dl class="simple">
+<dt>PTT_SPACY_PIPELINE</dt><dd><dl class="simple">
+<dt>Args:</dt><dd><ul>
+<li><p><cite>year</cite>: Year.</p></li>
+<li><p><cite>month</cite>: Month.</p></li>
+<li><p><cite>overwrite</cite>: Whether to overwrite rows.</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+</li>
 </ul>
 </dd>
 </dl>
