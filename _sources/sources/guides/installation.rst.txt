@@ -62,7 +62,7 @@ Finally, deploy services of **Eyes**.
 Initialize database
 ###################
 
-After installed services, remember to initialize database by eyes command line tools.
+After you installed services, remember to initialize database by eyes command line tools.
 
 .. code-block:: bash
     :caption: Initialize database & tables
