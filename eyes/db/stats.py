@@ -95,7 +95,7 @@ class DailySummary(Base, Timestamp):
 
 
 class EntitySummary(Base, Timestamp):
-    '''Entity daily summary ORM model
+    '''Entity summary ORM model
     '''
     __tablename__ = 'stats_entity_summaries'
     __table_args__ = (UniqueConstraint(
