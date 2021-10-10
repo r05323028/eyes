@@ -1,10 +1,41 @@
 '''Eyes graphQL schemas module
 '''
 import graphene
-from graphene import relay
+from graphene import Scalar, relay
 from graphene_sqlalchemy import SQLAlchemyConnectionField, SQLAlchemyObjectType
 
 from eyes.db import ptt, stats
+
+
+class DictType(Scalar):
+    '''Graphene dict type
+    '''
+    @staticmethod
+    def serialize(dt):
+        '''Serialize method
+
+        Args:
+            dt (str)
+        '''
+        return dt
+
+    @staticmethod
+    def parse_literal(node):
+        '''Parse literal method
+
+        Args:
+            node (relay.Node)
+        '''
+        return node
+
+    @staticmethod
+    def parse_value(value):
+        '''Parse value method
+
+        Args:
+            value (str)
+        '''
+        return value
 
 
 class PttComment(SQLAlchemyObjectType):
@@ -49,6 +80,20 @@ class DailySummary(SQLAlchemyObjectType):
         exclude_fields = ('source', )
 
 
+class EntitySummary(SQLAlchemyObjectType):
+    '''Entity summary
+    '''
+    board_stats = graphene.List(DictType)
+    link_stats = graphene.List(DictType)
+    posts = graphene.List(graphene.String)
+
+    class Meta:
+        '''Metadata
+        '''
+        model = stats.EntitySummary
+        interfaces = (relay.Node, )
+
+
 class Query(graphene.ObjectType):
     '''GraphQL Query definitions
     '''
@@ -69,6 +114,10 @@ class Query(graphene.ObjectType):
         graphene.List(DailySummary),
         source=graphene.Argument(type=graphene.Int, required=True),
         limit=graphene.Argument(type=graphene.Int, required=True),
+    )
+    entity_summary = graphene.Field(
+        EntitySummary,
+        name=graphene.Argument(type=graphene.String, required=True),
     )
 
     def resolve_monthly_summary(self, info, source, year, month):
@@ -122,6 +171,18 @@ class Query(graphene.ObjectType):
             stats.DailySummary.month.desc(),
             stats.DailySummary.day.desc(),
         ).limit(limit).all()
+
+    def resolve_entity_summary(self, info, name):
+        '''Resolve entity summary
+
+        Args:
+            name (str)
+
+        Returns:
+            stats.EntitySummary
+        '''
+        query = EntitySummary.get_query(info)
+        return query.filter(stats.EntitySummary.name == name).first()
 
 
 schema = graphene.Schema(query=Query)
