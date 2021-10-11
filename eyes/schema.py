@@ -1,10 +1,41 @@
 '''Eyes graphQL schemas module
 '''
 import graphene
-from graphene import relay
+from graphene import Scalar, relay
 from graphene_sqlalchemy import SQLAlchemyConnectionField, SQLAlchemyObjectType
 
-from eyes.db import ptt, stats
+from eyes.db import ptt, stats, wiki
+
+
+class DictType(Scalar):
+    '''Graphene dict type
+    '''
+    @staticmethod
+    def serialize(dt):
+        '''Serialize method
+
+        Args:
+            dt (str)
+        '''
+        return dt
+
+    @staticmethod
+    def parse_literal(node):
+        '''Parse literal method
+
+        Args:
+            node (relay.Node)
+        '''
+        return node
+
+    @staticmethod
+    def parse_value(value):
+        '''Parse value method
+
+        Args:
+            value (str)
+        '''
+        return value
 
 
 class PttComment(SQLAlchemyObjectType):
@@ -49,11 +80,46 @@ class DailySummary(SQLAlchemyObjectType):
         exclude_fields = ('source', )
 
 
+class WikiEntity(SQLAlchemyObjectType):
+    '''Wiki entity
+    '''
+    alias = graphene.List(graphene.String)
+
+    class Meta:
+        '''Metadata
+        '''
+        model = wiki.WikiEntity
+        exclude_fields = ('label', 'alias')
+        interfaces = (relay.Node, )
+
+
+class EntitySummary(SQLAlchemyObjectType):
+    '''Entity summary
+    '''
+    board_stats = graphene.List(DictType)
+    link_stats = graphene.List(DictType)
+    posts = graphene.List(graphene.String)
+
+    class Meta:
+        '''Metadata
+        '''
+        model = stats.EntitySummary
+        interfaces = (relay.Node, )
+
+
 class Query(graphene.ObjectType):
     '''GraphQL Query definitions
     '''
     node = relay.Node.Field()
     all_ptt_posts = SQLAlchemyConnectionField(PttPost.connection)
+    all_wiki_entities = SQLAlchemyConnectionField(WikiEntity.connection)
+    all_stats_entity_summaries = graphene.Field(
+        graphene.List(EntitySummary),
+        year=graphene.Argument(type=graphene.Int),
+        month=graphene.Argument(type=graphene.Int),
+        min_count=graphene.Argument(type=graphene.Int, default_value=1),
+        limit=graphene.Argument(type=graphene.Int),
+    )
     monthly_summary = graphene.Field(
         MonthSummary,
         source=graphene.Argument(type=graphene.Int, required=True),
@@ -69,6 +135,10 @@ class Query(graphene.ObjectType):
         graphene.List(DailySummary),
         source=graphene.Argument(type=graphene.Int, required=True),
         limit=graphene.Argument(type=graphene.Int, required=True),
+    )
+    entity_summary = graphene.Field(
+        EntitySummary,
+        name=graphene.Argument(type=graphene.String, required=True),
     )
 
     def resolve_monthly_summary(self, info, source, year, month):
@@ -122,6 +192,40 @@ class Query(graphene.ObjectType):
             stats.DailySummary.month.desc(),
             stats.DailySummary.day.desc(),
         ).limit(limit).all()
+
+    def resolve_entity_summary(self, info, name):
+        '''Resolve entity summary
+
+        Args:
+            name (str)
+
+        Returns:
+            stats.EntitySummary
+        '''
+        query = EntitySummary.get_query(info)
+        return query.filter(stats.EntitySummary.name == name).first()
+
+    def resolve_all_stats_entity_summaries(self, info, year, month, min_count,
+                                           limit):
+        '''Resolve all stats entity summary
+
+        Args:
+            year (int): Year
+            month (int): Month
+            limit (int): Max number of entities
+
+        Returns:
+            List[stats.EntitySummary]
+        '''
+        query = EntitySummary.get_query(info)
+        query = query.filter(
+            stats.EntitySummary.year == year,
+            stats.EntitySummary.month == month,
+            stats.EntitySummary.count > min_count,
+        ).order_by(stats.EntitySummary.count.desc())
+        if limit:
+            query = query.limit(limit)
+        return query.all()
 
 
 schema = graphene.Schema(query=Query)

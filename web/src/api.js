@@ -1,6 +1,11 @@
 import { ApolloClient, InMemoryCache } from "@apollo/client";
 
-import { ALL_PTT_ARTICLES, DAILY_SUMMARIES, MONTH_SUMMARY } from "./query";
+import {
+  ALL_ENTITY_SUMMARIES,
+  ALL_PTT_ARTICLES,
+  DAILY_SUMMARIES,
+  MONTH_SUMMARY,
+} from "./query";
 
 export const client = new ApolloClient({
   uri: "http://127.0.0.1:8000/graphql",
@@ -32,4 +37,18 @@ export async function fetchDailySummaries({ source, limit }) {
     variables: { source, limit },
   });
   return data.dailySummaries;
+}
+
+export async function fetchAllStatsEntitySummaries({ minCount, limit }) {
+  const now = new Date();
+  const { data } = await client.query({
+    query: ALL_ENTITY_SUMMARIES,
+    variables: {
+      year: now.getFullYear(),
+      month: now.getMonth() + 1,
+      minCount,
+      limit,
+    },
+  });
+  return data.allStatsEntitySummaries;
 }

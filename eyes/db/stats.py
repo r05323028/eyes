@@ -1,11 +1,8 @@
 '''Eyes stats db module
 '''
-import enum
-
 import sqlalchemy as sa
-from sqlalchemy.orm import relationship
 from sqlalchemy.sql.schema import UniqueConstraint
-from sqlalchemy_utils.types import ChoiceType
+from sqlalchemy_utils.types import ChoiceType, JSONType
 
 from eyes.db import Base, Timestamp
 from eyes.type import SourceType
@@ -119,15 +116,15 @@ class EntitySummary(Base, Timestamp):
         nullable=False,
     )
     board_stats = sa.Column(
-        sa.JSON,
+        JSONType,
         nullable=False,
     )
     link_stats = sa.Column(
-        sa.JSON,
+        JSONType,
         nullable=False,
     )
     posts = sa.Column(
-        sa.JSON,
+        JSONType,
         nullable=False,
     )
     year = sa.Column(

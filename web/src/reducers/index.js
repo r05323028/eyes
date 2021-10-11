@@ -1,3 +1,4 @@
 import articleSlice from "./article";
+import entitiesSlice from "./entities";
 
-export { articleSlice };
+export { articleSlice, entitiesSlice };
