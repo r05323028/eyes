@@ -26,6 +26,9 @@ services:
       - 3306:3306
     networks:
       - eyes
+    command:
+      - --innodb-buffer-pool-size=1G
+      - --sort_buffer_size=512K
 
   redis:
     image: redis:latest

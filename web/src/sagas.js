@@ -12,12 +12,20 @@ import {
   requestDailySummariesSuccess,
   requestDailySummariesFailed,
 } from "./reducers/article";
+import {
+  requestingAllStatsEntitySummaries,
+  requestAllStatsEntitySummariesSuccess,
+  requestAllStatsEntitySummariesFailed,
+} from "./reducers/entities";
 
 import {
   fetchPTTArticles,
   fetchMonthlySummary,
   fetchDailySummaries,
+  fetchAllStatsEntitySummaries,
 } from "./api";
+
+import { NODE_MIN_COUNT } from "./constant";
 
 export const sagaActions = {
   requestPTTArticles: createAction("articles/requestPTTArticlesSaga"),
@@ -29,6 +37,9 @@ export const sagaActions = {
   ),
   requestPTTMonthlySummary: createAction("article/requestPTTMonthlySummary"),
   requestPTTDailySummaries: createAction("article/requestPTTDailySummaries"),
+  requestAllStatsEntitySummaries: createAction(
+    "entities/requestAllStatsEntitySummaries"
+  ),
 };
 
 function* requestPTTArticlesSaga(action) {
@@ -100,6 +111,21 @@ function* requestPTTDailySummariesSaga(action) {
   }
 }
 
+function* requestAllStatsEntitySummariesSaga(action) {
+  const { limit } = action.payload;
+  const minCount = NODE_MIN_COUNT;
+  try {
+    yield put(requestingAllStatsEntitySummaries());
+    const allStatsEntitySummaries = yield call(fetchAllStatsEntitySummaries, {
+      limit,
+      minCount,
+    });
+    yield put(requestAllStatsEntitySummariesSuccess(allStatsEntitySummaries));
+  } catch (err) {
+    yield put(requestAllStatsEntitySummariesFailed());
+  }
+}
+
 export default function* rootSaga() {
   yield all([
     takeEvery(sagaActions.requestPTTArticles, requestPTTArticlesSaga),
@@ -118,6 +144,10 @@ export default function* rootSaga() {
     takeEvery(
       sagaActions.requestPTTDailySummaries,
       requestPTTDailySummariesSaga
+    ),
+    takeEvery(
+      sagaActions.requestAllStatsEntitySummaries,
+      requestAllStatsEntitySummariesSaga
     ),
   ]);
 }

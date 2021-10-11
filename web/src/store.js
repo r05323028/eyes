@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { articleSlice } from "./reducers";
+import { articleSlice, entitiesSlice } from "./reducers";
 import createSagaMiddleware from "@redux-saga/core";
 import sagas from "./sagas";
 
@@ -8,6 +8,7 @@ const sagaMiddleware = createSagaMiddleware();
 const store = configureStore({
   reducer: {
     article: articleSlice,
+    entities: entitiesSlice,
   },
   devTools: process.env.NODE_ENV === "development",
   middleware: (getDefaultMiddleware) =>

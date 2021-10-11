@@ -50,3 +50,24 @@ export const DAILY_SUMMARIES = gql`
     }
   }
 `;
+
+export const ALL_ENTITY_SUMMARIES = gql`
+  query AllStatsEntitySummaries(
+    $year: Int!
+    $month: Int!
+    $minCount: Int!
+    $limit: Int!
+  ) {
+    allStatsEntitySummaries(
+      year: $year
+      month: $month
+      minCount: $minCount
+      limit: $limit
+    ) {
+      id
+      name
+      count
+      linkStats
+    }
+  }
+`;

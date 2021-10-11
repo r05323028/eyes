@@ -1,7 +1,6 @@
 '''Eyes wiki db module
 '''
 import sqlalchemy as sa
-from sqlalchemy.orm import relationship
 from sqlalchemy_utils.types import ChoiceType
 
 from eyes.db import Base
