@@ -117,10 +117,14 @@
 </li>
       <li><a href="sources/api/data.html#eyes.data.ptt.PttPost.comments">comments (eyes.data.ptt.PttPost attribute)</a>
 </li>
-      <li><a href="sources/api/schema.html#eyes.schema.PttComment.connection">connection (eyes.schema.PttComment attribute)</a>
+      <li><a href="sources/api/schema.html#eyes.schema.EntitySummary.connection">connection (eyes.schema.EntitySummary attribute)</a>
 
       <ul>
+        <li><a href="sources/api/schema.html#eyes.schema.PttComment.connection">(eyes.schema.PttComment attribute)</a>
+</li>
         <li><a href="sources/api/schema.html#eyes.schema.PttPost.connection">(eyes.schema.PttPost attribute)</a>
+</li>
+        <li><a href="sources/api/schema.html#eyes.schema.WikiEntity.connection">(eyes.schema.WikiEntity attribute)</a>
 </li>
       </ul></li>
       <li><a href="sources/api/data.html#eyes.data.ptt.PttComment.content">content (eyes.data.ptt.PttComment attribute)</a>
@@ -145,14 +149,14 @@
 </li>
       <li><a href="sources/api/celery.html#eyes.celery.crawler.tasks.crawl_dcard_post">crawl_dcard_post() (in module eyes.celery.crawler.tasks)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="sources/api/crawler.html#eyes.crawler.dcard.crawl_post">crawl_post() (in module eyes.crawler.dcard)</a>
 
       <ul>
         <li><a href="sources/api/crawler.html#eyes.crawler.ptt.crawl_post">(in module eyes.crawler.ptt)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="sources/api/crawler.html#eyes.crawler.dcard.crawl_post_ids">crawl_post_ids() (in module eyes.crawler.dcard)</a>
 </li>
       <li><a href="sources/api/crawler.html#eyes.crawler.ptt.crawl_post_urls">crawl_post_urls() (in module eyes.crawler.ptt)</a>
@@ -233,6 +237,8 @@
       </ul></li>
       <li><a href="sources/api/data.html#eyes.data.dcard.DcardBoard.description">description (eyes.data.dcard.DcardBoard attribute)</a>
 </li>
+      <li><a href="sources/api/schema.html#eyes.schema.DictType">DictType (class in eyes.schema)</a>
+</li>
       <li><a href="sources/api/job.html#eyes.job.Jobs.dispatch">dispatch() (eyes.job.Jobs method)</a>
 </li>
   </ul></td>
@@ -247,6 +253,8 @@
 
       <ul>
         <li><a href="sources/api/db.html#eyes.db.stats.EntitySummary">(class in eyes.db.stats)</a>
+</li>
+        <li><a href="sources/api/schema.html#eyes.schema.EntitySummary">(class in eyes.schema)</a>
 </li>
       </ul></li>
       <li><a href="sources/api/data.html#eyes.data.stats.EntitySummary.Config">EntitySummary.Config (class in eyes.data.stats)</a>
@@ -607,6 +615,10 @@
 <h2 id="P">P</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="sources/api/schema.html#eyes.schema.DictType.parse_literal">parse_literal() (eyes.schema.DictType static method)</a>
+</li>
+      <li><a href="sources/api/schema.html#eyes.schema.DictType.parse_value">parse_value() (eyes.schema.DictType static method)</a>
+</li>
       <li><a href="sources/api/config.html#eyes.config.MySQLConfig.password">password (eyes.config.MySQLConfig attribute)</a>
 </li>
       <li><a href="sources/api/config.html#eyes.config.MySQLConfig.port">port (eyes.config.MySQLConfig attribute)</a>
@@ -623,10 +635,10 @@
         <li><a href="sources/api/celery.html#eyes.celery.stats.tasks.ptt_monthly_summary">(in module eyes.celery.stats.tasks)</a>
 </li>
       </ul></li>
-      <li><a href="sources/api/job.html#eyes.job.Jobs.ptt_spacy_pipeline">ptt_spacy_pipeline() (eyes.job.Jobs method)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="sources/api/job.html#eyes.job.Jobs.ptt_spacy_pipeline">ptt_spacy_pipeline() (eyes.job.Jobs method)</a>
+</li>
       <li><a href="sources/api/data.html#eyes.data.ptt.PttBoard">PttBoard (class in eyes.data.ptt)</a>
 
       <ul>
@@ -665,12 +677,16 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="sources/api/data.html#eyes.data.ptt.PttComment.reaction">reaction (eyes.data.ptt.PttComment attribute)</a>
 </li>
+      <li><a href="sources/api/schema.html#eyes.schema.Query.resolve_all_stats_entity_summaries">resolve_all_stats_entity_summaries() (eyes.schema.Query method)</a>
+</li>
       <li><a href="sources/api/schema.html#eyes.schema.Query.resolve_daily_summaries">resolve_daily_summaries() (eyes.schema.Query method)</a>
 </li>
-      <li><a href="sources/api/schema.html#eyes.schema.Query.resolve_monthly_summaries">resolve_monthly_summaries() (eyes.schema.Query method)</a>
+      <li><a href="sources/api/schema.html#eyes.schema.Query.resolve_entity_summary">resolve_entity_summary() (eyes.schema.Query method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="sources/api/schema.html#eyes.schema.Query.resolve_monthly_summaries">resolve_monthly_summaries() (eyes.schema.Query method)</a>
+</li>
       <li><a href="sources/api/schema.html#eyes.schema.Query.resolve_monthly_summary">resolve_monthly_summary() (eyes.schema.Query method)</a>
 </li>
       <li><a href="sources/api/config.html#eyes.config.CeleryConfig.result_backend">result_backend (eyes.config.CeleryConfig attribute)</a>
@@ -683,6 +699,8 @@
 <h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="sources/api/schema.html#eyes.schema.DictType.serialize">serialize() (eyes.schema.DictType static method)</a>
+</li>
       <li><a href="sources/api/celery.html#eyes.celery.crawler.tasks.CrawlerTask.sess">sess (eyes.celery.crawler.tasks.CrawlerTask property)</a>
 
       <ul>
@@ -693,14 +711,14 @@
       </ul></li>
       <li><a href="sources/api/config.html#eyes.config.SpacyConfig">SpacyConfig (class in eyes.config)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="sources/api/data.html#eyes.data.spacy.SpacyPttComment">SpacyPttComment (class in eyes.data.spacy)</a>
 
       <ul>
         <li><a href="sources/api/db.html#eyes.db.spacy.SpacyPttComment">(class in eyes.db.spacy)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="sources/api/data.html#eyes.data.spacy.SpacyPttPost">SpacyPttPost (class in eyes.data.spacy)</a>
 
       <ul>
@@ -794,7 +812,11 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="sources/api/db.html#eyes.db.wiki.WikiEntity">WikiEntity (class in eyes.db.wiki)</a>
+
+      <ul>
+        <li><a href="sources/api/schema.html#eyes.schema.WikiEntity">(class in eyes.schema)</a>
 </li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
