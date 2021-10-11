@@ -5,6 +5,7 @@ eyes is a **Public Opinion Mining System** focusing on taiwanese forums such as 
 ## Features
 
 - :fire: **Article monitor**: helps you capture the trend at a glance.
+- :fire: **Entity monitor**: helps you spy on a specific entity.
 - :fire: **Weak supervision**: let you generate & update model without human effort.
 - :fire: **Well-integrated with spaCy**: let you train models by yourself or use trained models in [model hub](https://spacy.io/models) simply.
 
