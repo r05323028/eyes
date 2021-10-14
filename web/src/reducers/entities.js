@@ -100,8 +100,7 @@ const entitiesSlice = createSlice({
       state.status.requesting = false;
     },
     setCurrentEntity: (state, action) => {
-      const { currentEntity } = action.payload;
-      state.currentEntity = currentEntity;
+      state.currentEntity = action.payload;
     },
   },
 });
