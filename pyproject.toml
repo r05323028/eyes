@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "eyes"
 version = "0.1.0"
-description = ""
+description = "Taiwanese Public Opinion Mining System"
 authors = ["Sean Chang <seanchang@kklab.com>"]
 
 [tool.poetry.dependencies]
