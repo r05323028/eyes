@@ -71,3 +71,16 @@ export const ALL_ENTITY_SUMMARIES = gql`
     }
   }
 `;
+
+export const ENTITY_SUMMARY = gql`
+  query EntitySummary($name: String!, $year: Int, $month: Int) {
+    entitySummary(name: $name, year: $year, month: $month) {
+      id
+      name
+      count
+      boardStats
+      linkStats
+      posts
+    }
+  }
+`;

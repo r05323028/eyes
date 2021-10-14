@@ -17,6 +17,7 @@ eyes is a **Public Opinion Mining System** focusing on taiwanese forums such as 
 
 ![Articles Dashboard](./doc/static/images/articles_dashboard.png)
 ![Entities Dashboard](./doc/static/images/entities_dashboard.png)
+![Entity Dashboard](./doc/static/images/entity_dashboard.png)
 
 ## Architecture
 
