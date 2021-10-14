@@ -17,12 +17,18 @@ import {
   requestAllStatsEntitySummariesSuccess,
   requestAllStatsEntitySummariesFailed,
 } from "./reducers/entities";
+import {
+  requestingEntitySummary,
+  requestEntitySummarySuccess,
+  requestEntitySummaryFailed,
+} from "./reducers/entity";
 
 import {
   fetchPTTArticles,
   fetchMonthlySummary,
   fetchDailySummaries,
   fetchAllStatsEntitySummaries,
+  fetchEntitySummary,
 } from "./api";
 
 import { NODE_MIN_COUNT } from "./constant";
@@ -35,11 +41,16 @@ export const sagaActions = {
   requestPTTArticlesPreviousPage: createAction(
     "articles/requestPTTArticlesPreviousPageSaga"
   ),
-  requestPTTMonthlySummary: createAction("article/requestPTTMonthlySummary"),
-  requestPTTDailySummaries: createAction("article/requestPTTDailySummaries"),
-  requestAllStatsEntitySummaries: createAction(
-    "entities/requestAllStatsEntitySummaries"
+  requestPTTMonthlySummary: createAction(
+    "article/requestPTTMonthlySummarySaga"
   ),
+  requestPTTDailySummaries: createAction(
+    "article/requestPTTDailySummariesSaga"
+  ),
+  requestAllStatsEntitySummaries: createAction(
+    "entities/requestAllStatsEntitySummariesSaga"
+  ),
+  requestEntitySummary: createAction("entity/requestEntitySummarySaga"),
 };
 
 function* requestPTTArticlesSaga(action) {
@@ -126,6 +137,17 @@ function* requestAllStatsEntitySummariesSaga(action) {
   }
 }
 
+function* requestEntitySummarySaga(action) {
+  const { name } = action.payload;
+  try {
+    yield put(requestingEntitySummary());
+    const entitySummary = yield call(fetchEntitySummary, { name });
+    yield put(requestEntitySummarySuccess(entitySummary));
+  } catch (err) {
+    yield put(requestEntitySummaryFailed());
+  }
+}
+
 export default function* rootSaga() {
   yield all([
     takeEvery(sagaActions.requestPTTArticles, requestPTTArticlesSaga),
@@ -149,5 +171,6 @@ export default function* rootSaga() {
       sagaActions.requestAllStatsEntitySummaries,
       requestAllStatsEntitySummariesSaga
     ),
+    takeEvery(sagaActions.requestEntitySummary, requestEntitySummarySaga),
   ]);
 }

@@ -1,5 +1,7 @@
 '''Eyes graphQL schemas module
 '''
+from datetime import datetime
+
 import graphene
 from graphene import Scalar, relay
 from graphene_sqlalchemy import SQLAlchemyConnectionField, SQLAlchemyObjectType
@@ -139,6 +141,10 @@ class Query(graphene.ObjectType):
     entity_summary = graphene.Field(
         EntitySummary,
         name=graphene.Argument(type=graphene.String, required=True),
+        year=graphene.Argument(type=graphene.Int,
+                               default_value=datetime.now().year),
+        month=graphene.Argument(type=graphene.Int,
+                                default_value=datetime.now().month),
     )
 
     def resolve_monthly_summary(self, info, source, year, month):
@@ -193,17 +199,23 @@ class Query(graphene.ObjectType):
             stats.DailySummary.day.desc(),
         ).limit(limit).all()
 
-    def resolve_entity_summary(self, info, name):
+    def resolve_entity_summary(self, info, name, year, month):
         '''Resolve entity summary
 
         Args:
             name (str)
+            year (int)
+            month (int)
 
         Returns:
             stats.EntitySummary
         '''
         query = EntitySummary.get_query(info)
-        return query.filter(stats.EntitySummary.name == name).first()
+        return query.filter(
+            stats.EntitySummary.name == name,
+            stats.EntitySummary.year == year,
+            stats.EntitySummary.month == month,
+        ).first()
 
     def resolve_all_stats_entity_summaries(self, info, year, month, min_count,
                                            limit):

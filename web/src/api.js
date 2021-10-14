@@ -4,6 +4,7 @@ import {
   ALL_ENTITY_SUMMARIES,
   ALL_PTT_ARTICLES,
   DAILY_SUMMARIES,
+  ENTITY_SUMMARY,
   MONTH_SUMMARY,
 } from "./query";
 
@@ -51,4 +52,17 @@ export async function fetchAllStatsEntitySummaries({ minCount, limit }) {
     },
   });
   return data.allStatsEntitySummaries;
+}
+
+export async function fetchEntitySummary({ name }) {
+  const now = new Date();
+  const { data } = await client.query({
+    query: ENTITY_SUMMARY,
+    variables: {
+      name: name,
+      year: now.getFullYear(),
+      month: now.getMonth() + 1,
+    },
+  });
+  return data.entitySummary;
 }

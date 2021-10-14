@@ -1,4 +1,6 @@
 import moment from "moment";
+import { ResponsiveLine } from "@nivo/line";
+
 import { useSelector, useDispatch } from "react-redux";
 import { useMount } from "react-use";
 import { useRouteMatch } from "react-router";
@@ -8,7 +10,6 @@ import { setCurrentTab } from "../reducers/article";
 import { sagaActions } from "../sagas";
 
 import Spinner from "../components/Spinner";
-import LineChart from "../components/LineChart";
 
 const columns = [
   {
@@ -39,7 +40,26 @@ const createLineChart = (data) => {
       })),
     },
   ];
-  return <LineChart data={lineData} />;
+  return (
+    <ResponsiveLine
+      curve="basis"
+      data={lineData}
+      enableArea={true}
+      axisBottom={{
+        tickRotation: -45,
+        legend: "date",
+        legendPosition: "middle",
+        orient: "bottom",
+        legendOffset: 65,
+      }}
+      margin={{ top: 30, right: 30, bottom: 75, left: 65 }}
+      useMesh={false}
+      colors={{ scheme: "nivo" }}
+      enablePoints={false}
+      enableGridX={false}
+      enableGridY={false}
+    />
+  );
 };
 
 const createStats = (numPosts, numComments) => {
