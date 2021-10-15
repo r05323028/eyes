@@ -22,7 +22,7 @@ from eyes.celery.crawler.tasks import (
     crawl_wiki_entity,
 )
 from eyes.celery.ml.tasks import transform_ptt_post_to_spacy_post
-from eyes.celery.stats.tasks import ptt_monthly_summary
+from eyes.celery.stats.tasks import ptt_monthly_summary, stats_entity_summary
 from eyes.config import EyesConfig, MySQLConfig
 from eyes.crawler.dcard import crawl_post_ids
 from eyes.crawler.entity import crawl_wiki_entity_urls
@@ -51,6 +51,7 @@ class JobType(enum.Enum):
 
     # stats jobs
     PTT_MONTHLY_SUMMARY = enum.auto()
+    ENTITY_MONTHLY_SUMMARY = enum.auto()
 
     # ml jobs
     PTT_SPACY_PIPELINE = enum.auto()
@@ -128,6 +129,7 @@ class Jobs:
             JobType.CRAWL_DCARD_BOARD_LIST: self.crawl_dcard_board_list,
             JobType.CRAWL_WIKI_ENTITIES: self.crawl_wiki_entities,
             JobType.PTT_MONTHLY_SUMMARY: self.ptt_monthly_summary,
+            JobType.ENTITY_MONTHLY_SUMMARY: self.entity_monthly_summary,
             JobType.PTT_SPACY_PIPELINE: self.ptt_spacy_pipeline,
         }
 
@@ -255,6 +257,19 @@ class Jobs:
             job.payload['year'],
             job.payload['month'],
         )
+        res.get()
+
+    def entity_monthly_summary(
+        self,
+        job: Job,
+    ):
+        '''Summary entity statistics
+
+        Args:
+            job (Job): stats job
+        '''
+        year, month = itemgetter('year', 'month')(job.payload)
+        res = stats_entity_summary.delay(year, month)
         res.get()
 
     def ptt_spacy_pipeline(
