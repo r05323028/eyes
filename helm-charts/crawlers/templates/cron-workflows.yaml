@@ -1,14 +1,54 @@
 apiVersion: argoproj.io/v1alpha1
 kind: CronWorkflow
 metadata:
-  name: crawl-ptt-latest-posts
+  name: ptt-posts-pipeline
 spec:
   schedule: "0 8 * * *"
   timezone: "Asia/Taipei"
   workflowSpec:
-    entrypoint: crawler
+    entrypoint: pipeline
     templates:
-      - name: crawler
+      - name: pipeline
+        dag:
+          tasks:
+            - name: crawl-top-board-posts
+              template: crawl-top-board-posts
+              arguments:
+                parameters:
+                  - name: n_days
+                    value: "{{ .Values.n_days }}"
+            - name: transform-ptt-posts
+              template: transform-ptt-posts-to-spacy
+              depends: "crawl-top-board-posts"
+              arguments:
+                parameters:
+                  - name: year
+                    value: "{{ `{{ workflow.creationTimestamp.Y }}` }}"
+                  - name: month
+                    value: "{{ `{{ workflow.creationTimestamp.m }}` }}"
+            - name: ptt-monthly-summary
+              depends: "transform-ptt-posts"
+              template: stats-ptt-summaries
+              arguments:
+                parameters:
+                  - name: year
+                    value: "{{ `{{ workflow.creationTimestamp.Y }}` }}"
+                  - name: month
+                    value: "{{ `{{ workflow.creationTimestamp.m }}` }}"
+            - name: entity-monthly-summary
+              depends: "transform-ptt-posts"
+              template: stats-entity-summaries
+              arguments:
+                parameters:
+                  - name: year
+                    value: "{{ `{{ workflow.creationTimestamp.Y }}` }}"
+                  - name: month
+                    value: "{{ `{{ workflow.creationTimestamp.m }}` }}"
+
+      - name: crawl-top-board-posts
+        inputs:
+          parameters:
+            - name: n_days
         container:
           image: eyes/base
           imagePullPolicy: Never
@@ -18,5 +58,56 @@ spec:
                 name: eyes-config-prod
           args:
             [
-              "poetry run eyes job dispatch --job_type CRAWL_PTT_TOP_BOARD_POSTS --n_days 3",
+              "poetry run eyes job dispatch --job_type CRAWL_PTT_TOP_BOARD_POSTS --n_days {{ `{{ inputs.parameters.n_days }}` }}",
+            ]
+
+      - name: transform-ptt-posts-to-spacy
+        inputs:
+          parameters:
+            - name: year
+            - name: month
+        container:
+          image: eyes/base
+          imagePullPolicy: Never
+          command: ["/bin/bash", "-c", "--"]
+          envFrom:
+            - configMapRef:
+                name: eyes-config-prod
+          args:
+            [
+              "poetry run eyes job dispatch --job_type PTT_SPACY_PIPELINE --year {{ `{{ inputs.parameters.year }}` }} --month {{ `{{ inputs.parameters.month }}` }}",
+            ]
+
+      - name: stats-ptt-summaries
+        inputs:
+          parameters:
+            - name: year
+            - name: month
+        container:
+          image: eyes/base
+          imagePullPolicy: Never
+          command: ["/bin/bash", "-c", "--"]
+          envFrom:
+            - configMapRef:
+                name: eyes-config-prod
+          args:
+            [
+              "poetry run eyes job dispatch --job_type PTT_MONTHLY_SUMMARY --year {{ `{{ inputs.parameters.year }}` }} --month {{ `{{ inputs.parameters.month }}` }}",
+            ]
+
+      - name: stats-entity-summaries
+        inputs:
+          parameters:
+            - name: year
+            - name: month
+        container:
+          image: eyes/base
+          imagePullPolicy: Never
+          command: ["/bin/bash", "-c", "--"]
+          envFrom:
+            - configMapRef:
+                name: eyes-config-prod
+          args:
+            [
+              "poetry run eyes job dispatch --job_type ENTITY_MONTHLY_SUMMARY --year {{ `{{ inputs.parameters.year }}` }} --month {{ `{{ inputs.parameters.month }}` }}",
             ]

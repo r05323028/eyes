@@ -123,6 +123,7 @@ def dispatch(
     if job_type in [
             JobType.PTT_MONTHLY_SUMMARY,
             JobType.PTT_SPACY_PIPELINE,
+            JobType.ENTITY_MONTHLY_SUMMARY,
     ]:
         job = Job(
             job_type=job_type,
