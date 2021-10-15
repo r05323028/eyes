@@ -3,6 +3,7 @@
 import enum
 import logging
 import os
+import time
 from operator import itemgetter
 from typing import Callable, Dict, Optional
 
@@ -12,6 +13,7 @@ from rich.logging import RichHandler
 from sqlalchemy import exists, extract
 from sqlalchemy.orm import scoped_session, sessionmaker
 
+from celery import group
 from eyes.celery.crawler.tasks import (
     crawl_dcard_board_list,
     crawl_dcard_post,
@@ -32,6 +34,8 @@ from eyes.type import Label
 logger = logging.getLogger(__name__)
 logger.addHandler(RichHandler(rich_tracebacks=True))
 logger.setLevel(logging.INFO)
+
+SLEEP_INTERVAL = 1
 
 
 class JobType(enum.Enum):
@@ -141,8 +145,14 @@ class Jobs:
             job.payload.get('n_days', None),
         )
 
-        for url in urls:
-            crawl_ptt_post.apply_async(args=[url, job.payload['board']])
+        # for url in urls:
+        #     crawl_ptt_post.apply_async(args=[url, job.payload['board']])
+
+        grp = group(
+            [crawl_ptt_post.s(url, job.payload['board']) for url in urls])
+        res_group = grp.apply_async()
+        while not res_group.ready():
+            time.sleep(SLEEP_INTERVAL)
 
     def crawl_ptt_board_list(
         self,
@@ -153,7 +163,8 @@ class Jobs:
         Args:
             job (Job): crawler job
         '''
-        crawl_ptt_board_list.apply_async(args=[job.payload['top_n']])
+        res = crawl_ptt_board_list.delay(job.payload['top_n'])
+        res.get()
 
     def crawl_ptt_top_board_posts(
         self,
@@ -167,15 +178,15 @@ class Jobs:
         boards = self.sess.query(PttBoard).all()
 
         for board in boards:
-            for url in crawl_post_urls(
+            grp = group([
+                crawl_ptt_post.s(url, board.name) for url in crawl_post_urls(
                     board.name,
                     job.payload.get('n_days', None),
-            ):
-                try:
-                    crawl_ptt_post.apply_async(args=[url, board.name])
-                except IndexError as err:
-                    logger.warning('Cookie over18 needed: %s', board)
-                    continue
+                )
+            ])
+            res_grp = grp.apply_async()
+            while not res_grp.ready():
+                time.sleep(SLEEP_INTERVAL)
 
     def crawl_dcard_latest_posts(
         self,
@@ -200,7 +211,8 @@ class Jobs:
         Args:
             job (Job): crawler job
         '''
-        crawl_dcard_board_list.apply_async(args=[job.payload['top_n']])
+        res = crawl_dcard_board_list.delay(job.payload['top_n'])
+        res.get()
 
     def crawl_wiki_entities(
         self,
@@ -223,8 +235,12 @@ class Jobs:
                     c_url,
                 )
                 entity_urls = crawl_wiki_entity_urls(c_url)
-                for url in entity_urls:
-                    crawl_wiki_entity.apply_async(args=[url, c_type.value])
+                grp = group(
+                    crawl_wiki_entity.s(url, c_type.value)
+                    for url in entity_urls)
+                res_grp = grp.apply_async()
+                while not res_grp.ready():
+                    time.sleep(SLEEP_INTERVAL)
 
     def ptt_monthly_summary(
         self,
@@ -235,10 +251,11 @@ class Jobs:
         Args:
             job (Job): stats job
         '''
-        ptt_monthly_summary.apply_async(args=[
+        res = ptt_monthly_summary.delay(
             job.payload['year'],
             job.payload['month'],
-        ])
+        )
+        res.get()
 
     def ptt_spacy_pipeline(
         self,
@@ -258,9 +275,10 @@ class Jobs:
         if not overwrite:
             stmt = stmt.filter(~exists().where(PttPost.id == SpacyPttPost.id))
         rows = stmt.all()
-        for row in rows:
-            post_id = row[0]
-            transform_ptt_post_to_spacy_post.apply_async(args=[post_id])
+        grp = group(transform_ptt_post_to_spacy_post.s(row[0]) for row in rows)
+        res_grp = grp.apply_async()
+        while not res_grp.ready():
+            time.sleep(SLEEP_INTERVAL)
 
     def dispatch(
         self,
@@ -271,5 +289,12 @@ class Jobs:
         Args:
             job (Job): Eyes job
         '''
+        start = time.time()
         func = self.job_map[job.job_type]
         func(job)
+        end = time.time()
+        logger.info(
+            '%s: All tasks were ready. Cost %s s',
+            job.job_type,
+            round(end - start, 3),
+        )
