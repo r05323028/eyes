@@ -47,6 +47,7 @@ eyes = "eyes.cmd:cli"
 addopts = "--cov=eyes --cov-report html"
 markers = [
     "slow: slow tests",
+    "dcard: dcard tests"
 ]
 
 [build-system]

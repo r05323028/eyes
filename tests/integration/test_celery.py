@@ -57,6 +57,7 @@ class TestCrawler:
         assert isinstance(board_list, List)
         assert isinstance(board_list[0], Dict)
 
+    @pytest.mark.dcard
     def test_dcard_celery_crawler(
         self,
         session: Session,
@@ -69,6 +70,7 @@ class TestCrawler:
 
         assert isinstance(post, Dict)
 
+    @pytest.mark.dcard
     def test_dcard_celery_board_list_cralwer(
         self,
         session: Session,

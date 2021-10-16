@@ -3,6 +3,8 @@
 import os
 import re
 
+import pytest
+
 from eyes.crawler import dcard, entity, ptt
 from eyes.data import Entity
 from eyes.data.dcard import DcardBoard, DcardPost
@@ -61,6 +63,7 @@ class TestPttCrawler:
         assert isinstance(boards[0], PttBoard)
 
 
+@pytest.mark.dcard
 class TestDcardCrawler:
     '''DcardCrawler test cases
     '''

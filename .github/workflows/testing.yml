@@ -1,0 +1,54 @@
+name: testing
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    name: Testing
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8
+        env:
+          MYSQL_DATABASE: eyes
+          MYSQL_USER: eyes
+          MYSQL_PASSWORD: example
+          MYSQL_ROOT_PASSWORD: example
+          MYSQL_HOST: 127.0.0.1
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+      redis:
+        image: redis:latest
+        ports:
+          - 6379:6379
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Setup Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.7
+      - name: Install Poetry
+        run: |
+          pip install poetry
+      - name: Install Dependencies
+        run: |
+          poetry install
+      - name: Initialize Database
+        run: |
+          poetry run dotenv -f .env.testing run eyes db init
+      - name: Download spacy model
+        run: |
+          poetry run spacy download zh_core_web_sm
+      - name: Run Celery Worker
+        run: |
+          poetry run dotenv -f .env.testing run celery -A eyes.celery worker --detach
+      - name: Run Testing
+        run: |
+          poetry run dotenv -f .env.testing run pytest -s -m 'not slow and not dcard'
