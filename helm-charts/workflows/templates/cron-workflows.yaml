@@ -16,7 +16,9 @@ spec:
               arguments:
                 parameters:
                   - name: n_days
-                    value: "{{ .Values.n_days }}"
+                    value: "{{ .Values.top_boards.n_days }}"
+                  - name: limit
+                    value: "{{ .Values.top_boards.n_boards }}"
             - name: transform-ptt-posts
               template: transform-ptt-posts-to-spacy
               depends: "crawl-top-board-posts"
@@ -49,17 +51,20 @@ spec:
         inputs:
           parameters:
             - name: n_days
+            - name: limit
         container:
           image: eyes/base
           imagePullPolicy: Never
-          command: ["/bin/bash", "-c", "--"]
+          command:
+            [
+              "/bin/bash",
+              "-c",
+              "--",
+              "poetry run eyes job dispatch --job_type CRAWL_PTT_TOP_BOARD_POSTS --n_days {{ `{{ inputs.parameters.n_days }}` }} --limit {{ `{{ inputs.parameters.limit }}` }}",
+            ]
           envFrom:
             - configMapRef:
                 name: eyes-config-prod
-          args:
-            [
-              "poetry run eyes job dispatch --job_type CRAWL_PTT_TOP_BOARD_POSTS --n_days {{ `{{ inputs.parameters.n_days }}` }}",
-            ]
 
       - name: transform-ptt-posts-to-spacy
         inputs:
@@ -69,14 +74,16 @@ spec:
         container:
           image: eyes/base
           imagePullPolicy: Never
-          command: ["/bin/bash", "-c", "--"]
+          command:
+            [
+              "/bin/bash",
+              "-c",
+              "--",
+              "poetry run eyes job dispatch --job_type PTT_SPACY_PIPELINE --year {{ `{{ inputs.parameters.year }}` }} --month {{ `{{ inputs.parameters.month }}` }}",
+            ]
           envFrom:
             - configMapRef:
                 name: eyes-config-prod
-          args:
-            [
-              "poetry run eyes job dispatch --job_type PTT_SPACY_PIPELINE --year {{ `{{ inputs.parameters.year }}` }} --month {{ `{{ inputs.parameters.month }}` }}",
-            ]
 
       - name: stats-ptt-summaries
         inputs:
@@ -86,14 +93,16 @@ spec:
         container:
           image: eyes/base
           imagePullPolicy: Never
-          command: ["/bin/bash", "-c", "--"]
+          command:
+            [
+              "/bin/bash",
+              "-c",
+              "--",
+              "poetry run eyes job dispatch --job_type PTT_MONTHLY_SUMMARY --year {{ `{{ inputs.parameters.year }}` }} --month {{ `{{ inputs.parameters.month }}` }}",
+            ]
           envFrom:
             - configMapRef:
                 name: eyes-config-prod
-          args:
-            [
-              "poetry run eyes job dispatch --job_type PTT_MONTHLY_SUMMARY --year {{ `{{ inputs.parameters.year }}` }} --month {{ `{{ inputs.parameters.month }}` }}",
-            ]
 
       - name: stats-entity-summaries
         inputs:
@@ -103,11 +112,13 @@ spec:
         container:
           image: eyes/base
           imagePullPolicy: Never
-          command: ["/bin/bash", "-c", "--"]
+          command:
+            [
+              "/bin/bash",
+              "-c",
+              "--",
+              "poetry run eyes job dispatch --job_type ENTITY_MONTHLY_SUMMARY --year {{ `{{ inputs.parameters.year }}` }} --month {{ `{{ inputs.parameters.month }}` }}",
+            ]
           envFrom:
             - configMapRef:
                 name: eyes-config-prod
-          args:
-            [
-              "poetry run eyes job dispatch --job_type ENTITY_MONTHLY_SUMMARY --year {{ `{{ inputs.parameters.year }}` }} --month {{ `{{ inputs.parameters.month }}` }}",
-            ]

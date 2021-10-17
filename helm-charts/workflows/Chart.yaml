@@ -1,4 +1,4 @@
 apiVersion: v2
-name: eyes-crawlers
+name: eyes-workflows
 version: 0.1.0
 appVersion: 0.1.0

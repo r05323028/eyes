@@ -177,8 +177,17 @@ class Jobs:
         Args:
             job (Job): crawler job
         '''
-        boards = self.sess.query(PttBoard).all()
+        # crawl ptt board list
+        res = crawl_ptt_board_list.delay(job.payload.get('limit', 10))
+        res.get()
 
+        # get board list
+        boards = self.sess.query(PttBoard).order_by(PttBoard.updated_at.desc())
+        limit = job.payload.get('limit')
+        if limit:
+            boards = boards.limit(limit)
+
+        # crawl posts
         for board in boards:
             grp = group([
                 crawl_ptt_post.s(url, board.name) for url in crawl_post_urls(
