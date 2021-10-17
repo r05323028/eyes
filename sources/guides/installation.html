@@ -44,6 +44,9 @@
 <div class="literal-block-wrapper docutils container" id="id1">
 <div class="code-block-caption"><span class="caption-text">Create namespace</span><a class="headerlink" href="#id1" title="Permalink to this code">¶</a></div>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kubectl create ns eyes
+
+<span class="c1"># create role binding</span>
+kubectl create rolebinding default-admin --clusterrole<span class="o">=</span>admin --serviceaccount<span class="o">=</span>eyes:default -n eyes
 </pre></div>
 </div>
 </div>
@@ -86,7 +89,7 @@ helm install -n eyes celery-worker helm-charts/celery
 helm install -n eyes api helm-charts/api
 
 <span class="c1"># cron-workflows</span>
-helm install -n eyes crawlers helm-charts/crawlers
+helm install -n eyes workflows helm-charts/workflows
 </pre></div>
 </div>
 </div>

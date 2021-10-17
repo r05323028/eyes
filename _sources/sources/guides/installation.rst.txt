@@ -16,6 +16,9 @@ First, we need to create an namespace.
 
     kubectl create ns eyes
 
+    # create role binding
+    kubectl create rolebinding default-admin --clusterrole=admin --serviceaccount=eyes:default -n eyes
+
 Argo workflows
 ##############
 
@@ -57,7 +60,7 @@ Finally, deploy services of **Eyes**.
     helm install -n eyes api helm-charts/api
 
     # cron-workflows
-    helm install -n eyes crawlers helm-charts/crawlers
+    helm install -n eyes workflows helm-charts/workflows
 
 Initialize database
 ###################
