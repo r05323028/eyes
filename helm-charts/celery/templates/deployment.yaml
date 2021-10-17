@@ -18,7 +18,7 @@ spec:
           command: ["/bin/bash", "-c", "--"]
           args:
             [
-              "poetry run celery -A eyes.celery worker --concurrency={{ .Values.celery.concurrency }}",
+              "poetry run celery -A eyes.celery worker --concurrency={{ .Values.celery.concurrency }} --loglevel={{ .Values.celery.loglevel }}",
             ]
           imagePullPolicy: Never
           envFrom:

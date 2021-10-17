@@ -2,6 +2,8 @@ FROM python:3.7
 
 LABEL authors="seanchang@kklab.com"
 
+ARG SPACY_MODEL=zh_core_web_sm
+
 # install system requires
 RUN apt update && \
     apt install -y libmariadb-dev redis-tools python3-dev
@@ -22,3 +24,4 @@ WORKDIR /app
 # copy project to workdir
 COPY . .
 RUN poetry install
+RUN poetry run spacy download $SPACY_MODEL

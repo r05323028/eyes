@@ -101,10 +101,24 @@ def crawl_ptt_post(
         exist_row.comments.extend(new_comments)
         exist_row.updated_at = datetime.utcnow()
         self.sess.merge(exist_row)
-        self.sess.commit()
+        try:
+            self.sess.commit()
+        except:
+            logger.warning(
+                "Commit failed on %s, will call session.rollback()",
+                url,
+            )
+            self.sess.rollback()
     else:
         self.sess.add(post.to_orm())
-        self.sess.commit()
+        try:
+            self.sess.commit()
+        except:
+            logger.warning(
+                "Commit failed on %s, will call session.rollback()",
+                url,
+            )
+            self.sess.rollback()
 
     return {
         'id': post.id,
@@ -141,11 +155,25 @@ def crawl_ptt_board_list(
             exist_board.url = board.url
             exist_board.updated_at = datetime.utcnow()
             self.sess.merge(exist_board)
-            self.sess.commit()
+            try:
+                self.sess.commit()
+            except:
+                logger.warning(
+                    "Commit failed on %s, will call session.rollback()",
+                    board.name,
+                )
+                self.sess.rollback()
 
         else:
             self.sess.add(board.to_orm())
-            self.sess.commit()
+            try:
+                self.sess.commit()
+            except:
+                logger.warning(
+                    "Commit failed on %s, will call session.rollback()",
+                    board.name,
+                )
+                self.sess.rollback()
 
         ret.append(board.dict())
 
@@ -231,10 +259,24 @@ def crawl_dcard_post(
         exist_row.comments.extend(new_comments)
 
         self.sess.merge(exist_row)
-        self.sess.commit()
+        try:
+            self.sess.commit()
+        except:
+            logger.warning(
+                "Commit failed on %s, will call session.rollback()",
+                post_id,
+            )
+            self.sess.rollback()
     else:
         self.sess.add(post.to_orm())
-        self.sess.commit()
+        try:
+            self.sess.commit()
+        except:
+            logger.warning(
+                "Commit failed on %s, will call session.rollback()",
+                post_id,
+            )
+            self.sess.rollback()
 
     return {
         'id': post.id,
@@ -271,10 +313,24 @@ def crawl_dcard_board_list(
             exist_board.description = board.description
             exist_board.is_school = board.is_school
             self.sess.merge(exist_board)
-            self.sess.commit()
+            try:
+                self.sess.commit()
+            except:
+                logger.warning(
+                    "Commit failed on %s, will call session.rollback()",
+                    board.name,
+                )
+                self.sess.rollback()
         else:
             self.sess.add(board.to_orm())
-            self.sess.commit()
+            try:
+                self.sess.commit()
+            except:
+                logger.warning(
+                    "Commit failed on %s, will call session.rollback()",
+                    board.name,
+                )
+                self.sess.rollback()
 
         ret.append(board.dict())
 
@@ -307,10 +363,24 @@ def crawl_wiki_entity(
         exist_entity.type = crawled_entity.type
         exist_entity.label = crawled_entity.label
         self.sess.merge(exist_entity)
-        self.sess.commit()
+        try:
+            self.sess.commit()
+        except:
+            logger.warning(
+                "Commit failed on %s, will call session.rollback()",
+                url,
+            )
+            self.sess.rollback()
     else:
         self.sess.add(crawled_entity.to_wiki_entity_orm())
-        self.sess.commit()
+        try:
+            self.sess.commit()
+        except:
+            logger.warning(
+                "Commit failed on %s, will call session.rollback()",
+                url,
+            )
+            self.sess.rollback()
 
     return {
         "name": crawled_entity.name,
