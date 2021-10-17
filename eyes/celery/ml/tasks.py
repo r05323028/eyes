@@ -91,11 +91,25 @@ def transform_ptt_post_to_spacy_post(
                 new_comments.append(comment.to_orm())
         exist_row.comments.extend(new_comments)
         self.sess.merge(exist_row)
-        self.sess.commit()
+        try:
+            self.sess.commit()
+        except:
+            logger.warning(
+                "Commit failed on %s, will call session.rollback()",
+                post_id,
+            )
+            self.sess.rollback()
     else:
         row = spacy_post.to_orm()
         self.sess.add(row)
-        self.sess.commit()
+        try:
+            self.sess.commit()
+        except:
+            logger.warning(
+                "Commit failed on %s, will call session.rollback()",
+                post_id,
+            )
+            self.sess.rollback()
 
     return {
         'id': spacy_post.id,

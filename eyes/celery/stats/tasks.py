@@ -118,7 +118,16 @@ def ptt_monthly_summary(
             exist_row.total_posts = daily_sum.total_posts
             exist_row.updated_at = datetime.utcnow()
             self.sess.merge(exist_row)
-            self.sess.commit()
+            try:
+                self.sess.commit()
+            except:
+                logger.warning(
+                    "Commit failed on %s, %s, will call session.rollback()",
+                    year,
+                    month,
+                )
+                self.sess.rollback()
+
         else:
             row = DailySummary(
                 source=SourceType.PTT,
@@ -128,7 +137,15 @@ def ptt_monthly_summary(
                 day=daily_sum.day,
             )
             self.sess.add(row)
-            self.sess.commit()
+            try:
+                self.sess.commit()
+            except:
+                logger.warning(
+                    "Commit failed on %s, %s, will call session.rollback()",
+                    year,
+                    month,
+                )
+                self.sess.rollback()
 
     # monthly
     total_posts = self.sess.query(PttPost).filter(
@@ -159,7 +176,15 @@ def ptt_monthly_summary(
         exist_row.total_comments = total_comments
         exist_row.updated_at = datetime.utcnow()
         self.sess.merge(exist_row)
-        self.sess.commit()
+        try:
+            self.sess.commit()
+        except:
+            logger.warning(
+                "Commit failed on %s, %s, will call session.rollback()",
+                year,
+                month,
+            )
+            self.sess.rollback()
 
     else:
         row = MonthlySummary(
@@ -170,7 +195,15 @@ def ptt_monthly_summary(
             month=monthly_sum.month,
         )
         self.sess.add(row)
-        self.sess.commit()
+        try:
+            self.sess.commit()
+        except:
+            logger.warning(
+                "Commit failed on %s, %s, will call session.rollback()",
+                year,
+                month,
+            )
+            self.sess.rollback()
 
     return {
         'year': monthly_sum.year,
@@ -331,7 +364,14 @@ def stats_entity_summary(
             exist_row.month = exist_row.created_at.month
             exist_row.updated_at = datetime.utcnow()
             self.sess.merge(exist_row)
-            self.sess.commit()
+            try:
+                self.sess.commit()
+            except:
+                logger.warning(
+                    "Commit failed on %s, will call session.rollback()",
+                    ent,
+                )
+                self.sess.rollback()
         else:
             self.sess.add(
                 EntitySummary(
@@ -347,7 +387,14 @@ def stats_entity_summary(
                     year=year,
                     month=month,
                 ))
-            self.sess.commit()
+            try:
+                self.sess.commit()
+            except:
+                logger.warning(
+                    "Commit failed on %s, will call session.rollback()",
+                    ent,
+                )
+                self.sess.rollback()
 
     return {
         'year': year,
