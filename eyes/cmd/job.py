@@ -61,6 +61,11 @@ def job():
     default=False,
     help='If overwrite.',
 )
+@click.option(
+    '--limit',
+    type=int,
+    help="Limitation",
+)
 def dispatch(
     job_type,
     board,
@@ -70,6 +75,7 @@ def dispatch(
     year,
     month,
     overwrite,
+    limit,
 ):
     '''Dispatch a job
     '''
@@ -141,6 +147,7 @@ def dispatch(
             job_type=job_type,
             payload={
                 'n_days': n_days,
+                'limit': limit,
             },
         )
 

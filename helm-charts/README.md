@@ -8,6 +8,9 @@ helm charts for deploying eyes on kubernetes.
 
 ```bash
 kubectl create ns eyes
+
+# create role binding
+kubectl create rolebinding default-admin --clusterrole=admin --serviceaccount=eyes:default -n eyes
 ```
 
 ### Deploy services
@@ -21,6 +24,8 @@ kubectl create ns eyes
 
 ### Argo workflow
 
+Use helm charts to deploy argo server & workflows controller to our cluster.
+
 ```bash
 # add repo
 helm repo add argo https://argoproj.github.io/argo-helm
@@ -32,5 +37,5 @@ helm repo update
 helm install -n eyes argo argo/argo-workflows
 
 # deploy workflows
-helm install -n eyes crawlers crawlers
+helm install -n eyes workflows workflows
 ```
