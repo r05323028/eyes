@@ -21,6 +21,7 @@ kubectl create rolebinding default-admin --clusterrole=admin --serviceaccount=ey
 - Dev Server: `helm install -n eyes dev dev`
 - Celery: `helm install -n eyes celery-worker celery`
 - API: `helm install -n eyes api api`
+- Web: `helm install -n eyes web web`
 
 ### Argo workflow
 

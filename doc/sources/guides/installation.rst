@@ -59,6 +59,9 @@ Finally, deploy services of **Eyes**.
     # api
     helm install -n eyes api helm-charts/api
 
+    # web
+    helm install -n eyew web helm-charts/web
+
     # cron-workflows
     helm install -n eyes workflows helm-charts/workflows
 
