@@ -1,7 +1,7 @@
 '''Eyes celery stats tasks
 '''
 from collections import defaultdict
-from datetime import date, datetime
+from datetime import datetime
 from itertools import groupby
 from typing import Dict
 
@@ -222,6 +222,7 @@ def stats_entity_summary(
     year,
     month,
     limit=None,
+    batch_size=2500,
 ) -> Dict:
     '''Entity stats
     '''
@@ -242,66 +243,27 @@ def stats_entity_summary(
     if limit:
         logger.warning('Set limit %s', limit)
         query = query.limit(limit)
+    n_posts = self.sess.query(func.count(SpacyPttPost.id)).scalar()
+    total_posts = limit if limit else n_posts
+    start, end = 0, batch_size
+    logger.info(
+        'Starting transform posts, total posts: %s',
+        total_posts,
+    )
 
-    for row in query:
-        spacy_post, board = row
-        row_date = spacy_post.created_at.date()
-        title = binary_to_doc(spacy_post.title, self.nlp)
-        content = binary_to_doc(spacy_post.content, self.nlp)
-        comments = [
-            binary_to_doc(com.content, self.nlp) for com in spacy_post.comments
-        ]
-
-        for i, ent in enumerate(title.ents):
-            ent = ent.text.strip()
-            if ent not in entities:
-                entities.add(ent)
-
-            # count stats
-            count[ent] += 1
-
-            # board stats
-            board_stats[(ent, board, row_date)] += 1
-
-            # link stats
-            other_ents = [
-                e.text.strip() for j, e in enumerate(title.ents) if i != j
+    # batch processing
+    while start < total_posts:
+        for row in query.slice(start, end):
+            spacy_post, board = row
+            row_date = spacy_post.created_at.date()
+            title = binary_to_doc(spacy_post.title, self.nlp)
+            content = binary_to_doc(spacy_post.content, self.nlp)
+            comments = [
+                binary_to_doc(com.content, self.nlp)
+                for com in spacy_post.comments
             ]
-            for other_ent in other_ents:
-                if other_ent not in link_stats[ent]:
-                    link_stats[ent][other_ent] = 1
-                else:
-                    link_stats[ent][other_ent] += 1
 
-            # post stats
-            posts[ent].add(spacy_post.id)
-
-        for i, ent in enumerate(content.ents):
-            ent = ent.text.strip()
-            if ent not in entities:
-                entities.add(ent)
-
-            # count stats
-            count[ent] += 1
-
-            # board stats
-            board_stats[(ent, board, row_date)] += 1
-
-            # link stats
-            other_ents = [
-                e.text.strip() for j, e in enumerate(content.ents) if i != j
-            ]
-            for other_ent in other_ents:
-                if other_ent not in link_stats[ent]:
-                    link_stats[ent][other_ent] = 1
-                else:
-                    link_stats[ent][other_ent] += 1
-
-            # post stats
-            posts[ent].add(spacy_post.id)
-
-        for comment in comments:
-            for i, ent in enumerate(comment.ents):
+            for i, ent in enumerate(title.ents):
                 ent = ent.text.strip()
                 if ent not in entities:
                     entities.add(ent)
@@ -314,7 +276,31 @@ def stats_entity_summary(
 
                 # link stats
                 other_ents = [
-                    e.text.strip() for j, e in enumerate(comment.ents)
+                    e.text.strip() for j, e in enumerate(title.ents) if i != j
+                ]
+                for other_ent in other_ents:
+                    if other_ent not in link_stats[ent]:
+                        link_stats[ent][other_ent] = 1
+                    else:
+                        link_stats[ent][other_ent] += 1
+
+                # post stats
+                posts[ent].add(spacy_post.id)
+
+            for i, ent in enumerate(content.ents):
+                ent = ent.text.strip()
+                if ent not in entities:
+                    entities.add(ent)
+
+                # count stats
+                count[ent] += 1
+
+                # board stats
+                board_stats[(ent, board, row_date)] += 1
+
+                # link stats
+                other_ents = [
+                    e.text.strip() for j, e in enumerate(content.ents)
                     if i != j
                 ]
                 for other_ent in other_ents:
@@ -325,6 +311,38 @@ def stats_entity_summary(
 
                 # post stats
                 posts[ent].add(spacy_post.id)
+
+            for comment in comments:
+                for i, ent in enumerate(comment.ents):
+                    ent = ent.text.strip()
+                    if ent not in entities:
+                        entities.add(ent)
+
+                    # count stats
+                    count[ent] += 1
+
+                    # board stats
+                    board_stats[(ent, board, row_date)] += 1
+
+                    # link stats
+                    other_ents = [
+                        e.text.strip() for j, e in enumerate(comment.ents)
+                        if i != j
+                    ]
+                    for other_ent in other_ents:
+                        if other_ent not in link_stats[ent]:
+                            link_stats[ent][other_ent] = 1
+                        else:
+                            link_stats[ent][other_ent] += 1
+
+                    # post stats
+                    posts[ent].add(spacy_post.id)
+        start, end = end, end + batch_size
+        logger.info(
+            'Slicing on [%s, %s]',
+            start,
+            end,
+        )
 
     # reshape board stats
     board_stats = dict(sorted(
@@ -344,6 +362,7 @@ def stats_entity_summary(
         } for key, value in e_group]
 
     # transform to orm and upsert
+    logger.info('Starting upsert data.')
     for ent in entities:
         exist_row = self.sess.query(EntitySummary).filter(
             EntitySummary.name == ent,
