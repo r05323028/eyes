@@ -1,7 +1,7 @@
 ---
 name: Question
 about: Ask a question
-title: "[QUESTION]"
+title: ''
 labels: question
 assignees: r05323028
 
