@@ -2,12 +2,13 @@ import moment from "moment";
 import { ResponsiveLine } from "@nivo/line";
 
 import { useSelector, useDispatch } from "react-redux";
-import { useMount } from "react-use";
+import { useMount, useKey } from "react-use";
 import { useRouteMatch } from "react-router";
 import { Link } from "react-router-dom";
 
 import { setCurrentTab } from "../reducers/article";
 import { sagaActions } from "../sagas";
+import { setModalOpen } from "../reducers/article";
 
 import Spinner from "../components/Spinner";
 
@@ -79,7 +80,7 @@ const createStats = (numPosts, numComments) => {
   );
 };
 
-const createTable = (data, columns) => {
+const createTable = (data, columns, handleOnPostClick) => {
   return (
     <div className="overflow-x-auto">
       <table className="table w-full">
@@ -93,7 +94,11 @@ const createTable = (data, columns) => {
         </thead>
         <tbody>
           {data?.map((row, index) => (
-            <tr key={index} className="hover">
+            <tr
+              key={index}
+              className="hover"
+              onClick={() => handleOnPostClick(row)}
+            >
               <th>{index}</th>
               <td>{row.board}</td>
               <td>{row.title}</td>
@@ -118,13 +123,58 @@ const createTab = (tab, active, onClick, key) => {
   );
 };
 
+const PostModal = (props) => {
+  const { modalOpen, onClose, post, requesting } = props;
+
+  return (
+    <div
+      id="article-modal"
+      className={`modal ${modalOpen ? "modal-open" : ""}`}
+    >
+      <div className="modal-box h-2/3 overflow-y-scroll">
+        {requesting ? (
+          <div className="flex justify-center">
+            <Spinner />
+          </div>
+        ) : (
+          <>
+            <h2 className="font-bold text-2xl my-5">{post.title}</h2>
+            <div className="divider" />
+            <p className="my-5">{post.content}</p>
+            <div className="divider" />
+            <div className="flex flex-col">
+              {post.comments?.map((com) => (
+                <div className="flex space-x-5">
+                  <div>{com.reaction}</div>
+                  <div>{com.author}: </div>
+                  <div>{com.content}</div>
+                </div>
+              ))}
+            </div>
+            <div className="modal-action">
+              <button className="btn" onClick={onClose}>
+                Close
+              </button>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  );
+};
+
 const Articles = (props) => {
   const { url } = useRouteMatch();
   const dispatch = useDispatch();
   const currentTab = useSelector((state) => state.article.currentTab);
+  const requestingPost = useSelector(
+    (state) => state.article.status.requestingPost
+  );
+  const currentPost = useSelector((state) => state.article.currentPost);
   const articles = useSelector((state) => state.article.articles);
   const pageInfo = useSelector((state) => state.article.pageInfo);
   const currentPage = useSelector((state) => state.article.currentPage);
+  const modalOpen = useSelector((state) => state.article.status.modalOpen);
   const monthlySummary = useSelector((state) => state.article.monthlySummary);
   const dailySummaries = useSelector((state) => state.article.dailySummaries);
   const articleLoading = useSelector(
@@ -157,6 +207,9 @@ const Articles = (props) => {
         limit: 30,
       })
     );
+  });
+  useKey("Escape", () => {
+    dispatch(setModalOpen(false));
   });
 
   const handleOnTabClick = (tab) => {
@@ -192,9 +245,21 @@ const Articles = (props) => {
     e.preventDefault();
     dispatch(sagaActions.requestPTTArticlesNextPage(pageInfo));
   };
-
+  const handleOnPostClick = (post) => {
+    dispatch(sagaActions.requestPost({ postId: post.postId }));
+    dispatch(setModalOpen(true));
+  };
+  const handleOnPostClose = () => {
+    dispatch(setModalOpen(false));
+  };
   return (
     <>
+      <PostModal
+        onClose={handleOnPostClose}
+        post={currentPost}
+        modalOpen={modalOpen}
+        requesting={requestingPost}
+      />
       <h1 className="font-bold text-4xl my-5">Articles</h1>
       <div className="tabs">
         {tabs.map((tab, index) =>
@@ -237,7 +302,11 @@ const Articles = (props) => {
       <div className="card bordered m-5">
         <div className="card-body">
           <h2 className="card-title text-2xl">Latest Posts</h2>
-          {articleLoading ? <Spinner /> : createTable(articles, columns)}
+          {articleLoading ? (
+            <Spinner />
+          ) : (
+            createTable(articles, columns, handleOnPostClick)
+          )}
           <div className="card-actions">
             <div className="btn-group">
               <button

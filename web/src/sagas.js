@@ -11,6 +11,9 @@ import {
   requestingDailySummaries,
   requestDailySummariesSuccess,
   requestDailySummariesFailed,
+  requestingPost,
+  requestPostSuccess,
+  requestPostFailed,
 } from "./reducers/article";
 import {
   requestingAllStatsEntitySummaries,
@@ -29,6 +32,7 @@ import {
   fetchDailySummaries,
   fetchAllStatsEntitySummaries,
   fetchEntitySummary,
+  fetchPttPost,
 } from "./api";
 
 import { NODE_MIN_COUNT } from "./constant";
@@ -51,6 +55,7 @@ export const sagaActions = {
     "entities/requestAllStatsEntitySummariesSaga"
   ),
   requestEntitySummary: createAction("entity/requestEntitySummarySaga"),
+  requestPost: createAction("post/requestPostSaga"),
 };
 
 function* requestPTTArticlesSaga(action) {
@@ -148,6 +153,17 @@ function* requestEntitySummarySaga(action) {
   }
 }
 
+function* requestPostSaga(action) {
+  const { postId } = action.payload;
+  try {
+    yield put(requestingPost());
+    const post = yield call(fetchPttPost, { postId });
+    yield put(requestPostSuccess(post));
+  } catch (err) {
+    yield put(requestPostFailed());
+  }
+}
+
 export default function* rootSaga() {
   yield all([
     takeEvery(sagaActions.requestPTTArticles, requestPTTArticlesSaga),
@@ -172,5 +188,6 @@ export default function* rootSaga() {
       requestAllStatsEntitySummariesSaga
     ),
     takeEvery(sagaActions.requestEntitySummary, requestEntitySummarySaga),
+    takeEvery(sagaActions.requestPost, requestPostSaga),
   ]);
 }
