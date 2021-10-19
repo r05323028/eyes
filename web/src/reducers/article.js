@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   currentTab: "PTT",
+  currentPost: {},
   monthlySummary: {},
   dailySummaries: [],
   articles: [],
@@ -12,6 +13,8 @@ const initialState = {
     requesting: false,
     requestingMonthlySummary: false,
     requestingDailySummaries: false,
+    requestingPost: false,
+    modalOpen: false,
   },
 };
 
@@ -60,6 +63,20 @@ const articleSlice = createSlice({
     requestDailySummariesFailed: (state, action) => {
       state.status.requestingDailySummaries = false;
     },
+    requestingPost: (state) => {
+      state.status.requestingPost = true;
+      state.currentPost = {};
+    },
+    requestPostSuccess: (state, action) => {
+      state.currentPost = action.payload;
+      state.status.requestingPost = false;
+    },
+    requestPostFailed: (state) => {
+      state.status.requestingPost = false;
+    },
+    setModalOpen: (state, action) => {
+      state.status.modalOpen = action.payload;
+    },
   },
 });
 
@@ -75,6 +92,10 @@ export const {
   requestingDailySummaries,
   requestDailySummariesSuccess,
   requestDailySummariesFailed,
+  requestingPost,
+  requestPostSuccess,
+  requestPostFailed,
+  setModalOpen,
 } = articleSlice.actions;
 
 export default articleSlice.reducer;

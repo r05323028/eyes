@@ -18,6 +18,7 @@ export const ALL_PTT_ARTICLES = gql`
       edges {
         node {
           id
+          postId
           title
           author
           board
@@ -81,6 +82,25 @@ export const ENTITY_SUMMARY = gql`
       boardStats
       linkStats
       posts
+    }
+  }
+`;
+
+export const PTT_POST = gql`
+  query PttPost($postId: String!) {
+    pttPost(postId: $postId) {
+      id
+      title
+      author
+      board
+      content
+      comments {
+        id
+        commentId
+        author
+        reaction
+        content
+      }
     }
   }
 `;

@@ -6,6 +6,7 @@ import {
   DAILY_SUMMARIES,
   ENTITY_SUMMARY,
   MONTH_SUMMARY,
+  PTT_POST,
 } from "./query";
 
 export const client = new ApolloClient({
@@ -65,4 +66,14 @@ export async function fetchEntitySummary({ name }) {
     },
   });
   return data.entitySummary;
+}
+
+export async function fetchPttPost({ postId }) {
+  const { data } = await client.query({
+    query: PTT_POST,
+    variables: {
+      postId: postId,
+    },
+  });
+  return data.pttPost;
 }

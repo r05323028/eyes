@@ -57,6 +57,12 @@ class PttPost(Base, Timestamp):
         '''
         return len(self.comments)
 
+    @hybrid_property
+    def post_id(self) -> str:
+        '''Get post id
+        '''
+        return self.id
+
 
 class PttComment(Base, Timestamp):
     '''Ptt comment ORM model
