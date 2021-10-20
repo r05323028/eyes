@@ -1,5 +1,6 @@
 '''Eyes celery stats tasks
 '''
+import os
 from collections import defaultdict
 from datetime import datetime
 from itertools import groupby
@@ -13,7 +14,7 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from celery import Task
 from celery.utils.log import get_task_logger
 from eyes.celery import app
-from eyes.config import MySQLConfig, SpacyConfig
+from eyes.config import EyesConfig, MySQLConfig, SpacyConfig
 from eyes.data import stats
 from eyes.db.ptt import PttComment, PttPost
 from eyes.db.spacy import SpacyPttPost
@@ -29,12 +30,26 @@ class StatsTask(Task):
     '''
     _sess = None
     _nlp = None
+    _config = None
 
     def after_return(self, *args, **kwargs):
         '''Callback after finishing a job
         '''
         if self._sess is not None:
             self._sess.close()
+
+    @property
+    def config(self):
+        '''Returns Eyes config
+        '''
+        if self._config is None:
+            config_fp = os.environ.get(
+                'EYES_CONFIG_PATH',
+                './config/eyes.yaml',
+            )
+            self._config = EyesConfig.from_yaml(config_fp)
+
+        return self._config
 
     @property
     def sess(self):
@@ -222,7 +237,6 @@ def stats_entity_summary(
     year,
     month,
     limit=None,
-    batch_size=2500,
 ) -> Dict:
     '''Entity stats
     '''
@@ -231,6 +245,10 @@ def stats_entity_summary(
     board_stats = defaultdict(int)
     link_stats = defaultdict(dict)
     posts = defaultdict(set)
+    batch_size = self.config.tasks.get(
+        'batch_size',
+        1000,
+    )
 
     query = self.sess.query(
         SpacyPttPost,

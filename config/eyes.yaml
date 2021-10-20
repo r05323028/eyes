@@ -1,3 +1,5 @@
+tasks:
+  batch_size: 1000
 wiki:
   categories:
     - type: PERSON

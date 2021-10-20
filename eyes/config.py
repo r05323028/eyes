@@ -11,6 +11,7 @@ from yaml import Loader
 class EyesConfig(BaseSettings):
     '''Eyes Config
     '''
+    tasks: typing.Dict
     wiki: typing.Dict
 
     @classmethod
@@ -25,7 +26,10 @@ class EyesConfig(BaseSettings):
         '''
         with open(file) as f:
             data = yaml.load(f, Loader=Loader)
-        return cls(wiki=data['wiki'])
+        return cls(
+            wiki=data['wiki'],
+            tasks=data['tasks'],
+        )
 
 
 class MySQLConfig(BaseSettings):
