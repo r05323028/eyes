@@ -104,3 +104,17 @@ export const PTT_POST = gql`
     }
   }
 `;
+
+export const PTT_POSTS = gql`
+  query PttPosts($postIds: [String]!) {
+    pttPosts(postIds: $postIds) {
+      id
+      postId
+      title
+      author
+      board
+      content
+      createdAt
+    }
+  }
+`;
