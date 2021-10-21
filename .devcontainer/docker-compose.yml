@@ -21,7 +21,7 @@ services:
     platform: linux/amd64
     volumes:
       - eyes-mysql:/var/lib/mysql
-    env_file: ../.env
+    env_file: ../.env.testing
     ports:
       - 3306:3306
     networks:

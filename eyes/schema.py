@@ -126,6 +126,13 @@ class Query(graphene.ObjectType):
         PttPost,
         post_id=graphene.Argument(type=graphene.String, required=True),
     )
+    ptt_posts = graphene.Field(
+        graphene.List(PttPost),
+        post_ids=graphene.Argument(
+            type=graphene.List(graphene.String),
+            required=True,
+        ),
+    )
     monthly_summary = graphene.Field(
         MonthSummary,
         source=graphene.Argument(type=graphene.Int, required=True),
@@ -161,9 +168,20 @@ class Query(graphene.ObjectType):
             ptt.PttPost
         '''
         query = PttPost.get_query(info)
-        return query.filter(
-            ptt.PttPost.id == post_id,
-        ).first()
+        return query.filter(ptt.PttPost.id == post_id, ).first()
+
+    def resolve_ptt_posts(self, info, post_ids):
+        '''Resolve ptt posts
+
+        Args:
+            post_ids (List[str]): Ptt post ids
+
+        Returns:
+            List[ptt.PttPost]
+        '''
+        query = PttPost.get_query(info)
+        return query.filter(ptt.PttPost.id.in_(post_ids)).order_by(
+            ptt.PttPost.created_at)
 
     def resolve_monthly_summary(self, info, source, year, month):
         '''Resolve monthly summary

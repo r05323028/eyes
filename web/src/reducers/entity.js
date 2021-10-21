@@ -49,9 +49,11 @@ const initialState = {
   edges: [],
   nodes: [],
   count: 0,
+  postIds: [],
   posts: [],
   status: {
     requesting: false,
+    requestingPosts: false,
   },
 };
 
@@ -67,7 +69,7 @@ const entitySlice = createSlice({
     },
     requestEntitySummarySuccess: (state, action) => {
       const { boardStats, posts, linkStats, count, name } = action.payload;
-      state.posts = posts;
+      state.postsIds = posts;
       state.boardStats = boardStats;
       state.linkStats = linkStats;
       state.count = count;
@@ -79,6 +81,16 @@ const entitySlice = createSlice({
     requestEntitySummaryFailed: (state, action) => {
       state.status.requesting = false;
     },
+    requestingEntityPosts: (state) => {
+      state.requestingPosts = true;
+    },
+    requestEntityPostsSuccess: (state, action) => {
+      state.posts = action.payload;
+      state.requestingPosts = false;
+    },
+    requestEntityPostsFailed: (state) => {
+      state.requestingPosts = false;
+    },
   },
 });
 
@@ -87,6 +99,9 @@ export const {
   requestEntitySummaryFailed,
   requestEntitySummarySuccess,
   requestingEntitySummary,
+  requestingEntityPosts,
+  requestEntityPostsSuccess,
+  requestEntityPostsFailed,
 } = entitySlice.actions;
 
 export default entitySlice.reducer;
