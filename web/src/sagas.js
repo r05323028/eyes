@@ -24,6 +24,9 @@ import {
   requestingEntitySummary,
   requestEntitySummarySuccess,
   requestEntitySummaryFailed,
+  requestingEntityPosts,
+  requestEntityPostsSuccess,
+  requestEntityPostsFailed,
 } from "./reducers/entity";
 
 import {
@@ -33,6 +36,7 @@ import {
   fetchAllStatsEntitySummaries,
   fetchEntitySummary,
   fetchPttPost,
+  fetchPttPosts,
 } from "./api";
 
 import { NODE_MIN_COUNT } from "./constant";
@@ -148,6 +152,15 @@ function* requestEntitySummarySaga(action) {
     yield put(requestingEntitySummary());
     const entitySummary = yield call(fetchEntitySummary, { name });
     yield put(requestEntitySummarySuccess(entitySummary));
+    try {
+      yield put(requestingEntityPosts());
+      const entityPosts = yield call(fetchPttPosts, {
+        postIds: entitySummary.posts,
+      });
+      yield put(requestEntityPostsSuccess(entityPosts));
+    } catch (err) {
+      yield put(requestEntityPostsFailed());
+    }
   } catch (err) {
     yield put(requestEntitySummaryFailed());
   }

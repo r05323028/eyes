@@ -82,6 +82,77 @@ const createLineChart = (lineData) => {
   );
 };
 
+const Timeline = (props) => {
+  const { posts, requesting } = props;
+  const createLeftCard = ({ title, content, dt }) => {
+    return (
+      <div class="mb-8 flex justify-between flex-row-reverse items-center w-full left-timeline">
+        <div class="order-1 w-5/12"></div>
+        <div class="z-20 flex items-center order-1 shadow-xl w-24 h-8">
+          <h1 class="mx-auto text-primary font-semibold text-lg">
+            {moment(dt).format("YYYY-MM-DD HH:MM")}
+          </h1>
+        </div>
+        <div class="order-1 bg-neutral-content rounded-lg shadow-xl w-5/12 px-6 py-4">
+          <h3 class="mb-3 font-bold text-white text-xl">{title}</h3>
+          <p class="text-sm font-medium leading-snug tracking-wide text-white text-opacity-100">
+            {content.slice(0, 100) + "..."}
+          </p>
+        </div>
+      </div>
+    );
+  };
+  const createRightCard = ({ title, content, dt }) => {
+    return (
+      <div class="mb-8 flex justify-between items-center w-full right-timeline">
+        <div class="order-1 w-5/12"></div>
+        <div class="z-20 flex items-center order-1 shadow-xl w-24 h-8">
+          <h1 class="mx-auto font-semibold text-lg text-white">
+            {moment(dt).format("YYYY-MM-DD HH:MM")}
+          </h1>
+        </div>
+        <div class="order-1 bg-primary rounded-lg shadow-xl w-5/12 px-6 py-4">
+          <h3 class="mb-3 font-bold text-base-300 text-xl">{title}</h3>
+          <p class="text-sm leading-snug tracking-wide text-base-300 text-opacity-100">
+            {content.slice(0, 100) + "..."}
+          </p>
+        </div>
+      </div>
+    );
+  };
+  return (
+    <div class="container mx-auto w-full h-full">
+      <div class="relative wrap overflow-hidden p-10 h-full">
+        <div
+          style={{ left: "50%" }}
+          class="border-2-2 absolute border-opacity-20 border-gray-700 h-full border"
+        ></div>
+        {requesting ? (
+          <Spinner />
+        ) : (
+          posts.map((post, index) => {
+            return (
+              <>
+                {index % 2 === 0
+                  ? createLeftCard({
+                      title: post.title,
+                      content: post.content,
+                      dt: post.createdAt,
+                    })
+                  : createRightCard({
+                      title: post.title,
+                      content: post.content,
+                      dt: post.createdAt,
+                    })}
+              </>
+            );
+          })
+        )}
+      </div>
+    </div>
+  );
+};
+
 const Entity = (props) => {
   const { entityName } = useParams();
   const dispatch = useDispatch();
@@ -91,6 +162,9 @@ const Entity = (props) => {
   const linkStats = useSelector((state) => state.entity.linkStats);
   const requesting = useSelector((state) => state.entity.status.requesting);
   const posts = useSelector((state) => state.entity.posts);
+  const requestingPosts = useSelector(
+    (state) => state.entity.status.requestingPosts
+  );
 
   useMount(() => {
     dispatch(sagaActions.requestEntitySummary({ name: entityName }));
@@ -118,6 +192,14 @@ const Entity = (props) => {
             ) : (
               <NetworkChart nodes={nodes} edges={edges} />
             )}
+          </div>
+        </div>
+      </div>
+      <div className="grid grid-cols-1 grid-flow-col gap-5 m-5">
+        <div className="card bordered">
+          <div className="card-body">
+            <div className="card-title">Timeline</div>
+            <Timeline posts={posts} requesting={requestingPosts} />
           </div>
         </div>
       </div>
