@@ -65,16 +65,6 @@ Finally, deploy services of **Eyes**.
     # cron-workflows
     helm install -n eyes workflows helm-charts/workflows
 
-Initialize database
-###################
-
-After you installed services, remember to initialize database by eyes command line tools.
-
-.. code-block:: bash
-    :caption: Initialize database & tables
-
-    eyes db init --host HOST --port PORT --user USER
-
 Docker Compose
 --------------
 
