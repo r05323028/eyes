@@ -1,0 +1,23 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "eyes-post-install-job-db-init"
+  annotations:
+    "helm.sh/hook": post-install
+    "helm.sh/hook-delete-policy": hook-succeeded
+    "helm.sh/hook-weight": "5"
+spec:
+  template:
+    metadata:
+      name: "eyes-post-install-job-db-init"
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: post-install-job
+          image: eyes/base
+          imagePullPolicy: Never
+          command: ["/bin/bash", "-c", "--"]
+          args: ["poetry run eyes db init"]
+          envFrom:
+            - configMapRef:
+                name: eyes-config-prod
