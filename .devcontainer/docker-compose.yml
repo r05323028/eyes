@@ -12,6 +12,7 @@ services:
     platform: linux/amd64
     volumes:
       - ..:/workspace:cached
+      - $HOME/.ssh/:/home/vscode/.ssh/
     networks:
       - eyes
     command: sleep infinity

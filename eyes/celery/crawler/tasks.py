@@ -237,7 +237,7 @@ def crawl_dcard_post(
                 exist_reaction.count = crawled_reaction.count
             else:
                 new_reactions.append(crawled_reaction.to_orm())
-            exist_row.reactions.extend(new_reactions)
+        exist_row.reactions.extend(new_reactions)
 
         # comments
         new_comments = []
