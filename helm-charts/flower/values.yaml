@@ -1,4 +1,0 @@
-image:
-  repository: eyes/base
-  pullPolicy: IfNotPresent
-  tag: ""

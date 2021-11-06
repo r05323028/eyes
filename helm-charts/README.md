@@ -2,41 +2,24 @@
 
 helm charts for deploying eyes on kubernetes.
 
-## Deployments
+## Deploy Eyes
 
-### Create Namespace
+Simply use one line command:
 
 ```bash
-kubectl create ns eyes
-
-# create role binding
-kubectl create rolebinding default-admin --clusterrole=admin --serviceaccount=eyes:default -n eyes
+helm install eyes eyes
 ```
 
-### Deploy services
+## Settings
 
-- Configmap: `helm install -n eyes config config`
-- MySQL: `helm install -n eyes mysql bitnami/mysql -f mysql/values.yaml`
-- Redis: `helm install -n eyes redis bitnami/redis -f redis/values.yaml`
-- Dev Server: `helm install -n eyes dev dev`
-- Celery: `helm install -n eyes celery-worker celery`
-- API: `helm install -n eyes api api`
-- Web: `helm install -n eyes web web`
-
-### Argo workflow
-
-Use helm charts to deploy argo server & workflows controller to our cluster.
+You can use `eyes/values.yaml` to change settings in `eyes`. For example, if you want to use AWS RDS rather than self-hosted MySQL, you can simply set `mysql.enabled=false` and `config.mysql.host=YOUR_AWS_RDS_HOST` or use following command:
 
 ```bash
-# add repo
-helm repo add argo https://argoproj.github.io/argo-helm
-
-# update repo
-helm repo update
-
-# install
-helm install -n eyes argo argo/argo-workflows
-
-# deploy workflows
-helm install -n eyes workflows workflows
+helm install eyes eyes \
+    --set mysql.enabled=false \
+    --set config.mysql.host=MYSQL_HOST \
+    --set config.mysql.user=MYSQL_USER \
+    --set config.mysql.password=MYSQL_PASSWORD \
+    --set config.mysql.password=MYSQL_PASSWORD \
+    ...
 ```

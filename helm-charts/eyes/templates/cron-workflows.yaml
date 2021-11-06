@@ -16,9 +16,9 @@ spec:
               arguments:
                 parameters:
                   - name: n_days
-                    value: "{{ .Values.top_boards.n_days }}"
+                    value: "{{ .Values.cron.top_boards.n_days }}"
                   - name: limit
-                    value: "{{ .Values.top_boards.n_boards }}"
+                    value: "{{ .Values.cron.top_boards.n_boards }}"
             - name: transform-ptt-posts
               template: transform-ptt-posts-to-spacy
               depends: "crawl-top-board-posts"
@@ -64,7 +64,7 @@ spec:
             ]
           envFrom:
             - configMapRef:
-                name: eyes-config-prod
+                name: eyes-configmaps
 
       - name: transform-ptt-posts-to-spacy
         inputs:
@@ -83,7 +83,7 @@ spec:
             ]
           envFrom:
             - configMapRef:
-                name: eyes-config-prod
+                name: eyes-configmaps
 
       - name: stats-ptt-summaries
         inputs:
@@ -102,7 +102,7 @@ spec:
             ]
           envFrom:
             - configMapRef:
-                name: eyes-config-prod
+                name: eyes-configmaps
 
       - name: stats-entity-summaries
         inputs:
@@ -121,4 +121,4 @@ spec:
             ]
           envFrom:
             - configMapRef:
-                name: eyes-config-prod
+                name: eyes-configmaps

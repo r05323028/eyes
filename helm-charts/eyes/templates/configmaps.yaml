@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: eyes-configmaps
+  labels:
+    workflows.argoproj.io/configmap-type: Parameter
+data:
+  MYSQL_ROOT_PASSWORD: "{{ .Values.config.mysql.rootPassword }}"
+  MYSQL_USER: "{{ .Values.config.mysql.user }}"
+  MYSQL_PASSWORD: "{{ .Values.config.mysql.password }}"
+  MYSQL_HOST: "{{ .Values.config.mysql.host }}"
+  MYSQL_PORT: "{{ .Values.config.mysql.port }}"
+  CELERY_BROKER_URL: "{{ .Values.config.celery.broker_url }}"
+  CELERY_RESULT_BACKEND: "{{ .Values.config.celery.result_backend }}"

@@ -1,6 +1,0 @@
-image: eyes/base
-tag: latest
-
-celery:
-  concurrency: 2
-  loglevel: INFO

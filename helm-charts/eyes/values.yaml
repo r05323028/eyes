@@ -1,0 +1,54 @@
+mysql:
+  enabled: true
+  auth:
+    username: eyes
+    password: example
+    rootPassword: example
+    database: eyes
+
+redis:
+  enabled: true
+  architecture: standalone
+  auth:
+    enabled: false
+
+argo-workflows:
+  enabled: true
+
+image:
+  name: eyes/base
+  tag: latest
+  pullPolicy: IfNotPresent
+
+celery:
+  concurrency: 2
+  loglevel: INFO
+
+config:
+  celery:
+    broker_url: redis://eyes-redis-master:6379/0
+    result_backend: redis://eyes-redis-master:6379/1
+  mysql:
+    host: eyes-mysql
+    port: 3306
+    user: root
+    password: example
+    rootPassword: example
+    database: eyes
+
+cron:
+  top_boards:
+    n_days: 3
+    n_boards: 10
+
+frontend:
+  enabled: false
+  service:
+    type: NodePort
+    port: 3000
+
+api:
+  enabled: false
+  service:
+    type: NodePort
+    port: 8000

@@ -1,0 +1,112 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ .Release.Name }}-celery-worker"
+spec:
+  selector:
+    matchLabels:
+      app: "{{ .Release.Name }}-celery-worker"
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: "{{ .Release.Name }}-celery-worker"
+    spec:
+      containers:
+        - name: "{{ .Release.Name }}-celery-worker"
+          image: '{{ .Values.image.name }}:{{ .Values.image.tag | default "latest" }}'
+          command: ["/bin/bash", "-c", "--"]
+          args:
+            [
+              "poetry run celery -A eyes.celery worker --concurrency={{ .Values.celery.concurrency }} --loglevel={{ .Values.celery.loglevel }}",
+            ]
+          imagePullPolicy: "{{ .Values.image.pullPolicy }}"
+          envFrom:
+            - configMapRef:
+                name: eyes-configmaps
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ .Release.Name }}-flower"
+spec:
+  selector:
+    matchLabels:
+      app: "{{ .Release.Name }}-flower"
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: "{{ .Release.Name }}-flower"
+    spec:
+      containers:
+        - name: "{{ .Release.Name }}-flower"
+          image: '{{ .Values.image.name }}:{{ .Values.image.tag | default "latest" }}'
+          command: ["/bin/bash", "-c", "--"]
+          args: ["poetry run celery -A eyes.celery flower"]
+          imagePullPolicy: "{{ .Values.image.pullPolicy }}"
+          envFrom:
+            - configMapRef:
+                name: eyes-configmaps
+---
+{{ if .Values.api.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ .Release.Name }}-api"
+  labels:
+    app: "{{ .Release.Name }}-api"
+spec:
+  selector:
+    matchLabels:
+      app: "{{ .Release.Name }}-api"
+  template:
+    metadata:
+      labels:
+        app: "{{ .Release.Name }}-api"
+    spec:
+      containers:
+        - name: "{{ .Release.Name }}-api"
+          image: '{{ .Values.image.name }}:{{ .Values.image.tag | default "latest" }}'
+          imagePullPolicy: "{{ .Values.image.pullPolicy }}"
+          command: ["/bin/bash", "-c", "--"]
+          args: ["poetry run uvicorn eyes.app.main:app --host 0.0.0.0"]
+          envFrom:
+            - configMapRef:
+                name: eyes-configmaps
+          ports:
+            - name: http
+              containerPort: {{ .Values.api.service.port }}
+              protocol: TCP
+{{ end }}
+---
+{{ if .Values.frontend.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ .Release.Name }}-web"
+  labels:
+    app: "{{ .Release.Name }}-web"
+spec:
+  selector:
+    matchLabels:
+      app: "{{ .Release.Name }}-web"
+  template:
+    metadata:
+      labels:
+        app: "{{ .Release.Name }}-web"
+    spec:
+      containers:
+        - name: "{{ .Release.Name }}-web"
+          image: '{{ .Values.image.name }}:{{ .Values.image.tag | default "latest" }}'
+          imagePullPolicy: "{{ .Values.image.pullPolicy }}"
+          envFrom:
+            - configMapRef:
+                name: eyes-configmaps
+          command: ["/bin/bash", "-c", "--"]
+          args: ["serve -s build -l tcp://0.0.0.0:3000"]
+          ports:
+            - name: http
+              containerPort: {{ .Values.frontend.service.port }}
+              protocol: TCP
+{{ end }}

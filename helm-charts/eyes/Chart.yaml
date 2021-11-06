@@ -1,0 +1,17 @@
+apiVersion: v2
+name: eyes
+description: Taiwanese Public Opinion Mining System
+version: 0.1.0
+dependencies:
+  - name: mysql
+    version: 8.8.12
+    condition: mysql.enabled
+    repository: https://charts.bitnami.com/bitnami
+  - name: argo-workflows
+    version: 0.8.1
+    condition: argo-workflows.enabled
+    repository: "https://argoproj.github.io/argo-helm"
+  - name: redis
+    version: 15.5.4
+    condition: redis.enabled
+    repository: "https://charts.bitnami.com/bitnami"

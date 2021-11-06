@@ -1,7 +1,0 @@
-image:
-  repository: eyes/web
-  pullPolicy: Never
-  tag: ""
-service:
-  type: NodePort
-  port: 8000
