@@ -38,63 +38,24 @@
 <section id="kubernetes-recommended">
 <h2>Kubernetes (Recommended)<a class="headerlink" href="#kubernetes-recommended" title="Permalink to this headline">¶</a></h2>
 <p><strong>Kubernetes</strong> is widely used in several famous services. We also recommended you install <strong>Eyes</strong> in a Kubernetes cluster.</p>
-<section id="create-namespace">
-<h3>Create namespace<a class="headerlink" href="#create-namespace" title="Permalink to this headline">¶</a></h3>
-<p>First, we need to create an namespace.</p>
-<div class="literal-block-wrapper docutils container" id="id1">
-<div class="code-block-caption"><span class="caption-text">Create namespace</span><a class="headerlink" href="#id1" title="Permalink to this code">¶</a></div>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kubectl create ns eyes
-
-<span class="c1"># create role binding</span>
-kubectl create rolebinding default-admin --clusterrole<span class="o">=</span>admin --serviceaccount<span class="o">=</span>eyes:default -n eyes
+<section id="deploy-eyes">
+<h3>Deploy Eyes<a class="headerlink" href="#deploy-eyes" title="Permalink to this headline">¶</a></h3>
+<p>Simply use one line command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>helm install eyes eyes
 </pre></div>
-</div>
 </div>
 </section>
-<section id="argo-workflows">
-<h3>Argo workflows<a class="headerlink" href="#argo-workflows" title="Permalink to this headline">¶</a></h3>
-<p>Second, install <strong>Argo Workflows</strong>. Our service mainly use it to manage ETL jobs.</p>
-<div class="literal-block-wrapper docutils container" id="id2">
-<div class="code-block-caption"><span class="caption-text">Add argo repository</span><a class="headerlink" href="#id2" title="Permalink to this code">¶</a></div>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># add repo</span>
-helm repo add argo https://argoproj.github.io/argo-helm
-
-<span class="c1"># update</span>
-helm repo update
-
-<span class="c1"># install</span>
-helm install -n eyes argo argo/argo-workflows
+<section id="settings">
+<h3>Settings<a class="headerlink" href="#settings" title="Permalink to this headline">¶</a></h3>
+<p>You can use <cite>eyes/values.yaml</cite> to change settings in <cite>eyes</cite>. For example, if you want to use AWS RDS rather than self-hosted MySQL, you can simply set <cite>mysql.enabled=false</cite> and <cite>config.mysql.host=YOUR_AWS_RDS_HOST</cite> or use following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>helm install eyes eyes <span class="se">\</span>
+    --set mysql.enabled<span class="o">=</span><span class="nb">false</span> <span class="se">\</span>
+    --set config.mysql.host<span class="o">=</span>MYSQL_HOST <span class="se">\</span>
+    --set config.mysql.user<span class="o">=</span>MYSQL_USER <span class="se">\</span>
+    --set config.mysql.password<span class="o">=</span>MYSQL_PASSWORD <span class="se">\</span>
+    --set config.mysql.password<span class="o">=</span>MYSQL_PASSWORD <span class="se">\</span>
+    ...
 </pre></div>
-</div>
-</div>
-</section>
-<section id="deploy-services">
-<h3>Deploy services<a class="headerlink" href="#deploy-services" title="Permalink to this headline">¶</a></h3>
-<p>Finally, deploy services of <strong>Eyes</strong>.</p>
-<div class="literal-block-wrapper docutils container" id="id3">
-<div class="code-block-caption"><span class="caption-text">Deploy services</span><a class="headerlink" href="#id3" title="Permalink to this code">¶</a></div>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># configmap</span>
-helm install -n eyes config helm-charts/config
-
-<span class="c1"># mysql</span>
-helm install -n eyes mysql bitnami/mysql -f helm-charts/mysql/values.yaml
-
-<span class="c1"># redis</span>
-helm install -n eyes redis bitnami/redis -f helm-charts/redis/values.yaml
-
-<span class="c1"># celery worker</span>
-helm install -n eyes celery-worker helm-charts/celery
-
-<span class="c1"># api</span>
-helm install -n eyes api helm-charts/api
-
-<span class="c1"># web</span>
-helm install -n eyew web helm-charts/web
-
-<span class="c1"># cron-workflows</span>
-helm install -n eyes workflows helm-charts/workflows
-</pre></div>
-</div>
 </div>
 </section>
 </section>

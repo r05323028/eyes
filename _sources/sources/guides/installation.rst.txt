@@ -6,64 +6,30 @@ Kubernetes (Recommended)
 
 **Kubernetes** is widely used in several famous services. We also recommended you install **Eyes** in a Kubernetes cluster.
 
-Create namespace
-################
+Deploy Eyes
+###########
 
-First, we need to create an namespace.
-
-.. code-block:: bash
-    :caption: Create namespace
-
-    kubectl create ns eyes
-
-    # create role binding
-    kubectl create rolebinding default-admin --clusterrole=admin --serviceaccount=eyes:default -n eyes
-
-Argo workflows
-##############
-
-Second, install **Argo Workflows**. Our service mainly use it to manage ETL jobs.
+Simply use one line command:
 
 .. code-block:: bash
-    :caption: Add argo repository
 
-    # add repo
-    helm repo add argo https://argoproj.github.io/argo-helm
+    helm install eyes eyes
 
-    # update
-    helm repo update
+Settings
+########
 
-    # install 
-    helm install -n eyes argo argo/argo-workflows
-
-Deploy services
-###############
-
-Finally, deploy services of **Eyes**.
+You can use `eyes/values.yaml` to change settings in `eyes`. For example, if you want to use AWS RDS rather than self-hosted MySQL, you can simply set `mysql.enabled=false` and `config.mysql.host=YOUR_AWS_RDS_HOST` or use following command:
 
 .. code-block:: bash
-    :caption: Deploy services
 
-    # configmap
-    helm install -n eyes config helm-charts/config
+    helm install eyes eyes \
+        --set mysql.enabled=false \
+        --set config.mysql.host=MYSQL_HOST \
+        --set config.mysql.user=MYSQL_USER \
+        --set config.mysql.password=MYSQL_PASSWORD \
+        --set config.mysql.password=MYSQL_PASSWORD \
+        ...
 
-    # mysql
-    helm install -n eyes mysql bitnami/mysql -f helm-charts/mysql/values.yaml
-
-    # redis
-    helm install -n eyes redis bitnami/redis -f helm-charts/redis/values.yaml
-
-    # celery worker
-    helm install -n eyes celery-worker helm-charts/celery
-
-    # api
-    helm install -n eyes api helm-charts/api
-
-    # web
-    helm install -n eyew web helm-charts/web
-
-    # cron-workflows
-    helm install -n eyes workflows helm-charts/workflows
 
 Docker Compose
 --------------
