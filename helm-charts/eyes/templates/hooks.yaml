@@ -1,0 +1,34 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "eyes-post-install-job-db-init"
+  labels:
+    app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+    app.kubernetes.io/instance: {{ .Release.Name | quote }}
+    helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+  annotations:
+    "helm.sh/hook": post-install
+    "helm.sh/hook-delete-policy": hook-succeeded
+    "helm.sh/hook-weight": "5"
+spec:
+  template:
+    metadata:
+      name: "eyes-post-install-job-db-init"
+      labels:
+        app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+        app.kubernetes.io/instance: {{ .Release.Name | quote }}
+        helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: post-install-job
+          image: eyes/base
+          imagePullPolicy: Never
+          command: ["/bin/bash", "-c", "--"]
+          args:
+            [
+              "poetry run eyes db init --host {{ .Values.config.mysql.host }} -u {{ .Values.config.mysql.user }} -p {{ .Values.config.mysql.password }} --database {{ .Values.config.mysql.database }}",
+            ]
+          envFrom:
+            - configMapRef:
+                name: eyes-configmaps
