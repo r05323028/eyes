@@ -2,6 +2,23 @@
 
 helm charts for deploying eyes on kubernetes.
 
+## Prerequisites
+
+Before you install `eyes` by helm charts, make sure you have following tools
+
+- Kubernetes
+- Helm
+
+After you install above tools, you need to add repositories to helm
+
+```bash
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo add argo https://argoproj.github.io/argo-helm
+
+# update
+helm repo update
+```
+
 ## Deploy Eyes
 
 Simply use one line command:

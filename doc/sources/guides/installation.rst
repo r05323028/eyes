@@ -6,6 +6,25 @@ Kubernetes (Recommended)
 
 **Kubernetes** is widely used in several famous services. We also recommended you install **Eyes** in a Kubernetes cluster.
 
+Prerequisites
+#############
+
+Before you install `eyes` by helm charts, make sure you have following tools
+
+- Kubernetes
+- Helm
+
+After you install above tools, you need to add repositories to helm
+
+.. code-block:: bash
+
+    helm repo add bitnami https://charts.bitnami.com/bitnami
+    helm repo add argo https://argoproj.github.io/argo-helm
+
+    # update
+    helm repo update
+
+
 Deploy Eyes
 ###########
 
