@@ -38,6 +38,22 @@
 <section id="kubernetes-recommended">
 <h2>Kubernetes (Recommended)<a class="headerlink" href="#kubernetes-recommended" title="Permalink to this headline">¶</a></h2>
 <p><strong>Kubernetes</strong> is widely used in several famous services. We also recommended you install <strong>Eyes</strong> in a Kubernetes cluster.</p>
+<section id="prerequisites">
+<h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h3>
+<p>Before you install <cite>eyes</cite> by helm charts, make sure you have following tools</p>
+<ul class="simple">
+<li><p>Kubernetes</p></li>
+<li><p>Helm</p></li>
+</ul>
+<p>After you install above tools, you need to add repositories to helm</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo add argo https://argoproj.github.io/argo-helm
+
+<span class="c1"># update</span>
+helm repo update
+</pre></div>
+</div>
+</section>
 <section id="deploy-eyes">
 <h3>Deploy Eyes<a class="headerlink" href="#deploy-eyes" title="Permalink to this headline">¶</a></h3>
 <p>Simply use one line command:</p>
