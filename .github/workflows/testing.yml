@@ -1,6 +1,9 @@
 name: testing
 
 on:
+  pull_request:
+    branches:
+      - main
   push:
     branches:
       - main
@@ -52,3 +55,5 @@ jobs:
       - name: Run Testing
         run: |
           poetry run dotenv -f .env.testing run pytest -s -m 'not slow and not dcard'
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v2

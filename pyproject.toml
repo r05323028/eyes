@@ -44,7 +44,7 @@ src_paths = ["eyes", "tests"]
 eyes = "eyes.cmd:cli"
 
 [tool.pytest.ini_options]
-addopts = "--cov=eyes --cov-report html"
+addopts = "--cov=eyes --cov-report xml"
 markers = [
     "slow: slow tests",
     "dcard: dcard tests"
