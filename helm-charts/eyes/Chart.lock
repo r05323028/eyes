@@ -1,12 +1,12 @@
 dependencies:
 - name: mysql
   repository: https://charts.bitnami.com/bitnami
-  version: 8.8.12
+  version: 8.8.35
 - name: argo-workflows
   repository: https://argoproj.github.io/argo-helm
-  version: 0.8.1
+  version: 0.8.3
 - name: redis
   repository: https://charts.bitnami.com/bitnami
-  version: 15.5.4
-digest: sha256:42824decac56b2e1921455c5096b9620f2b1741f35f3306e8d3767ff7d993411
-generated: "2021-11-06T17:07:31.816860751Z"
+  version: 17.0.5
+digest: sha256:aaa1eb2fde5a7be1379aac0e78f64d13246c09a2c95c8a4d6dde43722767f359
+generated: "2022-07-23T13:13:54.375935+08:00"
