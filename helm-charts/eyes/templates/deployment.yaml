@@ -6,7 +6,7 @@ spec:
   selector:
     matchLabels:
       app: "{{ .Release.Name }}-celery-worker"
-  replicas: 1
+  replicas: {{ int .Values.celery.replicas }}
   template:
     metadata:
       labels:

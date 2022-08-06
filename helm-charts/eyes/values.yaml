@@ -23,6 +23,7 @@ image:
 celery:
   concurrency: 2
   loglevel: INFO
+  replicas: 3
 
 config:
   celery:

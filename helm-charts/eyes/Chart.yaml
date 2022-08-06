@@ -8,7 +8,7 @@ dependencies:
     condition: mysql.enabled
     repository: https://charts.bitnami.com/bitnami
   - name: argo-workflows
-    version: ~0.8.1
+    version: ~0.16.8
     condition: argo-workflows.enabled
     repository: "https://argoproj.github.io/argo-helm"
   - name: redis
